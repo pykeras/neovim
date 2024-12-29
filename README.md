@@ -59,7 +59,7 @@ Ensure the following dependencies are installed for a seamless experience:
 ## How to install: 
 ```bash
 $ cd ~/.config/nvim
-$ git clone git@github.com:pykeras/neovim.git
+$ git clone git@github.com:pykeras/neovim.git .
 $ nvim
 ```
 
@@ -75,6 +75,13 @@ The leader key is mapped to the spacebar (<Space>).
 - **Which Key (Help Menu):** Press `<leader>` to see available shortcuts.  
 - **Copy to clipboard:** `<leader>y`
 - **Paste from clipboard:** `<leader>p`
+
+---
+
+### Virtual Environment Selector (Python)
+_By default if you have `.venv`  in project directory this setup will use that otherwise:_
+- **Open selector**: `<leader>vs`
+- **Select cached one**: `<leader>vc`
 
 ---
 
@@ -234,3 +241,4 @@ _Rust only_
 - Rename `~/.config/nvim/lua/plugins/avante` to `avante.lua` for `Ollama`.
 
 ---
+
