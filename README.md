@@ -7,9 +7,12 @@ _A basic set of key mappings is included and located in `lua/keymaps.lua`. You c
 ## Prerequisites
 Before proceeding, ensure you meet the following requirements:
 
-Neovim Version: `NVIM v0.10.2`
-Operating System: `Rocky Linux 9.4`, `PopOS 22.04`
-Notes for `Mac` and `Windows` Users
+Neovim Version: `NVIM v0.10.2`  
+Operating System: `Rocky Linux 9.4`, `PopOS 22.04`  
+
+
+
+Notes for `Mac` and `Windows` Users  
 
 __Mac Users:__ If you're struggling to optimize your workflow, don’t worry—you have plenty of money to waste. Just buy a newer Mac instead!  
 __Windows Users:__ Before searching for a real IDE, you might want to get yourself a real operating system.  
