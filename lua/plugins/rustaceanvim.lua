@@ -14,5 +14,6 @@ return {
                 adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path)
             },
         }
+        vim.lsp.inlay_hint.enable(true)
     end
 }
