@@ -75,6 +75,12 @@ The leader key is mapped to the spacebar (<Space>).
 - **Which Key (Help Menu):** Press `<leader>` to see available shortcuts.  
 - **Copy to clipboard:** `<leader>y`
 - **Paste from clipboard:** `<leader>p`
+- **Easier switching between splits:**
+  - _Move to the left split:_ `<C-h>`
+  - _Move to the right split:_ `<C-l>`
+  - _Move to the upper split:_ `<C-k>`
+  - _Move to the lower split:_ `<C-j>`
+- **Toggle relative line numbers:** `<leader>rl`
 
 ---
 
@@ -121,6 +127,10 @@ _Rust only_
 
 - **Show documentation:** `K`
 - **Go to definition:** `gd`
+- **Go to definition (vertical split):** `<leader>gdv` 
+- **Go to definition (horizontal split):** `<leader>gds`
+- **Peek definition:** `<leader>gdp`
+- **Close all splits except current:** `<leader>qo`
 - **Code actions:** `<leader>ca`
 - **Show method signature (Insert mode):** `ctrl+k`
 - **Autocomplete menu (Insert mode):** `ctrl+x, ctrl+o`
