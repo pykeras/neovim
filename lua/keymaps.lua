@@ -46,8 +46,15 @@ vim.keymap.set(
 -- LSP
 vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
+vim.keymap.set("n", "<leader>gdv", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>",
+    { desc = "Go to definition (vertical split)" })
+vim.keymap.set("n", "<leader>gds", "<cmd>split | lua vim.lsp.buf.definition()<CR>",
+    { desc = "Go to definition (horizontal split)" })
+vim.keymap.set("n", "<leader>gdp", "<cmd>Lspsaga peek_definition<CR>", { desc = "Peek definition" })
+vim.keymap.set("n", "<leader>qo", ":only<CR>", { desc = "Close all splits except current" })
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
 vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Show signature help" })
+
 
 -- Todo comment
 vim.keymap.set("n", "<leader>tt", "<cmd>TodoTelescope<cr>")
@@ -104,3 +111,14 @@ vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set("n", "<Esc>", ":nohlsearch<cr>")
 vim.keymap.set("i", "jj", "<Esc>")
+
+-- Switch between splits
+vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to the left split" })
+vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to the right split" })
+vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to the upper split" })
+vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to the lower split" })
+
+-- toggle relative line numbers
+vim.keymap.set("n", "<leader>rl", function()
+    vim.opt.relativenumber = not vim.opt.relativenumber:get()
+end, { desc = "Toggle relative line numbers" })
