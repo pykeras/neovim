@@ -147,7 +147,7 @@ _Rust only_
 
 - **Select buffer:** `<leader>bs`
 - **Cycle next buffer:** `<Tab>`
-- **Cycle previous buffer:** `<Tab>p`
+- **Cycle previous buffer:** `<S-Tab>`
 - **Move buffer left:** `<leader>bl`
 - **Move buffer right:** `<leader>br`
 - **Close buffer:** `<leader>bx`
