@@ -25,7 +25,7 @@ vim.keymap.set("n", "<leader>rdt", "<cmd>'RustLsp testables'<CR>", { desc = "Deb
 -- bufferline
 vim.keymap.set("n", "<leader>bs", "<Cmd>BufferLinePick<CR>", { silent = true })
 vim.keymap.set("n", "<Tab>", "<Cmd>BufferLineCycleNext<CR>", { silent = true })
-vim.keymap.set("n", "<Tab>p", "<Cmd>BufferLineCyclePrev<CR>", { silent = true })
+vim.keymap.set("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", { silent = true })
 vim.keymap.set("n", "<leader>bl", "<Cmd>BufferLineMovePrev<CR>", { silent = true })
 vim.keymap.set("n", "<leader>br", "<Cmd>BufferLineMoveNext<CR>", { silent = true })
 vim.keymap.set("n", "<leader>bx", "<Cmd>BufferLinePickClose<CR>", { silent = true })
