@@ -13,8 +13,18 @@ return {
                     visible = true,
                     hide_dotfiles = false,
                     hide_gitignored = false,
-                }
-            }
+                },
+                follow_current_file = {
+                    enabled = true,
+                },
+                use_libuv_file_watcher = true,
+            },
+        })
+
+        vim.api.nvim_create_autocmd({ "FocusGained", "DirChanged", "BufWritePost" }, {
+            callback = function()
+                require("neo-tree.command").execute({ command = "refresh" })
+            end,
         })
     end
 }
