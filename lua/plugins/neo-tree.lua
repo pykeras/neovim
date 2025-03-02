@@ -23,9 +23,13 @@ return {
 
         vim.api.nvim_create_autocmd({ "FocusGained", "DirChanged", "BufWritePost" }, {
             callback = function()
-                local manager = require("neo-tree.sources.manager")
+                local ok, manager = pcall(require, "neo-tree.sources.manager")
+                if not ok then return end
+
+                local ok_state, state = pcall(manager.get_state, "filesystem")
+                if not ok_state or not state or not state.path then return end
+
                 local renderer = require("neo-tree.ui.renderer")
-                local state = manager.get_state("filesystem")
                 local window_exists = renderer.window_exists(state)
                 if window_exists then
                     local current_win = vim.api.nvim_get_current_win()
@@ -36,4 +40,3 @@ return {
         })
     end
 }
-
