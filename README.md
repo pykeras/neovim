@@ -2,13 +2,17 @@
 _This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python** and **Rust** development.
 It's designed to be lightweight and easy to customize, providing a strong foundation for both beginners and experienced developers. Feel free to tweak or extend it to suit your workflow._
 
+![main environment](./images/main.png)
+
+![rust coding](./images/coding.png)
+
 _A basic set of key mappings is included and located in `lua/keymaps.lua`. You can review and customize these mappings to align with your personal preferences._
 
 ## Prerequisites
 Before proceeding, ensure you meet the following requirements:
 
-Neovim Version: `NVIM v0.10.2`  
-Operating System: `Rocky Linux 9.4`, `PopOS 22.04`  
+Neovim Version: `v0.10.2 - v0.10.4`  
+Operating System: `Rocky Linux 9.4`, `PopOS 22.04`, `Debian 12.9`
 
 
 
