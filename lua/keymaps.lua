@@ -46,8 +46,8 @@ vim.keymap.set(
 -- LSP
 vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-vim.keymap.set("n", "<leader>gdv", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>",
-    { desc = "Go to definition (vertical split)" })
+vim.keymap.set("n", "<leader>gdv", "<cmd>rightbelow vsplit | lua vim.lsp.buf.definition()<CR>",
+    { desc = "Go to definition (vertical split on right)" })
 vim.keymap.set("n", "<leader>gds", "<cmd>split | lua vim.lsp.buf.definition()<CR>",
     { desc = "Go to definition (horizontal split)" })
 vim.keymap.set("n", "<leader>gdp", "<cmd>Lspsaga peek_definition<CR>", { desc = "Peek definition" })
