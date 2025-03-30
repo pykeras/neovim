@@ -19,7 +19,6 @@ return {
         config = function()
             local original_capabilities = vim.lsp.protocol.make_client_capabilities()
             local capabilities = require('blink.cmp').get_lsp_capabilities(original_capabilities)
-            
             local lspconfig = require('lspconfig')
 
             lspconfig.lua_ls.setup({
