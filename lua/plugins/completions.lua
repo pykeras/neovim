@@ -1,52 +1,44 @@
 return {
-    "saghen/blink.cmp",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    version = "1.*",
-    opts = {
-        keymap = {
-            preset = "enter",
-            ["<Up>"] = { "select_prev", "fallback" },
-            ["<Down>"] = { "select_next", "fallback" },
-            ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
-            ['<C-e>'] = { 'hide' },
-            ["<C-space>"] = { function(cmp) cmp.show({providers = { "lsp", "path", "snippets", "buffer" }}) end },
-            ["<C-b>"] = { function(cmp) cmp.scroll_documentation_up(4) end },
-            ["<C-f>"] = { function(cmp)cmp.scroll_documentation_down(4) end },
-        },
-        signature = {
-            enabled = true,
-            trigger = { show_on_trigger_character = false },
-            window = {
-                border = "solid",
-                scrollbar = false,
-                show_documentation = true,
-                treesitter_highlighting = true,
-            }
-        },
-        completion = {
-            trigger = {
-                show_on_keyword = false,
-                show_in_snippet = false,
-            },
-            documentation = {
-                window = {
-                    border = "solid",
-                    scrollbar = false,
-                }
-            },
-            menu = {
-                scrollbar = false,
-                border = "solid",
-                winhighlight = "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:BlinkCmpDocCursorLine,Search:None",
-                draw = { treesitter = { "lsp" } }
-            }
-        },
-        sources = {
-            default = { "lsp", "path", "snippets", "buffer" }
-        },
-        fuzzy = {
-            implementation = "rust"
-        }
-    },
-    opts_extend = { "sources.default" }
+	{
+		"hrsh7th/cmp-nvim-lsp",
+	},
+	{
+		"L3MON4D3/LuaSnip",
+		dependencies = {
+			"saadparwaiz1/cmp_luasnip",
+			"rafamadriz/friendly-snippets",
+		},
+	},
+	{
+		"hrsh7th/nvim-cmp",
+		config = function()
+			local cmp = require("cmp")
+			require("luasnip.loaders.from_vscode").lazy_load()
+
+			cmp.setup({
+				snippet = {
+					expand = function(args)
+						require("luasnip").lsp_expand(args.body)
+					end,
+				},
+				window = {
+					completion = cmp.config.window.bordered(),
+					documentation = cmp.config.window.bordered(),
+				},
+				mapping = cmp.mapping.preset.insert({
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<C-Space>"] = cmp.mapping.complete(),
+					["<C-e>"] = cmp.mapping.abort(),
+					["<CR>"] = cmp.mapping.confirm({ select = true }),
+				}),
+				sources = cmp.config.sources({
+					{ name = "nvim_lsp" },
+					{ name = "luasnip" },
+				}, {
+					{ name = "buffer" },
+				}),
+			})
+		end,
+	},
 }

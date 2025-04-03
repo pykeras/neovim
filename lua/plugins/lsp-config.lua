@@ -15,11 +15,10 @@ return {
     },
     {
         "neovim/nvim-lspconfig",
-        dependencies = {'saghen/blink.cmp'},
         config = function()
-            local original_capabilities = vim.lsp.protocol.make_client_capabilities()
-            local capabilities = require('blink.cmp').get_lsp_capabilities(original_capabilities)
-            local lspconfig = require('lspconfig')
+            local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+            local lspconfig = require("lspconfig")
 
             lspconfig.lua_ls.setup({
                 on_attach = function(client, bufnr)
