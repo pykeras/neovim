@@ -11,5 +11,5 @@ vim.opt.autoread = true
 vim.g.mapleader = " "
 
 -- Cursor hold time reduce
-vim.o.updatetime = 150
+vim.o.updatetime = 100
 vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]]

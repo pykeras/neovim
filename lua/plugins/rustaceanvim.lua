@@ -1,6 +1,6 @@
 return {
     'mrcjkb/rustaceanvim',
-    version = '^5', -- Recommended
+    version = '^6', -- Recommended
     lazy = false,   -- This plugin is already lazy
     config = function()
         local mason_reg = require('mason-registry')
@@ -13,6 +13,12 @@ return {
             dap = {
                 adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path)
             },
+            tools = {
+                use_telescope = true,
+                inlay_hints = {
+                    enabled = true,
+                }
+            }
         }
         vim.lsp.inlay_hint.enable(true)
     end

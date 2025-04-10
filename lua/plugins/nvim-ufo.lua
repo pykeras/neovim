@@ -4,9 +4,9 @@ return {
     config = function()
         vim.o.foldcolumn = '0'    -- '1' if you want to have extra column for fold info
         vim.o.foldlevel = 99
-        vim.o.foldlevelstart = 30 -- high value for dashboard, top 30 level folds are open, anything beyond that is closed
+        vim.o.foldlevelstart = 15 -- high value for dashboard, top 30 level folds are open, anything beyond that is closed
         vim.o.foldenable = true
-        vim.o.foldnestmax = 5     -- no fold for more than 5 level of nesting
+        -- vim.o.foldnestmax = 5     -- no fold for more than 5 level of nesting
 
         local ftMap = {
             vim = 'indent',

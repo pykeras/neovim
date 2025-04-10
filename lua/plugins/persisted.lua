@@ -17,10 +17,10 @@ return {
 
         -- Autocommand to open neo-tree after loading the session
         -- vim.api.nvim_create_autocmd("User", {
-        -- pattern = "PersistedLoadPost",
-        -- callback = function()
-        -- vim.cmd("Neotree filesystem show")
-        -- end,
+        --     pattern = "PersistedLoadPost",
+        --     callback = function()
+        --         vim.cmd("Neotree filesystem show")
+        --     end,
         -- })
     end,
 }
