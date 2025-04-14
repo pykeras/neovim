@@ -11,9 +11,12 @@ return {
         "williamboman/mason-lspconfig.nvim",
         config = function()
             require("mason-lspconfig").setup({
-                ensure_installed = { "lua_ls", "pyright", "ruff", "rust_analyzer" },
+                ensure_installed = { "lua_ls", "pyright", "ruff", "rust_analyzer", "jsonls", "yamlls", "dockerls" },
             })
         end
+    },
+    {
+        "b0o/schemastore.nvim",
     },
     -- NVIM-LSPConfig: LSP server configurations using blink-cmp capabilities
     {
@@ -136,6 +139,26 @@ return {
                     }
                 }
             })
+            -- JSON LSP configuration
+            lspconfig.jsonls.setup({
+                on_attach = function(_, bufnr)
+                    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+                end,
+                capabilities = capabilities,
+                settings = {
+                    json = {
+                        schemas = require('schemastore').json.schemas(),
+                        validate = { enable = true },
+                    },
+                },
+            })
+            -- Docker
+            lspconfig.dockerls.setup({
+                on_attach = function(_, bufnr)
+                    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+                end,
+                capabilities = capabilities,
+            })
 
             --
             -- Common autocommand: disable ruff hover
@@ -202,6 +225,14 @@ return {
                 sources = {
                     null_ls.builtins.diagnostics.mypy.with({
                         extra_args = { "--strict", "--show-error-codes", "--exclude", ".venv" },
+                    }),
+                    null_ls.builtins.formatting.prettier.with({
+                        filetypes = {
+                            "jsonl", "yaml", "yml",
+                            "html", "css", "scss",
+                            "javascript", "javascriptreact",
+                            "typescript", "typescriptreact",
+                        },
                     }),
                 },
                 on_attach = function(client, bufnr)

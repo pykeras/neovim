@@ -17,11 +17,7 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to the right split" })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to the upper split" })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to the lower split" })
 
--- Prettify json with python
-vim.keymap.set("n", "<leader>jp", ":%!python -m json.tool<CR><CR>", { desc = "Prettify JSON with Python" })
-
 -- ATTENTION: here are the plugin keymaps
-
 
 -- bufferline
 vim.keymap.set("n", "<leader>bs", "<Cmd>BufferLinePick<CR>", { silent = true })
@@ -124,3 +120,4 @@ vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<cr>")
 -- python venv selector
 vim.keymap.set("n", "<leader>vs", "<cmd>VenvSelect<cr>", { desc = "Open python venv selector." })
 vim.keymap.set("n", "<leader>vc", "<cmd>VenvSelectCached<cr>", { desc = "Select previously used venv for this project." })
+
