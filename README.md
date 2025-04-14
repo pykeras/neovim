@@ -51,6 +51,11 @@ Ensure the following dependencies are installed for a seamless experience:
 - **Node.js & npm** (for LSP support via `nvm`):  
   [Install nvm from GitHub](https://github.com/nvm-sh/nvm).
 
+- **Prettier** (for yaml,js,... formatting)
+ ```bash
+ npm install -g prettier
+ ``` 
+
 ## Useful Commands
 
 - **Check Telescope health:**  
