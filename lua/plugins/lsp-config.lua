@@ -109,19 +109,19 @@ return {
                 },
             })
             -- Rust
-            lspconfig.rust_analyzer.setup({
-                on_attach = function(_, bufnr)
-                    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
-                end,
-                capabilities = capabilities,
-                settings = {
-                    ["rust-analyzer"] = {
-                        assist = { importGranularity = "module", importPrefix = "by_self" },
-                        cargo = { allFeatures = true },
-                        procMacro = { enable = true },
-                    },
-                },
-            })
+            -- lspconfig.rust_analyzer.setup({
+            --     on_attach = function(_, bufnr)
+            --         vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+            --     end,
+            --     capabilities = capabilities,
+            --     settings = {
+            --         ["rust-analyzer"] = {
+            --             assist = { importGranularity = "module", importPrefix = "by_self" },
+            --             cargo = { allFeatures = true },
+            --             procMacro = { enable = true },
+            --         },
+            --     },
+            -- })
             -- Ruff
             lspconfig.ruff.setup({
                 on_attach = function(_, bufnr)
