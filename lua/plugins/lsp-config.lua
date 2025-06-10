@@ -217,15 +217,13 @@ return {
         end
     },
     {
-        "jose-elias-alvarez/null-ls.nvim",
+        "nvimtools/none-ls.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
             local null_ls = require("null-ls")
             null_ls.setup({
                 sources = {
-                    null_ls.builtins.diagnostics.mypy.with({
-                        extra_args = { "--strict", "--show-error-codes", "--exclude", ".venv" },
-                    }),
+                    null_ls.builtins.diagnostics.mypy.with({ extra_args = { "--strict", "--show-error-codes", "--exclude", ".venv" } }),
                     null_ls.builtins.formatting.prettier.with({
                         filetypes = {
                             "jsonl", "yaml", "yml",
@@ -237,18 +235,16 @@ return {
                 },
                 on_attach = function(client, bufnr)
                     if client.supports_method("textDocument/formatting") then
-                        local augroup = vim.api.nvim_create_augroup("null_ls_formatting", { clear = true })
-                        vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+                        local aug = vim.api.nvim_create_augroup("none_ls_format", { clear = true })
+                        vim.api.nvim_clear_autocmds({ group = aug, buffer = bufnr })
                         vim.api.nvim_create_autocmd("BufWritePre", {
-                            group = augroup,
+                            group = aug,
                             buffer = bufnr,
-                            callback = function()
-                                vim.lsp.buf.format({ bufnr = bufnr })
-                            end,
+                            callback = function() vim.lsp.buf.format({ bufnr = bufnr }) end,
                         })
                     end
                 end,
             })
         end,
-    },
+    }
 }
