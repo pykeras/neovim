@@ -1,11 +1,6 @@
 # Neovim Configuration Guide
 
-Todo:
-
-- [ ] **update this documentation keybindings.**
-
-_This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python** and **Rust** development.
-It's designed to be lightweight and easy to customize, providing a strong foundation for both beginners and experienced developers. Feel free to tweak or extend it to suit your workflow._
+_This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python** and **Rust** development. It's lightweight and highly customizable, suitable for both beginners and advanced users._
 
 ![main environment](./images/main.png)
 
@@ -17,13 +12,8 @@ _A basic set of key mappings is included and located in `lua/keymaps.lua`. You c
 
 Before proceeding, ensure you meet the following requirements:
 
-Neovim Version: `v0.10.2 - v0.10.4`  
-Operating System: `Rocky Linux 9.4`, `PopOS 22.04`, `Debian 12.9`
-
-Notes for `Mac` and `Windows` Users
-
-**Mac Users:** If you're struggling to optimize your workflow, don’t worry—you have plenty of money to waste. Just buy a newer Mac instead!  
-**Windows Users:** Before searching for a real IDE, you might want to get yourself a real operating system.
+Neovim Version: `v0.11.0 - v.11.2`  
+Operating System: `Rocky Linux 9.4`, `PopOS 22.04`, `Debian 12.9`, `Android with termux`
 
 ## Dependencies:
 
@@ -52,14 +42,22 @@ Ensure the following dependencies are installed for a seamless experience:
   [Install nvm from GitHub](https://github.com/nvm-sh/nvm).
 
 - **Prettier** (for yaml,js,... formatting)
- ```bash
- npm install -g prettier
- ``` 
+  ```bash
+  npm install -g prettier
+  ```
+
+## How to install:
+
+  ```bash
+  $ cd ~/.config/nvim
+  $ git clone git@github.com:pykeras/neovim.git .
+  $ nvim
+  ```
+
 
 ## Useful Commands
 
 - **Check Telescope health:**  
-  In Neovim:
 
   ```vim
   :checkhealth telescope
@@ -76,13 +74,6 @@ Ensure the following dependencies are installed for a seamless experience:
   :Mason
   ```
 
-## How to install:
-
-```bash
-$ cd ~/.config/nvim
-$ git clone git@github.com:pykeras/neovim.git .
-$ nvim
-```
 
 ---
 
@@ -102,6 +93,9 @@ The leader key is mapped to the spacebar (<Space>).
   - _Move to the upper split:_ `<C-k>`
   - _Move to the lower split:_ `<C-j>`
 - **Toggle relative line numbers:** `<leader>rl`
+- __Clear search highlights:__ `Esc`
+- __Escape insert mode:__ `jj`
+- **Close all splits except current:** `<leader>qo`
 
 ---
 
@@ -110,7 +104,7 @@ The leader key is mapped to the spacebar (<Space>).
 _By default if you have `.venv` in project directory this setup will use that otherwise:_
 
 - **Open selector**: `<leader>vs`
-- **Select cached one**: `<leader>vc`
+- **Select cached venv**: `<leader>vc`
 
 ---
 
@@ -130,8 +124,7 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 ---
 
 ### Rustaceanvim
-
-- **Show testable functions:** `<leader>rdt`
+* **Show testable functions:** `<leader>rdt`
 
 ---
 
@@ -139,26 +132,29 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 
 - **Search files:** `<leader>ff`
 - **Live grep files:** `<leader>fg`
+- __Show TODOs (Telescope):__ `<leader>tt`
+- __Show TODOs (loclist):__ `<leader>tl`
 
 ---
 
 ### NeoTree (File Explorer)
 
 - **Open/Close NeoTree:** `<leader>e`
+- __Reveal file in NeoTree:__ `<leader>E`
+- __NeoTree filesystem:__ `<leader>nf`
+- __Git status NeoTree:__ `<leader>gs`
 
 ---
 
 ### LSP Configuration
 
-- **Show documentation:** `K`
+- **Hover documentation:** `K`
 - **Go to definition:** `gd`
 - **Go to definition (vertical split):** `<leader>gdv`
 - **Go to definition (horizontal split):** `<leader>gds`
 - **Peek definition:** `<leader>gdp`
-- **Close all splits except current:** `<leader>qo`
 - **Code actions:** `<leader>ca`
-- **Show method signature (Insert mode):** `ctrl+k`
-- **Autocomplete menu (Insert mode):** `ctrl+x, ctrl+o`
+- **Show method signature (Insert mode):** `<C-k>`
 
 ---
 
@@ -184,13 +180,6 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 
 - **Single line comment:** `ctrl+/`
 - **Multi-line comment (visual selection):** `ctrl+/`
-
----
-
-### Todo Comments
-
-- **View todo tree:** `<leader>tl`
-- **View todos in Telescope:** `<leader>tt`
 
 ---
 
@@ -226,10 +215,9 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 ### ToggleTerminal
 
 - **Open/Close terminal:** `ctrl+\`
-- **Exit terminal insert mode:** `<Esc>`
 - **Open terminal below:** `<leader>th`
 - **Open floating terminal:** `<leader>tf`
-- **Send current line to terminal:** `<leader>tst`
+- **Send current line to terminal (run command from docs):** `<leader>tst`
 
 ---
 
@@ -259,12 +247,6 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 
 - **View CSV as table:** `<leader>csv`
 - **View TSV as table:** `<leader>tsv`
-
----
-
-### JSON Prettification
-
-- **Prettify JSON:** `<leader>jp`
 
 ---
 
