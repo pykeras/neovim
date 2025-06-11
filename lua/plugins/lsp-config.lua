@@ -24,31 +24,32 @@ return {
         dependencies = { 'saghen/blink.cmp' },
         config = function()
             local capabilities = require('blink-cmp').get_lsp_capabilities()
-            local lspconfig = require("lspconfig")
+            local lspconfig = require('lspconfig')
             vim.diagnostic.config({
-                signs = true,            -- Enable signs (icons in the sign column)
-                underline = true,        -- Enable underlining diagnostics
-                update_in_insert = true, -- update diagnostics in insert mode (can be distracting)
-                severity_sort = true,    -- Sort diagnostics by severity
-
-                -- Configure floating window for diagnostics (to enable wrapping)
+                signs = {
+                    text = {
+                        [vim.diagnostic.severity.ERROR] = " ",
+                        [vim.diagnostic.severity.WARN]  = " ",
+                        [vim.diagnostic.severity.HINT]  = " ",
+                        [vim.diagnostic.severity.INFO]  = " ",
+                    },
+                },
+                underline = true,
+                update_in_insert = true,
+                severity_sort = true,
+                virtual_text = false,
                 float = {
                     border = "rounded",
                     source = true,
+                    format = function(diagnostic)
+                        return diagnostic.message
+                    end,
                     options = {
-                        wrap = true,       -- <<< Enable wrapping within the float
-                        linebreak = false, -- <<< Enable wrapping at word boundaries
-                    }
+                        wrap = true,
+                        linebreak = false,
+                    },
                 },
-                virtual_text = false, -- Set to true to keep truncated inline messages
             })
-            -- Customize diagnostic signs (requires Nerd Font)
-            local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-            for type, icon in pairs(signs) do
-                local hl = "DiagnosticSign" .. type
-                vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-            end
-
             -- Lua
             lspconfig.lua_ls.setup({
                 on_attach = function(_, bufnr)
