@@ -185,9 +185,10 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 
 ### Git Integration
 
-- **Preview hunk:** `<leader>gp`
+- **Preview hunk (change):** `<leader>gp`
 - **Git blame:** `<leader>gb`
 - **Git log (oneline graph, custom):** `<leader>gl`
+- __Git difference (file):__ `<leader>gfd` 
 
 ---
 

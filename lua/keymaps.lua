@@ -59,6 +59,7 @@ vim.keymap.set("n", "<F8>", function() dap.run_last() end, { desc = "Debugger ru
 vim.keymap.set("n", "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>")
 vim.keymap.set("n", "<leader>gb", "<cmd>Git blame<cr>")
 vim.keymap.set("n", "<leader>gl", "<cmd>Git log --oneline --graph --decorate --all<cr>")
+vim.keymap.set("n", "gfd", "<cmd>Gitsigns diffthis<CR>", { desc = "Git: diff current file" })
 
 -- LSP
 vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
@@ -120,4 +121,3 @@ vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<cr>")
 -- python venv selector
 vim.keymap.set("n", "<leader>vs", "<cmd>VenvSelect<cr>", { desc = "Open python venv selector." })
 vim.keymap.set("n", "<leader>vc", "<cmd>VenvSelectCached<cr>", { desc = "Select previously used venv for this project." })
-
