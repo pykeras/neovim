@@ -13,12 +13,14 @@ return {
             dap = {
                 adapter = cfg.get_codelldb_adapter(codelldb_path, liblldb_path),
             },
+            server = {
+                auto_attach = function(_, bufnr)
+                    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+                end
+            },
             tools = {
                 use_telescope = true,
                 inlay_hints = { enabled = true },
-            },
-            server = {
-                auto_attach = true, -- let rustaceanvim spawn rust-analyzer
             },
         }
 
