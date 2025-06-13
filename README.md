@@ -1,5 +1,8 @@
 # Neovim Configuration Guide
 
+### TODO:
+- [ ] __Fix issue with mypy doesn't show inline diagnostic messages__
+
 _This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python** and **Rust** development. It's lightweight and highly customizable, suitable for both beginners and advanced users._
 
 ![main environment](./images/main.png)
