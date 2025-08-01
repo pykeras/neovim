@@ -94,7 +94,7 @@ return {
 							settings = {
 								python = {
 									analysis = {
-										typeCheckingMode = "on",
+										typeCheckingMode = "off",
 										autoSearchPaths = true,
 										useLibraryCodeForTypes = true,
 										diagnosticMode = "workspace",
@@ -110,7 +110,7 @@ return {
 								client.server_capabilities.hoverProvider = false
 								client.server_capabilities.documentFormattingProvider = false
 								client.server_capabilities.documentRangeFormattingProvider = false
-								vim.keymap.set("n", "<leader>rf", function()
+								vim.keymap.set("n", "rf", function()
 									require("conform").format({ bufnr = bufnr })
 								end, { buffer = bufnr, desc = "Format with Conform" })
 							end,
@@ -137,6 +137,34 @@ return {
 		end,
 	},
 
+	-- none-ls for Mypy diagnostics with per-project venv detection
+	{
+		"nvimtools/none-ls.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			local null_ls = require("null-ls")
+
+			-- Helper: look for ./.venv/bin/mypy, else fall back to PATH
+			local function find_mypy()
+				local cwd = vim.fn.getcwd()
+				local venv_mypy = cwd .. "/.venv/bin/mypy"
+				if vim.fn.executable(venv_mypy) == 1 then
+					return venv_mypy
+				end
+				return "mypy"
+			end
+
+			null_ls.setup({
+				sources = {
+					null_ls.builtins.diagnostics.mypy.with({
+						command = find_mypy(),
+						extra_args = { "--strict", "--show-error-codes" },
+					}),
+				},
+			})
+		end,
+	},
+
 	-- Mason-tool-installer for non-LSP tools ⚙️
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -144,7 +172,7 @@ return {
 		config = function()
 			require("mason-tool-installer").setup({
 				ensure_installed = {
-					"mypy",
+					"mypy", -- Already here, which is correct!
 					"prettierd",
 					"stylua",
 				},
@@ -168,7 +196,6 @@ return {
 			formatters_by_ft = {
 				lua = { "stylua" },
 				python = { "ruff_format", "ruff_fix" },
-				-- python = { "ruff_fix" },
 				javascript = { "prettierd" },
 				typescript = { "prettierd" },
 				javascriptreact = { "prettierd" },
@@ -182,13 +209,11 @@ return {
 				rust = { "rustfmt" },
 			},
 			formatters = {
-				-- 1) format mode (always exits zero)
 				ruff_format = {
 					command = "ruff",
 					args = { "format", "--exit-zero", "--", "$FILENAME" },
 					stdin = false,
 				},
-				-- 2) check + fix (for any remaining autofixes)
 				ruff_fix = {
 					command = "ruff",
 					args = { "check", "--exit-zero", "--fix", "--extend-select", "I", "--", "$FILENAME" },
