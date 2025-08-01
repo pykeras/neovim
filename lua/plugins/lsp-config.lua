@@ -97,7 +97,7 @@ return {
 										typeCheckingMode = "off",
 										autoSearchPaths = true,
 										useLibraryCodeForTypes = true,
-										diagnosticMode = "workspace",
+										diagnosticMode = "openFilesOnly",
 									},
 								},
 							},

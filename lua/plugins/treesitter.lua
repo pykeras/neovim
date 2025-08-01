@@ -9,4 +9,5 @@ return {
 			indent = { enable = true },
 		})
 	end,
+	dependencies = { "OXY2DEV/markview.nvim" },
 }
