@@ -54,6 +54,9 @@ return {
 				"yamlls",
 				"dockerls",
 				"ts_ls",
+				"html",
+				"cssls",
+				"tailwindcss",
 			}
 
 			mason_lspconfig.setup({
@@ -132,6 +135,71 @@ return {
 							},
 						})
 					end,
+
+					["html"] = function()
+						lspconfig.html.setup({
+							capabilities = capabilities,
+							settings = {
+								html = {
+									hover = { documentation = true, references = true },
+									validate = { scripts = true },
+									suggest = {
+										completeAttributeTags = true,
+										completeTags = true,
+										snippetsPreventDoubleInsertion = false,
+									},
+								},
+							},
+						})
+					end,
+					["cssls"] = function()
+						lspconfig.cssls.setup({
+							capabilities = capabilities,
+							settings = {
+								css = {
+									validate = true,
+									lint = { unknownAtRules = "ignore" },
+								},
+								less = { validate = true },
+								scss = { validate = true },
+							},
+						})
+					end,
+					["tailwindcss"] = function()
+						lspconfig.tailwindcss.setup({
+							capabilities = capabilities,
+							settings = {
+								tailwindCSS = {
+									classAttributes = { "class", "className", "ngClass", ":class", "classList" },
+									lint = {
+										incompatibleProperty = "error",
+										invalidApply = "error",
+										invalidConfigPath = "error",
+										invalidScreen = "error",
+										invalidVariant = "error",
+										recommendedVariantOrder = "warning",
+									},
+									validate = true,
+									experimental = {
+										classRegex = {
+											"class:['\"]([^'\"]*)['\"]",
+											"class:['\"]([^'\"]*)['\"]",
+											"class=\\{([^\\}]*)\\}",
+											"class=([^\\s>]+)",
+											"class:(.*?)[^\\S]",
+											"class=([^\\s>]+)",
+										},
+									},
+								},
+							},
+							init_options = {
+								userLanguages = {
+									eelixir = "html-eex",
+									eruby = "erb",
+								},
+							},
+						})
+					end,
 				},
 			})
 		end,
@@ -172,13 +240,14 @@ return {
 		config = function()
 			require("mason-tool-installer").setup({
 				ensure_installed = {
-					"mypy", -- Already here, which is correct!
+					"mypy",
 					"prettierd",
 					"stylua",
+					"tailwindcss",
 				},
 				auto_update = false,
 				run_on_start = true,
-				start_delay = 3000,
+				start_delay = 1000,
 			})
 		end,
 	},
