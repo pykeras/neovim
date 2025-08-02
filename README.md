@@ -1,9 +1,12 @@
 # Neovim Configuration Guide
 
-### TODO:
-- [ ] __Fix issue with mypy doesn't show inline diagnostic messages__
+**Updated: August 2, 2025**  
 
-_This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python** and **Rust** development. It's lightweight and highly customizable, suitable for both beginners and advanced users._
+> - New: Now includes support for JavaScript, HTML, CSS, and Tailwind-CSS!
+> - Fixed: Mypy inline diagnostics now display correctly in the editor. This was resolved by ensuring the Neovim LSP client and diagnostic settings are properly configured to show virtual text for type-checking feedback.
+
+
+_This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python**, **Rust** and **JavaScript** development. It's lightweight and highly customizable, suitable for both beginners and advanced users._
 
 ![main environment](./images/main.png)
 
@@ -15,7 +18,7 @@ _A basic set of key mappings is included and located in `lua/keymaps.lua`. You c
 
 Before proceeding, ensure you meet the following requirements:
 
-Neovim Version: `v0.11.0 - v.11.2`  
+Neovim Version: `v0.11.0 - v.11.3`  
 Operating System: `Rocky Linux 9.4`, `PopOS 22.04`, `Debian 12.9`, `Android with termux`
 
 ## Dependencies:
