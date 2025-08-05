@@ -1,6 +1,9 @@
 # Neovim Configuration Guide
 
-**Updated: August 2, 2025**  
+**Update: August 5, 2025**
+> - New: Added support for Flash, a fast navigation/search plugin
+  
+**Update: August 2, 2025**  
 
 > - New: Now includes support for JavaScript, HTML, CSS, and Tailwind-CSS!
 > - Fixed: Mypy inline diagnostics now display correctly in the editor. This was resolved by ensuring the Neovim LSP client and diagnostic settings are properly configured to show virtual text for type-checking feedback.
@@ -126,6 +129,16 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 - **Set conditional breakpoint:** `<F6>`
 - **Terminate debugger:** `<F7>`
 - **Run last debugging session:** `<F8>`
+
+---
+
+### Flash (Navigation)
+
+- **Flash jump (normal/visual/operator):** `s`
+- **Flash Treesitter jump (normal/visual/operator)**: `S`
+- **Remote Flash (operator mode):** `r`
+- **Treesitter search (operator/visual mode):** `R`
+- **Toggle Flash search (command-line mode):** `<C-s>`
 
 ---
 

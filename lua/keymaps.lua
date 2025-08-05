@@ -1,3 +1,5 @@
+-- stylua: ignore start
+
 -- toggle relative line numbers
 vim.keymap.set("n", "<leader>rl", function()
     vim.opt.relativenumber = not vim.opt.relativenumber:get()
@@ -54,6 +56,13 @@ vim.keymap.set("n", "<F6>", function() dap.set_breakpoint(vim.fn.input('Breakpoi
     { desc = "Debugger set conditional breakpoint" })
 vim.keymap.set("n", "<F7>", function() dap.terminate() end, { desc = "Debugger reset" })
 vim.keymap.set("n", "<F8>", function() dap.run_last() end, { desc = "Debugger run last" })
+
+-- Flash
+vim.keymap.set({ "n", "x", "o" }, "s", function() require("flash").jump() end, { desc = "Flash" })
+vim.keymap.set({ "n", "x", "o" }, "S", function() require("flash").treesitter() end, { desc = "Flash Treesitter" })
+vim.keymap.set("o", "r", function() require("flash").remote() end, { desc = "Remote Flash" })
+vim.keymap.set({ "o", "x" }, "R", function() require("flash").treesitter_search() end, { desc = "Treesitter Search" })
+vim.keymap.set("c", "<c-s>", function() require("flash").toggle() end, { desc = "Toggle Flash Search" })
 
 -- Git
 vim.keymap.set("n", "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>")
@@ -121,3 +130,5 @@ vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<cr>")
 -- python venv selector
 vim.keymap.set("n", "<leader>vs", "<cmd>VenvSelect<cr>", { desc = "Open python venv selector." })
 vim.keymap.set("n", "<leader>vc", "<cmd>VenvSelectCached<cr>", { desc = "Select previously used venv for this project." })
+
+-- stylua: ignore end
