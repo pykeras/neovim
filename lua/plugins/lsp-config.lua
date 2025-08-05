@@ -280,7 +280,7 @@ return {
 			formatters = {
 				ruff_format = {
 					command = "ruff",
-					args = { "format", "--exit-zero", "--", "$FILENAME" },
+					args = { "format", "$FILENAME" },
 					stdin = false,
 				},
 				ruff_fix = {
