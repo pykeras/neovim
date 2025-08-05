@@ -114,6 +114,11 @@ local tbuilt = require("telescope.builtin")
 vim.keymap.set("n", "<leader>ff", tbuilt.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "<leader>fg", tbuilt.live_grep, { desc = "Telescope live grep" })
 
+-- theme
+vim.keymap.set("n", "<leader>ts", "<cmd>Themery<cr>", { desc = "Theme switcher menu" })
+vim.keymap.set("n", "<leader>tn", "<cmd>ThemeryNext<cr>", { desc = "Next theme" })
+vim.keymap.set("n", "<leader>tp", "<cmd>ThemeryPrev<cr>", { desc = "Previous theme" })
+
 -- Todo comment
 vim.keymap.set("n", "<leader>tt", "<cmd>TodoTelescope<cr>")
 vim.keymap.set("n", "<leader>tl", "<cmd>TodoLocList<cr>")

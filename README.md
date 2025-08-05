@@ -2,6 +2,7 @@
 
 **Update: August 5, 2025**
 > - New: Added support for Flash, a fast navigation/search plugin
+> - New: Added Themery for quickly switching between installed themes
   
 **Update: August 2, 2025**  
 
