@@ -1,32 +1,3 @@
--- 	{
--- 		"rebelot/kanagawa.nvim",
--- 		name = "kanagawa",
--- 	},
--- 	{
--- 		"savq/melange",
--- 		name = "melange",
--- 	},
---
--- 	-- Theme switcher plugin
--- 	{
--- 		"zaldih/themery.nvim",
--- 		lazy = false,
--- 		config = function()
--- 			require("themery").setup({
--- 				themes = {
--- 					"catppuccin",
--- 					"tokyonight",
--- 					"kanagawa",
--- 					"melange",
--- 				},
--- 				default = "catppuccin",
--- 				livePreview = true,
--- 			})
--- 		end,
--- 	},
--- }
---
-
 return {
 	{
 		"catppuccin/nvim",
@@ -53,10 +24,9 @@ return {
 		name = "nightfox",
 	},
 	{
-		"navarasu/onedark.nvim",
+		"olimorris/onedarkpro.nvim",
 		name = "onedark",
 	},
-
 	{
 		"zaldih/themery.nvim",
 		lazy = false,
@@ -83,13 +53,23 @@ return {
 					"carbonfox",
 					-- One Dark
 					"onedark",
+					"onedark_vivid",
+					"onedark_dark",
+					"vaporwave",
+					-- Just a separator.
+					{
+						name = "───────── Light Themes ─────────",
+						colorscheme = vim.g.colors_name,
+						commands = { "lua --[[]]" },
+					},
 					-- light
+					"onelight",
 					"tokyonight-day",
 					"catppuccin-latte",
 					"dayfox",
 					"kanagawa-lotus",
 				},
-				default = "tokyonight-night",
+				default = "kanagawa-wave",
 				livePreview = true,
 			})
 		end,

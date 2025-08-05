@@ -109,6 +109,14 @@ The leader key is mapped to the spacebar (<Space>).
 
 ---
 
+### Theme selection
+_The default theme is set to `kanagawa-wave`; feel free to change it._
+- Theme switcher menu: `tsm`
+- Next theme: `tn`
+- Previous theme: `tp`
+
+---
+
 ### Virtual Environment Selector (Python)
 
 _By default if you have `.venv` in project directory this setup will use that otherwise:_

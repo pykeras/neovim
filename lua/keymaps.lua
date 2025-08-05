@@ -115,7 +115,7 @@ vim.keymap.set("n", "<leader>ff", tbuilt.find_files, { desc = "Telescope find fi
 vim.keymap.set("n", "<leader>fg", tbuilt.live_grep, { desc = "Telescope live grep" })
 
 -- theme
-vim.keymap.set("n", "<leader>ts", "<cmd>Themery<cr>", { desc = "Theme switcher menu" })
+vim.keymap.set("n", "<leader>tsm", "<cmd>Themery<cr>", { desc = "Theme switcher menu" })
 vim.keymap.set("n", "<leader>tn", "<cmd>ThemeryNext<cr>", { desc = "Next theme" })
 vim.keymap.set("n", "<leader>tp", "<cmd>ThemeryPrev<cr>", { desc = "Previous theme" })
 
