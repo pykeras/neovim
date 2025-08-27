@@ -1,9 +1,22 @@
 # Neovim Configuration Guide
 
-### TODO:
-- [ ] __Fix issue with mypy doesn't show inline diagnostic messages__
+__If you are updating from previous versions, please make sure to run :Lazy sync and :Mason and update everything.__
 
-_This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python** and **Rust** development. It's lightweight and highly customizable, suitable for both beginners and advanced users._
+**Update: August 28, 2025**
+> - The neo-tree will now automatically update the Git and file system state upon focus change.
+> - The Venv selector config has been updated to support the latest Git changes.
+
+**Update: August 5, 2025**
+> - New: Added support for Flash, a fast navigation/search plugin
+> - New: Added Themery for quickly switching between installed themes
+  
+**Update: August 2, 2025**  
+
+> - New: Now includes support for JavaScript, HTML, CSS, and Tailwind-CSS!
+> - Fixed: Mypy inline diagnostics now display correctly in the editor. This was resolved by ensuring the Neovim LSP client and diagnostic settings are properly configured to show virtual text for type-checking feedback.
+
+
+_This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python**, **Rust** and **JavaScript** development. It's lightweight and highly customizable, suitable for both beginners and advanced users._
 
 ![main environment](./images/main.png)
 
@@ -15,7 +28,7 @@ _A basic set of key mappings is included and located in `lua/keymaps.lua`. You c
 
 Before proceeding, ensure you meet the following requirements:
 
-Neovim Version: `v0.11.0 - v.11.2`  
+Neovim Version: `v0.11.0 - v.11.3`  
 Operating System: `Rocky Linux 9.4`, `PopOS 22.04`, `Debian 12.9`, `Android with termux`
 
 ## Dependencies:
@@ -96,9 +109,18 @@ The leader key is mapped to the spacebar (<Space>).
   - _Move to the upper split:_ `<C-k>`
   - _Move to the lower split:_ `<C-j>`
 - **Toggle relative line numbers:** `<leader>rl`
+- **Reload all open files:** `<leader>re`
 - __Clear search highlights:__ `Esc`
 - __Escape insert mode:__ `jj`
 - **Close all splits except current:** `<leader>qo`
+
+---
+
+### Theme selection
+_The default theme is set to `kanagawa-wave`; feel free to change it._
+- Theme switcher menu: `tsm`
+- Next theme: `tn`
+- Previous theme: `tp`
 
 ---
 
@@ -123,6 +145,16 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 - **Set conditional breakpoint:** `<F6>`
 - **Terminate debugger:** `<F7>`
 - **Run last debugging session:** `<F8>`
+
+---
+
+### Flash (Navigation)
+
+- **Flash jump (normal/visual/operator):** `s`
+- **Flash Treesitter jump (normal/visual/operator)**: `S`
+- **Remote Flash (operator mode):** `r`
+- **Treesitter search (operator/visual mode):** `R`
+- **Toggle Flash search (command-line mode):** `<C-s>`
 
 ---
 
