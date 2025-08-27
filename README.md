@@ -103,6 +103,7 @@ The leader key is mapped to the spacebar (<Space>).
   - _Move to the upper split:_ `<C-k>`
   - _Move to the lower split:_ `<C-j>`
 - **Toggle relative line numbers:** `<leader>rl`
+- **Reload all open files:** `<leader>re`
 - __Clear search highlights:__ `Esc`
 - __Escape insert mode:__ `jj`
 - **Close all splits except current:** `<leader>qo`

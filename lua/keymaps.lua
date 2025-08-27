@@ -5,6 +5,9 @@ vim.keymap.set("n", "<leader>rl", function()
     vim.opt.relativenumber = not vim.opt.relativenumber:get()
 end, { desc = "Toggle relative line numbers" })
 
+-- Reload all buffers
+vim.keymap.set("n", "<leader>re", ":bufdo e<CR>", { desc = "Reload all open files" })
+
 -- yank/paste to clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
