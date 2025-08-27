@@ -5,46 +5,54 @@ return {
 		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons",
 		"MunifTanjim/nui.nvim",
-		-- "3rd/image.nvim"
 	},
 	config = function()
 		require("neo-tree").setup({
+			enable_session_for_tree = false,
 			close_if_last_window = false,
+			components = {
+				git_status = {
+					symbols = {
+						added = "A",
+						deleted = "D",
+						modified = "M",
+						renamed = "R",
+						staged = "S",
+						conflict = "C",
+						untracked = "U",
+					},
+				},
+			},
 			filesystem = {
-				filtered_items = {
-					visible = true,
-					hide_dotfiles = false,
-					hide_gitignored = false,
-				},
-				follow_current_file = {
-					enabled = true,
-				},
+				enable_file_watcher = true,
+				filtered_items = { visible = true, hide_dotfiles = false, hide_gitignored = false },
+				follow_current_file = { enabled = true },
 				use_libuv_file_watcher = true,
 			},
 			window = {
 				position = "left",
 				width = 40,
+				auto_refresh_on_change = true,
 			},
 		})
 
-		vim.api.nvim_create_autocmd({ "FocusGained", "DirChanged", "BufWritePost" }, {
+		local NeotreeRefreshGroup = vim.api.nvim_create_augroup("NeotreeRefreshGroup", { clear = true })
+
+		vim.api.nvim_create_autocmd("FocusGained", {
+			group = NeotreeRefreshGroup,
 			callback = function()
-				local ok, manager = pcall(require, "neo-tree.sources.manager")
-				if not ok then
+				require("neo-tree.command").execute({ command = "refresh" })
+			end,
+		})
+
+		vim.api.nvim_create_autocmd("WinLeave", {
+			group = NeotreeRefreshGroup,
+			callback = function(event)
+				if vim.v.dying > 0 then
 					return
 				end
-
-				local ok_state, state = pcall(manager.get_state, "filesystem")
-				if not ok_state or not state or not state.path then
-					return
-				end
-
-				local renderer = require("neo-tree.ui.renderer")
-				local window_exists = renderer.window_exists(state)
-				if window_exists then
-					local current_win = vim.api.nvim_get_current_win()
+				if vim.bo[event.buf].buftype == "terminal" then
 					require("neo-tree.command").execute({ command = "refresh" })
-					vim.api.nvim_set_current_win(current_win)
 				end
 			end,
 		})

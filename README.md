@@ -1,5 +1,11 @@
 # Neovim Configuration Guide
 
+__If you are updating from previous versions, please make sure to run :Lazy sync and :Mason and update everything.__
+
+**Update: August 28, 2025**
+> - The neo-tree will now automatically update the Git and file system state upon focus change.
+> - The Venv selector config has been updated to support the latest Git changes.
+
 **Update: August 5, 2025**
 > - New: Added support for Flash, a fast navigation/search plugin
 > - New: Added Themery for quickly switching between installed themes
