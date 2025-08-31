@@ -7,6 +7,11 @@ end, { desc = "Toggle relative line numbers" })
 
 -- Reload all buffers
 vim.keymap.set("n", "<leader>re", ":bufdo e<CR>", { desc = "Reload all open files" })
+-- vim.keymap.set("n", "re", function()
+--     local current_buf = vim.fn.bufnr()
+--     vim.cmd("bufdo e")
+--     vim.api.nvim_set_current_buf(current_buf)
+-- end, { desc = "Reload all open files" })
 
 -- yank/paste to clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])

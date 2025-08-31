@@ -45,6 +45,26 @@ return {
 					},
 				},
 			})
+			-- solution:
+			-- Manually close floating diagnostic
+			local function force_close_diagnostic_float()
+				vim.schedule(function()
+					for _, winid in ipairs(vim.api.nvim_list_wins()) do
+						local config = vim.api.nvim_win_get_config(winid)
+						if config and config.relative ~= "" then
+							local bufnr = vim.api.nvim_win_get_buf(winid)
+							if vim.bo[bufnr].buftype == "nofile" and vim.bo[bufnr].filetype == "" then
+								vim.api.nvim_win_close(winid, true)
+							end
+						end
+					end
+				end)
+			end
+			local lsp_augroup = vim.api.nvim_create_augroup("LspFloatClose", { clear = true })
+			vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave", "CursorMoved", "InsertEnter" }, {
+				group = lsp_augroup,
+				callback = force_close_diagnostic_float,
+			})
 
 			local servers = {
 				"lua_ls",
