@@ -2,18 +2,16 @@
 
 __If you are updating from previous versions, please make sure to run :Lazy sync and :Mason and update everything.__
 
-**Update: August 28, 2025**
+**Update: Sep 8, 2025** :tada:
+
+> - New: auto formatting TOML files on save.
+> - Fix: diagnostics float will auto close on buffer switch, to copy the diagnostic content use `<leader>cd`
+> - New: `bh`, `bl` to move buffer around (`h` for moving left, `l` for moving right) also support `<n>bh or <n>bl` to repeat moving around.
+
+**Update: August 28, 2025** :rocket:
+
 > - The neo-tree will now automatically update the Git and file system state upon focus change.
 > - The Venv selector config has been updated to support the latest Git changes.
-
-**Update: August 5, 2025**
-> - New: Added support for Flash, a fast navigation/search plugin
-> - New: Added Themery for quickly switching between installed themes
-  
-**Update: August 2, 2025**  
-
-> - New: Now includes support for JavaScript, HTML, CSS, and Tailwind-CSS!
-> - Fixed: Mypy inline diagnostics now display correctly in the editor. This was resolved by ensuring the Neovim LSP client and diagnostic settings are properly configured to show virtual text for type-checking feedback.
 
 
 _This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python**, **Rust** and **JavaScript** development. It's lightweight and highly customizable, suitable for both beginners and advanced users._
@@ -190,6 +188,7 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 - **Peek definition:** `<leader>gdp`
 - **Code actions:** `<leader>ca`
 - **Show method signature (Insert mode):** `<C-k>`
+- __Copy diagnostic message to clipboard:__ `<leader>cd`
 
 ---
 
@@ -204,10 +203,11 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 - **Select buffer:** `<leader>bs`
 - **Cycle next buffer:** `<Tab>`
 - **Cycle previous buffer:** `<S-Tab>`
-- **Move buffer left:** `<leader>bl`
-- **Move buffer right:** `<leader>br`
+- **Move buffer left:** `3bh` _move buffer left 3 times._
+- **Move buffer right:** `3bl` _move buffer right 5 times._
 - **Close buffer:** `<leader>bx`
 - **Close all other buffers:** `<leader>bxa`
+- __Jump to buffer based on position number:__ `<leader>num` _number can be 1 to 9_
 
 ---
 

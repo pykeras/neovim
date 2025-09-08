@@ -7,11 +7,6 @@ end, { desc = "Toggle relative line numbers" })
 
 -- Reload all buffers
 vim.keymap.set("n", "<leader>re", ":bufdo e<CR>", { desc = "Reload all open files" })
--- vim.keymap.set("n", "re", function()
---     local current_buf = vim.fn.bufnr()
---     vim.cmd("bufdo e")
---     vim.api.nvim_set_current_buf(current_buf)
--- end, { desc = "Reload all open files" })
 
 -- yank/paste to clipboard
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
@@ -33,10 +28,24 @@ vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to the lower split" })
 vim.keymap.set("n", "<leader>bs", "<Cmd>BufferLinePick<CR>", { silent = true })
 vim.keymap.set("n", "<Tab>", "<Cmd>BufferLineCycleNext<CR>", { silent = true })
 vim.keymap.set("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", { silent = true })
-vim.keymap.set("n", "<leader>bl", "<Cmd>BufferLineMovePrev<CR>", { silent = true })
-vim.keymap.set("n", "<leader>br", "<Cmd>BufferLineMoveNext<CR>", { silent = true })
+-- vim.keymap.set("n", "<leader>bh", "<Cmd>BufferLineMovePrev<CR>", { silent = true })
+-- vim.keymap.set("n", "<leader>bl", "<Cmd>BufferLineMoveNext<CR>", { silent = true })
 vim.keymap.set("n", "<leader>bx", "<Cmd>BufferLinePickClose<CR>", { silent = true })
 vim.keymap.set("n", "<leader>bxa", "<Cmd>BufferLineCloseOthers<CR>", { silent = true })
+
+vim.keymap.set("n", "bl", function()
+  require("bufferline").move(vim.v.count1)
+end, { silent = true, desc = "Move buffer right" })
+
+vim.keymap.set("n", "bh", function()
+  require("bufferline").move(-vim.v.count1)
+end, { silent = true, desc = "Move buffer left" })
+
+for i = 1, 9 do
+  vim.keymap.set("n", "<leader>" .. i, function()
+    require("bufferline").go_to_buffer(i, true)
+  end, { desc = "Go to buffer " .. i })
+end
 
 -- CodeSnap
 vim.keymap.set("x", "<leader>cc", ":CodeSnap<CR>", { desc = "Save to clipboard." })
@@ -90,6 +99,22 @@ vim.keymap.set("n", "<leader>qo", ":only<CR>", { desc = "Close all splits except
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
 vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Show signature help" })
 
+-- Copy diagnostics to system clipboard
+vim.keymap.set("n", "<leader>cd", function()
+  local diag = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
+  if #diag == 0 then
+    vim.notify("No diagnostics on this line", vim.log.levels.INFO)
+    return
+  end
+  local messages = {}
+  for _, d in ipairs(diag) do
+    table.insert(messages, d.message)
+  end
+  vim.fn.setreg("+", table.concat(messages, "\n"))
+  vim.notify("Diagnostics copied to clipboard")
+end, { desc = "Copy diagnostics to clipboard" })
+
+
 -- neo-tree
 vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", { desc = "Explorer NeoTree (Toggle)" })
 vim.keymap.set("n", "<leader>E", ":Neotree reveal<CR>", { desc = "Explorer NeoTree (Reveal File)" })
@@ -138,7 +163,7 @@ vim.keymap.set("n", "<leader>tf", ":ToggleTerm direction=float<CR>", { desc = "O
 vim.keymap.set("n", "<leader>tst", ":ToggleTermSendCurrentLine<CR>", { desc = "Send current line to terminal." })
 
 -- UndoTree
-vim.keymap.set("n", "<leader>u", "<cmd>UndotreeToggle<cr>")
+vim.keymap.set("n", "<leader>u", ":UndotreeToggle<CR>", { desc = "Toggle Undo Tree" })
 
 -- python venv selector
 vim.keymap.set("n", "<leader>vs", "<cmd>VenvSelect<cr>", { desc = "Open python venv selector." })
