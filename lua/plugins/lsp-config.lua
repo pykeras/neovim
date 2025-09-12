@@ -59,6 +59,8 @@ return {
 				"html",
 				"cssls",
 				"tailwindcss",
+				"bufls",
+				"sqlls",
 			}
 
 			mason_lspconfig.setup({
@@ -247,6 +249,8 @@ return {
 					"stylua",
 					"tailwindcss",
 					"taplo",
+					"buf",
+					"sql-formatter",
 				},
 				auto_update = false,
 				run_on_start = true,
@@ -280,6 +284,8 @@ return {
 				yaml = { "prettierd" },
 				rust = { "rustfmt" },
 				toml = { "taplo" },
+				proto = { "buf" },
+				sql = { "sql_formatter" },
 			},
 			formatters = {
 				ruff_format = {
