@@ -59,7 +59,7 @@ return {
 				"html",
 				"cssls",
 				"tailwindcss",
-				"bufls",
+				-- "bufls",
 				"sqlls",
 			}
 
