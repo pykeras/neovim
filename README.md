@@ -60,6 +60,11 @@ Ensure the following dependencies are installed for a seamless experience:
   npm install -g prettier
   ```
 
+- `fd-find` is also needed for python virtualenv selector:
+  ```
+  sudo dnf install fd-find
+  ```
+
 ## How to install:
 
   ```bash
