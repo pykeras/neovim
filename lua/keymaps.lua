@@ -47,10 +47,6 @@ for i = 1, 9 do
   end, { desc = "Go to buffer " .. i })
 end
 
--- CodeSnap
-vim.keymap.set("x", "<leader>cc", ":CodeSnap<CR>", { desc = "Save to clipboard." })
-vim.keymap.set("x", "<leader>cs", ":CodeSnapSave<CR>", { desc = "Save to directory." })
-
 -- Comments
 vim.keymap.set("n", "<C-_>", function()
     require("Comment.api").toggle.linewise.current()
