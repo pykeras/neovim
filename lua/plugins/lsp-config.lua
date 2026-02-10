@@ -61,6 +61,7 @@ return {
 				"tailwindcss",
 				-- "bufls",
 				"sqlls",
+				"bashls",
 			}
 
 			mason_lspconfig.setup({
@@ -251,6 +252,8 @@ return {
 					"taplo",
 					"buf",
 					"sql-formatter",
+					"shfmt",
+					"shellcheck",
 				},
 				auto_update = false,
 				run_on_start = true,
