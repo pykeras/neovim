@@ -1,17 +1,47 @@
 # Neovim Configuration Guide
 
-__If you are updating from previous versions, please make sure to run :Lazy sync and :Mason and update everything.__
+__If you are updating from previous versions, please make sure to run :Lazy sync and :Mason to update everything.__
+
+**Update: Feb 13, 2026** :clipboard:
+
+> - New: Enable clipboard (copy/yank & paste) over SSH using OSC52.
+> - This allows yanked text inside Neovim (running remotely) to be copied directly to your local machine clipboard without requiring `xclip`, `xsel`, or X11 forwarding.
+> - Only activates automatically when inside an SSH session.
+
+To enable this feature, add the following snippet **to the end of your `init.lua`**:
+
+```lua
+-- OSC52 clipboard integration for remote
+-- Only enable when in a TTY session (e.g., SSH)
+if vim.env.SSH_CONNECTION then
+	local ok, osc52 = pcall(require, "vim.ui.clipboard.osc52")
+	if ok then
+		vim.g.clipboard = {
+			name = "osc52",
+			copy = {
+				["+"] = osc52.copy("+"),
+				["*"] = osc52.copy("*"),
+			},
+			paste = {
+				["+"] = osc52.paste("+"),
+				["*"] = osc52.paste("*"),
+			},
+		}
+	end
+end
+```
+
+[Source discussion](https://github.com/LazyVim/LazyVim/discussions/1565#discussioncomment-7173819)
+
+⚠️ Note: Your terminal emulator must support `OSC52` clipboard sequences.
+
+------
 
 **Update: Sep 8, 2025** :tada:
 
 > - New: auto formatting TOML files on save.
 > - Fix: diagnostics float will auto close on buffer switch, to copy the diagnostic content use `<leader>cd`
 > - New: `bh`, `bl` to move buffer around (`h` for moving left, `l` for moving right) also support `<n>bh or <n>bl` to repeat moving around.
-
-**Update: August 28, 2025** :rocket:
-
-> - The neo-tree will now automatically update the Git and file system state upon focus change.
-> - The Venv selector config has been updated to support the latest Git changes.
 
 
 _This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python**, **Rust** and **JavaScript** development. It's lightweight and highly customizable, suitable for both beginners and advanced users._
