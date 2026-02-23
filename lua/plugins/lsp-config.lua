@@ -20,6 +20,36 @@ return {
 			local mason_lspconfig = require("mason-lspconfig")
 			local capabilities = require("blink-cmp").get_lsp_capabilities()
 
+			-- ==========================
+			-- Ignore SC2034 in any .env* file
+			-- ==========================
+			local default_handler = vim.lsp.handlers["textDocument/publishDiagnostics"]
+
+			vim.lsp.handlers["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+				if result and result.diagnostics then
+					local bufnr = vim.uri_to_bufnr(result.uri)
+					local filename = vim.api.nvim_buf_get_name(bufnr)
+					if filename:match("[.]env") then
+						local filtered = {}
+						for _, diag in ipairs(result.diagnostics) do
+							if diag.code ~= "SC2034" then
+								table.insert(filtered, diag)
+							end
+						end
+						result.diagnostics = filtered
+					end
+				end
+				-- Protect against notify errors
+				if vim.fn.exists("g:loaded_noice") == 1 then
+					local ok, _ = pcall(default_handler, err, result, ctx, config)
+					if not ok then
+						return
+					end
+				else
+					default_handler(err, result, ctx, config)
+				end
+			end
+
 			vim.diagnostic.config({
 				signs = {
 					text = {
@@ -33,6 +63,18 @@ return {
 				update_in_insert = true,
 				severity_sort = true,
 				virtual_text = true,
+				-- virtual_text = {
+				-- 	format = function(diagnostic)
+				-- 		-- local filename = vim.api.nvim_buf_get_name(diagnostic.bufnr)
+				-- 		-- if filename:match("%.env$") or filename:match("%.env%..+$") then
+				-- 		-- 	-- Ignore unused variable warning
+				-- 		-- 	if diagnostic.code == "SC2034" then
+				-- 		-- 		return
+				-- 		-- 	end
+				-- 		-- end
+				-- 		return diagnostic.message
+				-- 	end,
+				-- },
 				float = {
 					border = "rounded",
 					source = "if_many",
