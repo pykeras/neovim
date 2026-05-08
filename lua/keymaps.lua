@@ -16,6 +16,9 @@ vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set("n", "<Esc>", ":nohlsearch<cr>")
 vim.keymap.set("i", "jj", "<Esc>")
 
+-- Toggle to the previously edited buffer
+vim.keymap.set("n", "<leader><leader>", "<cmd>b#<CR>", { desc = "Switch to last buffer" })
+
 -- Switch between splits
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to the left split" })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to the right split" })
