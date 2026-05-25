@@ -168,4 +168,19 @@ vim.keymap.set("n", "<leader>u", ":UndotreeToggle<CR>", { desc = "Toggle Undo Tr
 vim.keymap.set("n", "<leader>vs", "<cmd>VenvSelect<cr>", { desc = "Open python venv selector." })
 vim.keymap.set("n", "<leader>vc", "<cmd>VenvSelectCached<cr>", { desc = "Select previously used venv for this project." })
 
+-- File opener
+vim.keymap.set("n", "<C-p>", ":FZFFilesProximity<CR>", { noremap = true, silent = true })
+
+-- focus the floating window with the highest z-index
+vim.keymap.set('n', '<leader>z', function()
+  local top_win, top_z = nil, -1
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local cfg = vim.api.nvim_win_get_config(win)
+    if cfg.relative ~= '' and (cfg.zindex or 0) > top_z then
+      top_win, top_z = win, cfg.zindex or 0
+    end
+  end
+  if top_win then vim.api.nvim_set_current_win(top_win) end
+end, { desc = 'Focus topmost floating window' })
+
 -- stylua: ignore end
