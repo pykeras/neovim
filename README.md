@@ -2,6 +2,12 @@
 
 __If you are updating from previous versions, please make sure to run :Lazy sync and :Mason to update everything.__
 
+**Update: May 26, 2026** :sparkles:
+
+> - New: `<C>-p` fuzzy file finder. 
+>   - Searches all files under the Git project root, sorted by proximity to the currently open file.
+> - Fix: `neo-tree` auto opening on focus
+
 **Update: Feb 13, 2026** :clipboard:
 
 > - New: Enable clipboard (copy/yank & paste) over SSH using OSC52.
@@ -63,10 +69,18 @@ Operating System: `Rocky Linux 9.4`, `PopOS 22.04`, `Debian 12.9`, `Android with
 
 Ensure the following dependencies are installed for a seamless experience:
 
-- **Ripgrep** (for Telescope):
+- **Ripgrep** (for Telescope and fzf file search):
 
   ```bash
   sudo dnf install ripgrep
+  ```
+
+- **fzf** (fuzzy finder binary required by the `<C-p>` file search):
+  ```bash
+  # Install via package manager (e.g., dnf)
+  sudo dnf install fzf
+
+  # Or install manually from https://github.com/junegunn/fzf
   ```
 
 - **Python venv** (for Python-based plugins):  
@@ -146,6 +160,16 @@ The leader key is mapped to the spacebar (<Space>).
 - __Clear search highlights:__ `Esc`
 - __Escape insert mode:__ `jj`
 - **Close all splits except current:** `<leader>qo`
+
+---
+
+### FZF File Finder (Proximity Search)
+
+- **Open file in project (fuzzy, proximity-sorted):** `<C-p>`
+  - Scopes search to the Git root (nearest parent `.git` up to `$HOME`).
+  - Displays files relative to the project root; common parent directories are stripped for a cleaner view.
+  - Sorted by directory distance from the currently open file, then alphabetically.
+  - Requires `fzf` binary and `ripgrep`.
 
 ---
 
