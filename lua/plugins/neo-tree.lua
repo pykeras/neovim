@@ -36,13 +36,19 @@ return {
 			},
 		})
 
+		-- Safe refresh: do nothing if the filesystem tree isn’t open
+		local function safe_refresh()
+			local state = require("neo-tree.sources.manager").get_state("filesystem")
+			if state then
+				require("neo-tree.command").execute({ command = "refresh" })
+			end
+		end
+
 		local NeotreeRefreshGroup = vim.api.nvim_create_augroup("NeotreeRefreshGroup", { clear = true })
 
 		vim.api.nvim_create_autocmd("FocusGained", {
 			group = NeotreeRefreshGroup,
-			callback = function()
-				require("neo-tree.command").execute({ command = "refresh" })
-			end,
+			callback = safe_refresh,
 		})
 
 		vim.api.nvim_create_autocmd("WinLeave", {
@@ -52,7 +58,7 @@ return {
 					return
 				end
 				if vim.bo[event.buf].buftype == "terminal" then
-					require("neo-tree.command").execute({ command = "refresh" })
+					safe_refresh()
 				end
 			end,
 		})
