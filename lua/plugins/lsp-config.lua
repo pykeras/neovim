@@ -13,12 +13,11 @@ return {
 		dependencies = {
 			"neovim/nvim-lspconfig",
 			"b0o/schemastore.nvim",
-			-- "saghen/blink.cmp",
 		},
 		config = function()
 			local lspconfig = require("lspconfig")
 			local mason_lspconfig = require("mason-lspconfig")
-			local capabilities = require("blink-cmp").get_lsp_capabilities()
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 			-- ==========================
 			-- Ignore SC2034 in any .env* file
