@@ -13,7 +13,7 @@ return {
 		dependencies = {
 			"neovim/nvim-lspconfig",
 			"b0o/schemastore.nvim",
-			"saghen/blink.cmp",
+			-- "saghen/blink.cmp",
 		},
 		config = function()
 			local lspconfig = require("lspconfig")
@@ -113,19 +113,6 @@ return {
 										checkThirdParty = false,
 									},
 									telemetry = { enable = false },
-								},
-							},
-						})
-					end,
-					["pyrefly"] = function()
-						lspconfig.pyrefly.setup({
-							capabilities = capabilities,
-							-- Note: Pyrefly automatically detects virtual environments and project roots.
-							settings = {
-								python = {
-									pyrefly = {
-										displayTypeErrors = "force-on",
-									},
 								},
 							},
 						})
@@ -237,6 +224,7 @@ return {
 			require("mason-tool-installer").setup({
 				ensure_installed = {
 					"prettierd",
+					"pyrefly",
 					"stylua",
 					"tailwindcss",
 					"taplo",
