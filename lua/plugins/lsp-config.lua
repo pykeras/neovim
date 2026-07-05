@@ -13,12 +13,11 @@ return {
 		dependencies = {
 			"neovim/nvim-lspconfig",
 			"b0o/schemastore.nvim",
-			"saghen/blink.cmp",
 		},
 		config = function()
 			local lspconfig = require("lspconfig")
 			local mason_lspconfig = require("mason-lspconfig")
-			local capabilities = require("blink-cmp").get_lsp_capabilities()
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 			-- ==========================
 			-- Ignore SC2034 in any .env* file
@@ -63,18 +62,6 @@ return {
 				update_in_insert = true,
 				severity_sort = true,
 				virtual_text = true,
-				-- virtual_text = {
-				-- 	format = function(diagnostic)
-				-- 		-- local filename = vim.api.nvim_buf_get_name(diagnostic.bufnr)
-				-- 		-- if filename:match("%.env$") or filename:match("%.env%..+$") then
-				-- 		-- 	-- Ignore unused variable warning
-				-- 		-- 	if diagnostic.code == "SC2034" then
-				-- 		-- 		return
-				-- 		-- 	end
-				-- 		-- end
-				-- 		return diagnostic.message
-				-- 	end,
-				-- },
 				float = {
 					border = "rounded",
 					source = "if_many",
@@ -92,7 +79,7 @@ return {
 
 			local servers = {
 				"lua_ls",
-				"pyright",
+				"pyrefly",
 				"ruff",
 				"jsonls",
 				"yamlls",
@@ -101,7 +88,6 @@ return {
 				"html",
 				"cssls",
 				"tailwindcss",
-				-- "bufls",
 				"sqlls",
 				"bashls",
 			}
@@ -126,29 +112,6 @@ return {
 										checkThirdParty = false,
 									},
 									telemetry = { enable = false },
-								},
-							},
-						})
-					end,
-					["pyright"] = function()
-						lspconfig.pyright.setup({
-							on_init = function(client)
-								local root_dir = client.config.root_dir
-								local venv_path = root_dir and (root_dir .. "/.venv") or ""
-								if vim.fn.isdirectory(venv_path) == 1 then
-									client.config.settings.python.pythonPath = venv_path .. "/bin/python3"
-								end
-							end,
-							filetypes = { "python" },
-							capabilities = capabilities,
-							settings = {
-								python = {
-									analysis = {
-										typeCheckingMode = "off",
-										autoSearchPaths = true,
-										useLibraryCodeForTypes = true,
-										diagnosticMode = "openFilesOnly",
-									},
 								},
 							},
 						})
@@ -252,34 +215,6 @@ return {
 		end,
 	},
 
-	-- none-ls for Mypy diagnostics with per-project venv detection
-	{
-		"nvimtools/none-ls.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			local null_ls = require("null-ls")
-
-			-- Helper: look for ./.venv/bin/mypy, else fall back to PATH
-			local function find_mypy()
-				local cwd = vim.fn.getcwd()
-				local venv_mypy = cwd .. "/.venv/bin/mypy"
-				if vim.fn.executable(venv_mypy) == 1 then
-					return venv_mypy
-				end
-				return "mypy"
-			end
-
-			null_ls.setup({
-				sources = {
-					null_ls.builtins.diagnostics.mypy.with({
-						command = find_mypy(),
-						extra_args = { "--strict", "--show-error-codes" },
-					}),
-				},
-			})
-		end,
-	},
-
 	-- Mason-tool-installer for non-LSP tools ⚙️
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -287,8 +222,8 @@ return {
 		config = function()
 			require("mason-tool-installer").setup({
 				ensure_installed = {
-					"mypy",
 					"prettierd",
+					"pyrefly",
 					"stylua",
 					"tailwindcss",
 					"taplo",

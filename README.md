@@ -2,19 +2,17 @@
 
 __If you are updating from previous versions, please make sure to run :Lazy sync and :Mason to update everything.__
 
+**Update: Jul 6, 2026** 
+> - Switching to `Pyrefly` instead `Mypy`
+> - Minor bug fixes and tested with Neovim v0.12.4 
+
 **Update: May 26, 2026** :sparkles:
 
 > - New: `<C>-p` fuzzy file finder. 
 >   - Searches all files under the Git project root, sorted by proximity to the currently open file.
 > - Fix: `neo-tree` auto opening on focus
 
-**Update: Feb 13, 2026** :clipboard:
-
-> - New: Enable clipboard (copy/yank & paste) over SSH using OSC52.
-> - This allows yanked text inside Neovim (running remotely) to be copied directly to your local machine clipboard without requiring `xclip`, `xsel`, or X11 forwarding.
-> - Only activates automatically when inside an SSH session.
-
-To enable this feature, add the following snippet **to the end of your `init.lua`**:
+To enable copy/yank & paste over SSH using OSC52, add the following snippet **to the end of your `init.lua`**:
 
 ```lua
 -- OSC52 clipboard integration for remote
@@ -42,13 +40,6 @@ end
 ⚠️ Note: Your terminal emulator must support `OSC52` clipboard sequences.
 
 ------
-
-**Update: Sep 8, 2025** :tada:
-
-> - New: auto formatting TOML files on save.
-> - Fix: diagnostics float will auto close on buffer switch, to copy the diagnostic content use `<leader>cd`
-> - New: `bh`, `bl` to move buffer around (`h` for moving left, `l` for moving right) also support `<n>bh or <n>bl` to repeat moving around.
-
 
 _This is a **starter configuration** for Neovim, featuring a curated selection of the most useful plugins for **Python**, **Rust** and **JavaScript** development. It's lightweight and highly customizable, suitable for both beginners and advanced users._
 
