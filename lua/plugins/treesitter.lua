@@ -14,6 +14,8 @@ return {
 		local parsers = {
 			"lua",
 			"python",
+			"rust",
+			"toml",
 			"json",
 			"yaml",
 			"dockerfile",
