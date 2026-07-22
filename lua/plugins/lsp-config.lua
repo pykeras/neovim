@@ -90,6 +90,7 @@ return {
 				"tailwindcss",
 				"sqlls",
 				"bashls",
+				"harper_ls",
 			}
 
 			mason_lspconfig.setup({
@@ -172,6 +173,35 @@ return {
 								},
 								less = { validate = true },
 								scss = { validate = true },
+							},
+						})
+					end,
+					["harper_ls"] = function() -- offline grammar checker
+						lspconfig.harper_ls.setup({
+							capabilities = capabilities,
+							settings = {
+								["harper-ls"] = {
+									userDictPath = "",
+									fileDictPath = "",
+									linters = {
+										SpellCheck = true,
+										SpelledNumbers = false,
+										AnA = true,
+										SentenceCapitalization = true,
+										UnclosedQuotes = true,
+										WrongApostrophe = false,
+										LongSentences = true,
+										RepeatedWords = true,
+										Spaces = true,
+										CorrectNumberSuffix = true,
+									},
+									codeActions = { ForceStable = false },
+									markdown = { IgnoreLinkTitle = false },
+									diagnosticSeverity = "hint",
+									isolateEnglish = false,
+									dialect = "American",
+									maxFileLength = 120000,
+								},
 							},
 						})
 					end,
