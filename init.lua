@@ -29,6 +29,7 @@ require("lazy").setup(
     }
 )
 require("keymaps")
+require("persian").setup()
 
 -- Auto-save the current buffer only (not `wall`, which fights format_on_save
 -- by rewriting every open buffer on each TextChanged).
