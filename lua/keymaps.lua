@@ -203,6 +203,16 @@ vim.keymap.set("n", "[e", function()
     vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR, float = true })
 end, { desc = "Previous error" })
 
+-- Open the Python/Neovim cheat sheet in the default browser
+vim.keymap.set("n", "<leader>hp", function()
+    local path = vim.fn.stdpath("config") .. "/docs/python-cheatsheet.html"
+    if vim.fn.filereadable(path) == 0 then
+        vim.notify("Cheat sheet not found: " .. path, vim.log.levels.ERROR)
+        return
+    end
+    vim.ui.open(path)
+end, { desc = "Open Python cheat sheet in browser" })
+
 -- File opener
 vim.keymap.set("n", "<C-p>", ":FZFFilesProximity<CR>", { noremap = true, silent = true })
 
