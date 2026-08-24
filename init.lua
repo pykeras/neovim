@@ -29,3 +29,19 @@ require("lazy").setup(
     }
 )
 require("keymaps")
+require("persian").setup()
+
+-- Auto-save the current buffer only (not `wall`, which fights format_on_save
+-- by rewriting every open buffer on each TextChanged).
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+    pattern = "*",
+    callback = function(args)
+        if vim.bo[args.buf].buftype ~= "" or not vim.bo[args.buf].modifiable then
+            return
+        end
+        if vim.api.nvim_buf_get_name(args.buf) == "" then
+            return
+        end
+        vim.cmd("silent! write")
+    end,
+})

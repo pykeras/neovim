@@ -37,7 +37,11 @@ return {
 			end,
 		})
 
-		local indent_ft = { "lua", "python", "javascript", "typescript", "tsx", "bash" }
+		-- NOTE: python is intentionally excluded — nvim-treesitter's (main branch)
+		-- indent module is still experimental and mis-handles Python, which caused
+		-- Enter to jump to column 0 with no indent. Neovim's builtin Python indent
+		-- (indent/python.vim) + autoindent works far better, so we let it handle .py.
+		local indent_ft = { "lua", "javascript", "typescript", "tsx", "bash" }
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = indent_ft,
 			callback = function()

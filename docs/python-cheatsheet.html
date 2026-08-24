@@ -1,0 +1,782 @@
+<title>Python در Neovim — راهنما و چیت‌شیت</title>
+
+<style>
+  :root {
+    --ground: #FBFAF7;
+    --panel: #F3F1EC;
+    --ink: #1C1D26;
+    --ink-soft: #4A4D5A;
+    --muted: #6E7280;
+    --rule: #DEDBD3;
+    --accent: #1F7A68;
+    --accent-soft: #E4F0ED;
+    --warn: #A76A22;
+    --warn-soft: #F7EEDF;
+    --danger: #A63C33;
+    --danger-soft: #F8E8E6;
+    --key-bg: #FFFFFF;
+    --key-edge: #CFCBC2;
+
+    --mono: "Fira Code", "JetBrains Mono", "DejaVu Sans Mono", ui-monospace, monospace;
+    --serif: "Source Serif 4", "Noto Serif", Georgia, "Times New Roman", serif;
+    --sans: "Vazirmatn", "Noto Sans Arabic", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #12131A;
+      --panel: #1A1C25;
+      --ink: #E8E6E1;
+      --ink-soft: #B6B8C0;
+      --muted: #8A8D99;
+      --rule: #2B2E39;
+      --accent: #4FB8A2;
+      --accent-soft: #16302B;
+      --warn: #D9A059;
+      --warn-soft: #2E2517;
+      --danger: #D9776B;
+      --danger-soft: #2E1B19;
+      --key-bg: #232630;
+      --key-edge: #3A3E4B;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #12131A;
+    --panel: #1A1C25;
+    --ink: #E8E6E1;
+    --ink-soft: #B6B8C0;
+    --muted: #8A8D99;
+    --rule: #2B2E39;
+    --accent: #4FB8A2;
+    --accent-soft: #16302B;
+    --warn: #D9A059;
+    --warn-soft: #2E2517;
+    --danger: #D9776B;
+    --danger-soft: #2E1B19;
+    --key-bg: #232630;
+    --key-edge: #3A3E4B;
+  }
+
+  :root[data-theme="light"] {
+    --ground: #FBFAF7;
+    --panel: #F3F1EC;
+    --ink: #1C1D26;
+    --ink-soft: #4A4D5A;
+    --muted: #6E7280;
+    --rule: #DEDBD3;
+    --accent: #1F7A68;
+    --accent-soft: #E4F0ED;
+    --warn: #A76A22;
+    --warn-soft: #F7EEDF;
+    --danger: #A63C33;
+    --danger-soft: #F8E8E6;
+    --key-bg: #FFFFFF;
+    --key-edge: #CFCBC2;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: 3.5rem;
+    max-width: 74rem;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+    align-items: start;
+  }
+
+  @media (max-width: 62rem) {
+    .shell { grid-template-columns: minmax(0, 1fr); gap: 2rem; padding: 2rem 1.25rem 4rem; }
+    nav.toc { position: static !important; border-inline-start: none !important; }
+  }
+
+  /* ---- masthead ---- */
+
+  header.masthead {
+    grid-column: 1 / -1;
+    border-block-end: 2px solid var(--ink);
+    padding-block-end: 1.5rem;
+    margin-block-end: 1rem;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-block-end: 0.9rem;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3.1rem);
+    font-weight: 600;
+    line-height: 1.12;
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+    margin-block-end: 0.75rem;
+  }
+
+  .standfirst {
+    color: var(--ink-soft);
+    max-width: 46rem;
+    font-size: 1.03rem;
+  }
+
+  /* ---- table of contents ---- */
+
+  nav.toc {
+    position: sticky;
+    top: 2rem;
+    font-size: 0.87rem;
+    border-inline-start: 2px solid var(--rule);
+    padding-inline-start: 1.1rem;
+  }
+
+  nav.toc p {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-block-end: 0.85rem;
+  }
+
+  nav.toc ol { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+
+  nav.toc a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: block;
+    border-inline-start: 2px solid transparent;
+    margin-inline-start: -1.2rem;
+    padding-inline-start: 1.2rem;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  nav.toc a:hover, nav.toc a:focus-visible {
+    color: var(--accent);
+    border-inline-start-color: var(--accent);
+  }
+
+  /* ---- sections ---- */
+
+  main { display: flex; flex-direction: column; gap: 3.25rem; min-width: 0; }
+
+  section { scroll-margin-top: 2rem; }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    padding-block-end: 0.5rem;
+    border-block-end: 1px solid var(--rule);
+    margin-block-end: 0.4rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+  }
+
+  h2 .idx {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  h3 {
+    font-family: var(--serif);
+    font-size: 1.12rem;
+    font-weight: 600;
+    margin-block: 1.6rem 0.6rem;
+  }
+
+  section > p, li { color: var(--ink-soft); max-width: 44rem; }
+
+  section > ul { padding-inline-start: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; margin-block: 0.6rem; }
+
+  strong { color: var(--ink); font-weight: 600; }
+
+  a.inline { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  /* ---- keymap rows ---- */
+
+  .keys {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-block-start: 0.9rem;
+    background: var(--panel);
+  }
+
+  .keys .row {
+    display: grid;
+    grid-template-columns: 11.5rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 0.6rem 1rem;
+    align-items: baseline;
+    border-block-end: 1px solid var(--rule);
+  }
+
+  .keys .row:last-child { border-block-end: none; }
+
+  .keys .row .desc { color: var(--ink-soft); font-size: 0.94rem; }
+
+  .keys .row .desc em {
+    font-style: normal;
+    font-family: var(--mono);
+    font-size: 0.86em;
+    color: var(--muted);
+  }
+
+  @media (max-width: 34rem) {
+    .keys .row { grid-template-columns: minmax(0, 1fr); gap: 0.3rem; }
+  }
+
+  .group-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--ground);
+    padding: 0.5rem 1rem;
+    border-block-end: 1px solid var(--rule);
+  }
+
+  kbd {
+    font-family: var(--mono);
+    font-size: 0.83rem;
+    direction: ltr;
+    unicode-bidi: isolate;
+    display: inline-block;
+    background: var(--key-bg);
+    border: 1px solid var(--key-edge);
+    border-block-end-width: 2px;
+    border-radius: 3px;
+    padding: 0.1rem 0.42rem;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.87em;
+    direction: ltr;
+    unicode-bidi: isolate;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 0.08rem 0.32rem;
+    border-radius: 3px;
+  }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 0.84rem;
+    line-height: 1.6;
+    direction: ltr;
+    text-align: left;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    margin-block: 0.9rem;
+    color: var(--ink-soft);
+  }
+
+  pre .c { color: var(--muted); font-style: italic; }
+  pre .k { color: var(--accent); }
+
+  /* ---- callouts ---- */
+
+  .note {
+    border-inline-start: 3px solid var(--accent);
+    background: var(--accent-soft);
+    padding: 0.85rem 1.1rem;
+    border-radius: 0 3px 3px 0;
+    margin-block: 1.1rem;
+    font-size: 0.94rem;
+    color: var(--ink-soft);
+    max-width: 44rem;
+  }
+
+  .note.warn { border-inline-start-color: var(--warn); background: var(--warn-soft); }
+  .note.danger { border-inline-start-color: var(--danger); background: var(--danger-soft); }
+
+  .note .tag {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-block-end: 0.35rem;
+    color: var(--accent);
+  }
+
+  .note.warn .tag { color: var(--warn); }
+  .note.danger .tag { color: var(--danger); }
+
+  /* ---- workflow steps ---- */
+
+  ol.flow {
+    list-style: none;
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    margin-block-start: 1rem;
+  }
+
+  ol.flow li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 1.9rem minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: start;
+  }
+
+  ol.flow li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+    width: 1.9rem;
+    height: 1.9rem;
+    display: grid;
+    place-items: center;
+    background: var(--ground);
+  }
+
+  footer {
+    grid-column: 1 / -1;
+    margin-block-start: 3rem;
+    padding-block-start: 1.25rem;
+    border-block-start: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+  }
+
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="shell" dir="rtl" lang="fa">
+
+  <header class="masthead">
+    <p class="eyebrow">Neovim &middot; Python Workflow</p>
+    <h1>پایتون حرفه‌ای در Neovim</h1>
+    <p class="standfirst">
+      راهنمای کامل و چیت‌شیت کیبایندهای کانفیگ شما — از انتخاب محیط مجازی و
+      دیباگ تا اجرای تست و ریفکتور. همهٔ کلیدها بر اساس فایل‌های
+      <code>lua/keymaps.lua</code> و <code>lua/plugins/</code> همین کانفیگ نوشته شده‌اند.
+    </p>
+  </header>
+
+  <nav class="toc" aria-label="فهرست مطالب">
+    <p>فهرست</p>
+    <ol>
+      <li><a href="#setup">۰۰ &nbsp; نصب و پیش‌نیازها</a></li>
+      <li><a href="#venv">۰۱ &nbsp; محیط مجازی</a></li>
+      <li><a href="#lsp">۰۲ &nbsp; LSP و تشخیص خطا</a></li>
+      <li><a href="#format">۰۳ &nbsp; فرمت و ایمپورت</a></li>
+      <li><a href="#motion">۰۴ &nbsp; حرکت ساختاری</a></li>
+      <li><a href="#test">۰۵ &nbsp; تست با pytest</a></li>
+      <li><a href="#debug">۰۶ &nbsp; دیباگ</a></li>
+      <li><a href="#repl">۰۷ &nbsp; ترمینال و REPL</a></li>
+      <li><a href="#nav">۰۸ &nbsp; جست‌وجو و پیمایش</a></li>
+      <li><a href="#workflow">۰۹ &nbsp; جریان کاری روزمره</a></li>
+      <li><a href="#project">۱۰ &nbsp; ساختار پروژه</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section id="setup">
+      <h2><span class="idx">۰۰</span> نصب و پیش‌نیازها</h2>
+      <p>
+        این کانفیگ به <strong>Neovim نسخهٔ ۰٫۱۱ یا بالاتر</strong> نیاز دارد.
+        نسخه‌های قدیمی‌تر نمی‌توانند <code>mason-lspconfig</code> نسخهٔ ۲ و
+        <code>venv-selector</code> را بارگذاری کنند و در نتیجه هیچ LSP‌ای به فایل پایتون وصل نمی‌شود.
+      </p>
+
+      <div class="note warn">
+        <span class="tag">بررسی نسخه</span>
+        با <code>nvim --version</code> نسخه را چک کنید. اگر عدد کمتر از ۰٫۱۱ بود،
+        اول Neovim را به‌روز کنید — بقیهٔ این راهنما بدون آن کار نخواهد کرد.
+      </div>
+
+      <h3>ابزارهای بیرونی</h3>
+      <p>این‌ها باید در سیستم نصب باشند (نه داخل Neovim):</p>
+      <pre><span class="c"># مدیر پکیج و محیط مجازی — سریع‌ترین گزینهٔ فعلی</span>
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+<span class="c"># لینتر و فرمترِ پایتون (بسیار سریع، جایگزین black + isort + flake8)</span>
+uv tool install ruff
+
+<span class="c"># اجرای تست‌ها + دیباگر</span>
+uv tool install pytest
+uv pip install debugpy</pre>
+
+      <p>
+        بقیهٔ ابزارها (<code>pyrefly</code>، <code>ruff-lsp</code>، <code>stylua</code> و …)
+        را خود Mason موقع اولین اجرا نصب می‌کند. با <kbd>:Mason</kbd> وضعیتشان را ببینید و
+        با <kbd>:checkhealth</kbd> از سالم بودن کل نصب مطمئن شوید.
+      </p>
+
+      <h3>نقش هر ابزار</h3>
+      <div class="keys">
+        <div class="row"><span><kbd>pyrefly</kbd></span><span class="desc">سرور زبان اصلی — تایپ‌چک، تعریف، ارجاع، تکمیل کد</span></div>
+        <div class="row"><span><kbd>ruff</kbd></span><span class="desc">لینتر و فرمتر — سریع، جای <em>black</em>، <em>isort</em> و <em>flake8</em> را می‌گیرد</span></div>
+        <div class="row"><span><kbd>debugpy</kbd></span><span class="desc">موتور دیباگ که <em>nvim-dap</em> به آن وصل می‌شود</span></div>
+        <div class="row"><span><kbd>pytest</kbd></span><span class="desc">اجراکنندهٔ تست که <em>neotest</em> صدا می‌زند</span></div>
+      </div>
+    </section>
+
+    <section id="venv">
+      <h2><span class="idx">۰۱</span> محیط مجازی</h2>
+      <p>
+        <strong>این اولین کاری است که در هر پروژه باید انجام دهید.</strong>
+        تا وقتی محیط مجازی انتخاب نشده، LSP پکیج‌های نصب‌شدهٔ پروژه را نمی‌شناسد
+        و زیر هر <code>import</code> خط قرمز می‌کشد.
+      </p>
+
+      <div class="keys">
+        <div class="row"><span><kbd>&lt;leader&gt;vs</kbd></span><span class="desc">باز کردن انتخابگر محیط مجازی</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;vc</kbd></span><span class="desc">انتخاب محیطی که قبلاً برای همین پروژه استفاده شده</span></div>
+      </div>
+
+      <div class="note">
+        <span class="tag">نکته</span>
+        کلید <kbd>&lt;leader&gt;</kbd> در این کانفیگ همان <kbd>Space</kbd> است.
+        پس <kbd>&lt;leader&gt;vs</kbd> یعنی: <kbd>Space</kbd> بعد <kbd>v</kbd> بعد <kbd>s</kbd>.
+      </div>
+
+      <h3>ساخت محیط جدید</h3>
+      <pre>uv venv                      <span class="c"># می‌سازد: .venv</span>
+uv pip install -r requirements.txt
+
+<span class="c"># یا با pyproject.toml</span>
+uv sync</pre>
+
+      <p>
+        انتخابگر به‌طور خودکار دنبال پوشهٔ <code>.venv</code> می‌گردد،
+        پس اگر محیط را با همین نام بسازید بدون تنظیم اضافی پیدا می‌شود.
+      </p>
+    </section>
+
+    <section id="lsp">
+      <h2><span class="idx">۰۲</span> LSP و تشخیص خطا</h2>
+      <p>پرکاربردترین بخش روزمره — رفتن به تعریف، دیدن مستندات و رفع خطا.</p>
+
+      <div class="keys">
+        <div class="group-label">کاوش کد</div>
+        <div class="row"><span><kbd>K</kbd></span><span class="desc">نمایش مستندات و تایپ زیر نشانگر</span></div>
+        <div class="row"><span><kbd>gd</kbd></span><span class="desc">پرش به تعریف</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;gdp</kbd></span><span class="desc">پیش‌نمایش تعریف در پنجرهٔ شناور <em>(بدون ترک فایل)</em></span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;gdv</kbd></span><span class="desc">تعریف در split عمودی سمت راست</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;gds</kbd></span><span class="desc">تعریف در split افقی</span></div>
+        <div class="row"><span><kbd>Ctrl</kbd> + <kbd>k</kbd></span><span class="desc">راهنمای پارامترهای تابع <em>(در حالت insert)</em></span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;qo</kbd></span><span class="desc">بستن همهٔ split‌ها به‌جز فعلی</span></div>
+
+        <div class="group-label">خطاها</div>
+        <div class="row"><span><kbd>]d</kbd> &nbsp; <kbd>[d</kbd></span><span class="desc">خطای بعدی / قبلی</span></div>
+        <div class="row"><span><kbd>]e</kbd> &nbsp; <kbd>[e</kbd></span><span class="desc">فقط ارورها — هشدارها را رد می‌کند</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;xx</kbd></span><span class="desc">فهرست خطاهای کل پروژه <em>(Trouble)</em></span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;xb</kbd></span><span class="desc">فهرست خطاهای همین فایل</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;xs</kbd></span><span class="desc">نمای درختی کلاس‌ها و توابع فایل</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;cd</kbd></span><span class="desc">کپی متن خطای این خط در کلیپ‌بورد</span></div>
+
+        <div class="group-label">تغییر کد</div>
+        <div class="row"><span><kbd>&lt;leader&gt;ca</kbd></span><span class="desc">اکشن‌های پیشنهادی (رفع خودکار خطا)</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;rn</kbd></span><span class="desc">تغییر نام متغیر/تابع در <strong>کل پروژه</strong></span></div>
+      </div>
+
+      <div class="note">
+        <span class="tag">چرا rename مهم است</span>
+        <kbd>&lt;leader&gt;rn</kbd> با درک معنایی کد کار می‌کند، نه جست‌وجوی متنی.
+        متغیر <code>data</code> در یک تابع را عوض می‌کند بدون آنکه به <code>data</code>ی
+        تابع دیگر دست بزند — کاری که <code>:%s/</code> هرگز درست انجام نمی‌دهد.
+      </div>
+    </section>
+
+    <section id="format">
+      <h2><span class="idx">۰۳</span> فرمت و ایمپورت</h2>
+      <p>
+        فرمت‌کردن <strong>موقع ذخیره به‌طور خودکار</strong> انجام می‌شود:
+        <code>ruff format</code> و بعد <code>ruff check --fix</code>.
+        پس معمولاً نیازی به زدن دستی کلید ندارید.
+      </p>
+
+      <div class="keys">
+        <div class="row"><span><kbd>rf</kbd></span><span class="desc">فرمت دستی فایل</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;oi</kbd></span><span class="desc">مرتب‌سازی ایمپورت‌ها و حذف ایمپورت‌های بلااستفاده</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;fa</kbd></span><span class="desc">رفع همهٔ خطاهای قابل‌اصلاح خودکار</span></div>
+      </div>
+
+      <h3>تنظیم قوانین در پروژه</h3>
+      <p>
+        یک فایل <code>pyproject.toml</code> در ریشهٔ پروژه بگذارید — هم Neovim
+        و هم اجرای دستی <code>ruff</code> از آن پیروی می‌کنند:
+      </p>
+      <pre><span class="k">[tool.ruff]</span>
+line-length = 88
+target-version = <span class="c">"py313"</span>
+
+<span class="k">[tool.ruff.lint]</span>
+<span class="c"># E,F پایه · I ایمپورت · UP نحو مدرن</span>
+<span class="c"># B باگ‌های رایج · SIM ساده‌سازی · RUF عمومی</span>
+select = [<span class="c">"E"</span>, <span class="c">"F"</span>, <span class="c">"I"</span>, <span class="c">"UP"</span>, <span class="c">"B"</span>, <span class="c">"SIM"</span>, <span class="c">"RUF"</span>]
+
+<span class="k">[tool.ruff.format]</span>
+quote-style = <span class="c">"double"</span></pre>
+    </section>
+
+    <section id="motion">
+      <h2><span class="idx">۰۴</span> حرکت ساختاری</h2>
+      <p>
+        این بخش بزرگ‌ترین تفاوت بین «تایپ‌کردن در Neovim» و «حرفه‌ای کدنوشتن» است.
+        به‌جای حرکت خط‌به‌خط، مستقیم روی <strong>تابع، کلاس و آرگومان</strong> کار می‌کنید.
+      </p>
+
+      <h3>انتخاب</h3>
+      <p>
+        این‌ها بعد از <kbd>v</kbd> (انتخاب)، <kbd>d</kbd> (حذف)، <kbd>c</kbd> (تغییر)
+        یا <kbd>y</kbd> (کپی) می‌آیند. مثلاً <kbd>vif</kbd> بدنهٔ تابع را انتخاب می‌کند.
+      </p>
+
+      <div class="keys">
+        <div class="row"><span><kbd>af</kbd> &nbsp; <kbd>if</kbd></span><span class="desc">کل تابع / فقط بدنهٔ تابع</span></div>
+        <div class="row"><span><kbd>ac</kbd> &nbsp; <kbd>ic</kbd></span><span class="desc">کل کلاس / فقط بدنهٔ کلاس</span></div>
+        <div class="row"><span><kbd>aa</kbd> &nbsp; <kbd>ia</kbd></span><span class="desc">آرگومان — با یا بدون ویرگول</span></div>
+        <div class="row"><span><kbd>al</kbd> &nbsp; <kbd>il</kbd></span><span class="desc">حلقه</span></div>
+        <div class="row"><span><kbd>ai</kbd> &nbsp; <kbd>ii</kbd></span><span class="desc">بلوک شرطی</span></div>
+        <div class="row"><span><kbd>a/</kbd></span><span class="desc">کامنت</span></div>
+      </div>
+
+      <h3>پرش و جابه‌جایی</h3>
+      <div class="keys">
+        <div class="row"><span><kbd>]f</kbd> &nbsp; <kbd>[f</kbd></span><span class="desc">تابع بعدی / قبلی</span></div>
+        <div class="row"><span><kbd>]c</kbd> &nbsp; <kbd>[c</kbd></span><span class="desc">کلاس بعدی / قبلی</span></div>
+        <div class="row"><span><kbd>]a</kbd> &nbsp; <kbd>[a</kbd></span><span class="desc">آرگومان بعدی / قبلی</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;sa</kbd></span><span class="desc">جابه‌جایی این آرگومان با بعدی</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;sA</kbd></span><span class="desc">جابه‌جایی این آرگومان با قبلی</span></div>
+      </div>
+
+      <div class="note">
+        <span class="tag">ترکیب‌های پرکاربرد</span>
+        <kbd>dif</kbd> خالی‌کردن بدنهٔ تابع &nbsp;·&nbsp;
+        <kbd>yac</kbd> کپی کل کلاس &nbsp;·&nbsp;
+        <kbd>cia</kbd> عوض‌کردن یک آرگومان &nbsp;·&nbsp;
+        <kbd>vaf</kbd> سپس <kbd>&lt;leader&gt;ca</kbd> برای اکشن روی کل تابع.
+      </div>
+
+      <h3>تاکردن کد</h3>
+      <div class="keys">
+        <div class="row"><span><kbd>za</kbd></span><span class="desc">باز/بستن تای زیر نشانگر</span></div>
+        <div class="row"><span><kbd>zR</kbd></span><span class="desc">باز کردن همهٔ تاها</span></div>
+        <div class="row"><span><kbd>zM</kbd></span><span class="desc">بستن همهٔ تاها — نمای کلی فایل</span></div>
+      </div>
+    </section>
+
+    <section id="test">
+      <h2><span class="idx">۰۵</span> تست با pytest</h2>
+      <p>
+        تست‌ها بدون خروج از ادیتور اجرا می‌شوند و نتیجه به‌صورت علامت کنار
+        شمارهٔ خط ظاهر می‌شود. کلیدها با <kbd>&lt;leader&gt;n</kbd> شروع می‌شوند.
+      </p>
+
+      <div class="keys">
+        <div class="row"><span><kbd>&lt;leader&gt;nr</kbd></span><span class="desc">اجرای نزدیک‌ترین تست به نشانگر</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;nF</kbd></span><span class="desc">اجرای همهٔ تست‌های این فایل</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;na</kbd></span><span class="desc">اجرای کل مجموعهٔ تست پروژه</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;nL</kbd></span><span class="desc">اجرای دوبارهٔ آخرین تست</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;ndb</kbd></span><span class="desc">دیباگ تست نزدیک — با breakpoint متوقف می‌شود</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;nx</kbd></span><span class="desc">توقف اجرای تست</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;no</kbd></span><span class="desc">دیدن خروجی کامل تست شکست‌خورده</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;np</kbd></span><span class="desc">پنل خروجی (زنده)</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;ns</kbd></span><span class="desc">نمای درختی همهٔ تست‌ها</span></div>
+      </div>
+
+      <div class="note warn">
+        <span class="tag">مهم</span>
+        <code>neotest</code> از همان محیط مجازی استفاده می‌کند که با
+        <kbd>&lt;leader&gt;vs</kbd> انتخاب کرده‌اید. اگر تست‌ها با خطای
+        <code>ModuleNotFoundError</code> شکست خوردند، اول محیط را انتخاب کنید.
+      </div>
+
+      <h3>ساختار استاندارد تست</h3>
+      <pre>project/
+├── src/mypkg/__init__.py
+├── tests/
+│   ├── conftest.py       <span class="c"># فیکسچرهای مشترک</span>
+│   └── test_core.py
+└── pyproject.toml</pre>
+    </section>
+
+    <section id="debug">
+      <h2><span class="idx">۰۶</span> دیباگ</h2>
+      <p>
+        به‌جای پخش‌کردن <code>print()</code> در کد، اجرا را متوقف کنید و
+        مقدار واقعی متغیرها را ببینید. رابط دیباگ خودکار باز و بسته می‌شود.
+      </p>
+
+      <div class="keys">
+        <div class="row"><span><kbd>&lt;leader&gt;b</kbd></span><span class="desc">گذاشتن / برداشتن breakpoint روی این خط</span></div>
+        <div class="row"><span><kbd>F6</kbd></span><span class="desc">breakpoint شرطی — مثلاً <em>i == 42</em></span></div>
+        <div class="row"><span><kbd>F5</kbd></span><span class="desc">شروع اجرا / ادامه تا breakpoint بعدی</span></div>
+        <div class="row"><span><kbd>F3</kbd></span><span class="desc">اجرای خط بعد <em>(step over)</em></span></div>
+        <div class="row"><span><kbd>F2</kbd></span><span class="desc">ورود به داخل تابع <em>(step into)</em></span></div>
+        <div class="row"><span><kbd>F4</kbd></span><span class="desc">خروج از تابع فعلی <em>(step out)</em></span></div>
+        <div class="row"><span><kbd>F7</kbd></span><span class="desc">پایان دادن به جلسهٔ دیباگ</span></div>
+        <div class="row"><span><kbd>F8</kbd></span><span class="desc">اجرای دوبارهٔ آخرین پیکربندی</span></div>
+      </div>
+
+      <div class="note">
+        <span class="tag">جریان معمول</span>
+        نشانگر را روی خط مشکوک ببرید &larr; <kbd>&lt;leader&gt;b</kbd> &larr;
+        <kbd>F5</kbd> &larr; وقتی متوقف شد در پنجرهٔ <em>Scopes</em> مقدار
+        متغیرها را ببینید &larr; با <kbd>F3</kbd> خط‌به‌خط جلو بروید.
+      </div>
+    </section>
+
+    <section id="repl">
+      <h2><span class="idx">۰۷</span> ترمینال و REPL</h2>
+      <p>برای آزمایش سریع یک قطعه کد بدون ساختن فایل جدید.</p>
+
+      <div class="keys">
+        <div class="row"><span><kbd>&lt;leader&gt;th</kbd></span><span class="desc">ترمینال در پایین صفحه</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;tf</kbd></span><span class="desc">ترمینال شناور</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;tst</kbd></span><span class="desc">فرستادن خط فعلی به ترمینال</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;rs</kbd></span><span class="desc">فرستادن متن انتخاب‌شده به ترمینال <em>(حالت visual)</em></span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;rb</kbd></span><span class="desc">فرستادن کل فایل به ترمینال</span></div>
+        <div class="row"><span><kbd>Esc</kbd></span><span class="desc">خروج از حالت ترمینال به حالت عادی</span></div>
+      </div>
+
+      <div class="note">
+        <span class="tag">پیشنهاد</span>
+        <code>uv tool install ipython</code> را نصب کنید و در ترمینال
+        <code>ipython</code> را اجرا کنید — تکمیل خودکار و نمایش بهتری از
+        <code>python</code> ساده دارد.
+      </div>
+    </section>
+
+    <section id="nav">
+      <h2><span class="idx">۰۸</span> جست‌وجو و پیمایش</h2>
+
+      <div class="keys">
+        <div class="group-label">فایل و متن</div>
+        <div class="row"><span><kbd>&lt;leader&gt;ff</kbd></span><span class="desc">جست‌وجوی فایل بر اساس نام</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;fg</kbd></span><span class="desc">جست‌وجوی متن در کل پروژه</span></div>
+        <div class="row"><span><kbd>Ctrl</kbd> + <kbd>p</kbd></span><span class="desc">بازکنندهٔ سریع فایل</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;e</kbd></span><span class="desc">باز/بستن درخت فایل‌ها</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;E</kbd></span><span class="desc">نمایش فایل فعلی در درخت</span></div>
+
+        <div class="group-label">پرش سریع</div>
+        <div class="row"><span><kbd>s</kbd></span><span class="desc">پرش به هر نقطهٔ صفحه با دو حرف <em>(Flash)</em></span></div>
+        <div class="row"><span><kbd>S</kbd></span><span class="desc">پرش بر اساس ساختار نحوی</span></div>
+
+        <div class="group-label">بافر</div>
+        <div class="row"><span><kbd>Tab</kbd> &nbsp; <kbd>Shift</kbd>+<kbd>Tab</kbd></span><span class="desc">بافر بعدی / قبلی</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;&lt;leader&gt;</kbd></span><span class="desc">برگشت به بافر قبلی</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;1</kbd> … <kbd>9</kbd></span><span class="desc">پرش به بافر شماره‌دار</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;bx</kbd></span><span class="desc">بستن بافر با انتخاب</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;bxa</kbd></span><span class="desc">بستن همهٔ بافرها به‌جز فعلی</span></div>
+
+        <div class="group-label">گیت و تاریخچه</div>
+        <div class="row"><span><kbd>&lt;leader&gt;gp</kbd></span><span class="desc">پیش‌نمایش تغییر این بخش</span></div>
+        <div class="row"><span><kbd>gfd</kbd></span><span class="desc">دیف فایل فعلی</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;gb</kbd></span><span class="desc">blame — چه کسی این خط را نوشته</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;u</kbd></span><span class="desc">درخت undo — بازیابی نسخه‌های قبلی</span></div>
+        <div class="row"><span><kbd>&lt;leader&gt;tt</kbd></span><span class="desc">فهرست همهٔ <em>TODO</em>‌های پروژه</span></div>
+      </div>
+    </section>
+
+    <section id="workflow">
+      <h2><span class="idx">۰۹</span> جریان کاری روزمره</h2>
+      <p>ترتیبی که در عمل بیشترین بازدهی را می‌دهد:</p>
+
+      <ol class="flow">
+        <li><span>پروژه را باز کنید و <strong>فوراً</strong> با <kbd>&lt;leader&gt;vs</kbd> محیط مجازی را انتخاب کنید. بدون این کار بقیهٔ ابزارها ناقص کار می‌کنند.</span></li>
+        <li><span>با <kbd>&lt;leader&gt;ff</kbd> یا <kbd>Ctrl</kbd>+<kbd>p</kbd> فایل را پیدا کنید؛ برای گشتن دنبال یک تابع از <kbd>&lt;leader&gt;fg</kbd> استفاده کنید.</span></li>
+        <li><span>کد بنویسید. فایل خودکار ذخیره و فرمت می‌شود، پس نیازی به <kbd>:w</kbd> نیست.</span></li>
+        <li><span>خطاها را با <kbd>]e</kbd> دنبال کنید و با <kbd>&lt;leader&gt;ca</kbd> رفع کنید.</span></li>
+        <li><span>با <kbd>&lt;leader&gt;nr</kbd> تست مربوطه را اجرا کنید. اگر شکست خورد، <kbd>&lt;leader&gt;no</kbd> خروجی کامل را نشان می‌دهد.</span></li>
+        <li><span>اگر علت شکست روشن نبود، breakpoint بگذارید <kbd>&lt;leader&gt;b</kbd> و با <kbd>&lt;leader&gt;ndb</kbd> تست را دیباگ کنید.</span></li>
+        <li><span>پیش از commit، <kbd>&lt;leader&gt;xx</kbd> را بزنید تا مطمئن شوید خطایی در کل پروژه باقی نمانده.</span></li>
+      </ol>
+    </section>
+
+    <section id="project">
+      <h2><span class="idx">۱۰</span> ساختار پروژه</h2>
+      <p>
+        چیدمانی که ابزارهای بالا بدون تنظیم اضافی با آن کار می‌کنند —
+        الگوی <code>src/</code> که استاندارد پروژه‌های جدی پایتون است:
+      </p>
+
+      <pre>myproject/
+├── .venv/                <span class="c"># venv-selector خودکار پیدا می‌کند</span>
+├── src/
+│   └── myproject/
+│       ├── __init__.py
+│       └── core.py
+├── tests/
+│   ├── conftest.py
+│   └── test_core.py
+├── pyproject.toml        <span class="c"># تنظیمات ruff + وابستگی‌ها</span>
+└── README.md</pre>
+
+      <h3>حداقل pyproject.toml</h3>
+      <pre><span class="k">[project]</span>
+name = <span class="c">"myproject"</span>
+version = <span class="c">"0.1.0"</span>
+requires-python = <span class="c">"&gt;=3.11"</span>
+dependencies = []
+
+<span class="k">[build-system]</span>
+requires = [<span class="c">"hatchling"</span>]
+build-backend = <span class="c">"hatchling.build"</span>
+
+<span class="k">[tool.pytest.ini_options]</span>
+testpaths = [<span class="c">"tests"</span>]
+pythonpath = [<span class="c">"src"</span>]</pre>
+
+      <div class="note">
+        <span class="tag">چرا src/</span>
+        با این ساختار، تست‌ها ناچارند پکیج <em>نصب‌شده</em> را ایمپورت کنند نه
+        فایل‌های کنار خودشان. نتیجه: خطاهای بسته‌بندی را موقع تست می‌بینید،
+        نه بعد از انتشار.
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>Neovim &middot; Python &middot; چیت‌شیت کانفیگ شخصی</span>
+    <span>leader = Space</span>
+  </footer>
+
+</div>

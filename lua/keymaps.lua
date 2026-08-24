@@ -168,6 +168,51 @@ vim.keymap.set("n", "<leader>u", ":UndotreeToggle<CR>", { desc = "Toggle Undo Tr
 vim.keymap.set("n", "<leader>vs", "<cmd>VenvSelect<cr>", { desc = "Open python venv selector." })
 vim.keymap.set("n", "<leader>vc", "<cmd>VenvSelectCached<cr>", { desc = "Select previously used venv for this project." })
 
+-- Testing (neotest + pytest). Uses <leader>n… because <leader>t… is already
+-- taken by themes, terminals, todo-comments and tabular.
+vim.keymap.set("n", "<leader>nr", function() require("neotest").run.run() end,                     { desc = "Test: nearest" })
+vim.keymap.set("n", "<leader>nF", function() require("neotest").run.run(vim.fn.expand("%")) end,   { desc = "Test: current file" })
+vim.keymap.set("n", "<leader>na", function() require("neotest").run.run(vim.fn.getcwd()) end,      { desc = "Test: whole suite" })
+vim.keymap.set("n", "<leader>nL", function() require("neotest").run.run_last() end,                { desc = "Test: re-run last" })
+vim.keymap.set("n", "<leader>nx", function() require("neotest").run.stop() end,                    { desc = "Test: stop" })
+vim.keymap.set("n", "<leader>ndb", function() require("neotest").run.run({ strategy = "dap" }) end,{ desc = "Test: debug nearest" })
+vim.keymap.set("n", "<leader>no", function() require("neotest").output.open({ enter = true }) end, { desc = "Test: show output" })
+vim.keymap.set("n", "<leader>np", function() require("neotest").output_panel.toggle() end,         { desc = "Test: output panel" })
+vim.keymap.set("n", "<leader>ns", function() require("neotest").summary.toggle() end,              { desc = "Test: summary tree" })
+
+-- Python REPL: send buffer / selection to an IPython terminal
+vim.keymap.set("v", "<leader>rs", ":ToggleTermSendVisualSelection<CR>", { desc = "Send selection to terminal" })
+vim.keymap.set("n", "<leader>rb", ":%ToggleTermSendVisualLines<CR>",    { desc = "Send whole buffer to terminal" })
+
+-- LSP refactors that matter in Python
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename,          { desc = "Rename symbol (project-wide)" })
+vim.keymap.set("n", "<leader>oi", function()
+    vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
+end, { desc = "Organize imports (ruff)" })
+vim.keymap.set("n", "<leader>fa", function()
+    vim.lsp.buf.code_action({ context = { only = { "source.fixAll" } }, apply = true })
+end, { desc = "Ruff: fix all auto-fixable" })
+
+-- Diagnostic navigation
+vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1,  float = true }) end, { desc = "Next diagnostic" })
+vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, { desc = "Previous diagnostic" })
+vim.keymap.set("n", "]e", function()
+    vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR, float = true })
+end, { desc = "Next error" })
+vim.keymap.set("n", "[e", function()
+    vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR, float = true })
+end, { desc = "Previous error" })
+
+-- Open the Python/Neovim cheat sheet in the default browser
+vim.keymap.set("n", "<leader>hp", function()
+    local path = vim.fn.stdpath("config") .. "/docs/python-cheatsheet.html"
+    if vim.fn.filereadable(path) == 0 then
+        vim.notify("Cheat sheet not found: " .. path, vim.log.levels.ERROR)
+        return
+    end
+    vim.ui.open(path)
+end, { desc = "Open Python cheat sheet in browser" })
+
 -- File opener
 vim.keymap.set("n", "<C-p>", ":FZFFilesProximity<CR>", { noremap = true, silent = true })
 
@@ -184,3 +229,8 @@ vim.keymap.set('n', '<leader>z', function()
 end, { desc = 'Focus topmost floating window' })
 
 -- stylua: ignore end
+
+-- Open a blank line below without leaving normal mode or moving the cursor.
+vim.keymap.set("n", "<S-CR>", function()
+    vim.fn.append(vim.fn.line("."), "")
+end, { noremap = true, silent = true, desc = "Append blank line below" })
