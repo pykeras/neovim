@@ -229,3 +229,8 @@ vim.keymap.set('n', '<leader>z', function()
 end, { desc = 'Focus topmost floating window' })
 
 -- stylua: ignore end
+
+-- Open a blank line below without leaving normal mode or moving the cursor.
+vim.keymap.set("n", "<S-CR>", function()
+    vim.fn.append(vim.fn.line("."), "")
+end, { noremap = true, silent = true, desc = "Append blank line below" })
