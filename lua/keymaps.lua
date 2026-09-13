@@ -168,8 +168,7 @@ vim.keymap.set("n", "<leader>u", ":UndotreeToggle<CR>", { desc = "Toggle Undo Tr
 vim.keymap.set("n", "<leader>vs", "<cmd>VenvSelect<cr>", { desc = "Open python venv selector." })
 vim.keymap.set("n", "<leader>vc", "<cmd>VenvSelectCached<cr>", { desc = "Select previously used venv for this project." })
 
--- Testing (neotest + pytest). Uses <leader>n… because <leader>t… is already
--- taken by themes, terminals, todo-comments and tabular.
+-- Testing. <leader>n… because <leader>t… is taken by themes/terminals/todo.
 vim.keymap.set("n", "<leader>nr", function() require("neotest").run.run() end,                     { desc = "Test: nearest" })
 vim.keymap.set("n", "<leader>nF", function() require("neotest").run.run(vim.fn.expand("%")) end,   { desc = "Test: current file" })
 vim.keymap.set("n", "<leader>na", function() require("neotest").run.run(vim.fn.getcwd()) end,      { desc = "Test: whole suite" })
@@ -180,11 +179,10 @@ vim.keymap.set("n", "<leader>no", function() require("neotest").output.open({ en
 vim.keymap.set("n", "<leader>np", function() require("neotest").output_panel.toggle() end,         { desc = "Test: output panel" })
 vim.keymap.set("n", "<leader>ns", function() require("neotest").summary.toggle() end,              { desc = "Test: summary tree" })
 
--- Python REPL: send buffer / selection to an IPython terminal
+-- Python REPL
 vim.keymap.set("v", "<leader>rs", ":ToggleTermSendVisualSelection<CR>", { desc = "Send selection to terminal" })
 vim.keymap.set("n", "<leader>rb", ":%ToggleTermSendVisualLines<CR>",    { desc = "Send whole buffer to terminal" })
 
--- LSP refactors that matter in Python
 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename,          { desc = "Rename symbol (project-wide)" })
 vim.keymap.set("n", "<leader>oi", function()
     vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
@@ -193,7 +191,6 @@ vim.keymap.set("n", "<leader>fa", function()
     vim.lsp.buf.code_action({ context = { only = { "source.fixAll" } }, apply = true })
 end, { desc = "Ruff: fix all auto-fixable" })
 
--- Diagnostic navigation
 vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1,  float = true }) end, { desc = "Next diagnostic" })
 vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, { desc = "Previous diagnostic" })
 vim.keymap.set("n", "]e", function()
@@ -203,7 +200,6 @@ vim.keymap.set("n", "[e", function()
     vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR, float = true })
 end, { desc = "Previous error" })
 
--- Open the Python/Neovim cheat sheet in the default browser
 vim.keymap.set("n", "<leader>hp", function()
     local path = vim.fn.stdpath("config") .. "/docs/python-cheatsheet.html"
     if vim.fn.filereadable(path) == 0 then

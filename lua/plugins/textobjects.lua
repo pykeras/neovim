@@ -1,5 +1,4 @@
 -- Treesitter text objects: select/move/swap by function, class, argument, loop.
--- This is what makes editing Python structural instead of line-based.
 return {
 	"nvim-treesitter/nvim-treesitter-textobjects",
 	branch = "main",
@@ -15,7 +14,6 @@ return {
 		local move = require("nvim-treesitter-textobjects.move")
 		local swap = require("nvim-treesitter-textobjects.swap")
 
-		-- Select: af/if = function, ac/ic = class, aa/ia = argument, al/il = loop
 		local selections = {
 			["af"] = "@function.outer",
 			["if"] = "@function.inner",
@@ -35,7 +33,6 @@ return {
 			end, { desc = "Select " .. capture })
 		end
 
-		-- Move: ]f / [f next-previous function start, ]c / [c class, ]a argument
 		local moves = {
 			[")m"] = { "@function.outer", "next_start" },
 			["]f"] = { "@function.outer", "next_start" },
@@ -60,7 +57,6 @@ return {
 			end, { desc = "Previous " .. spec[1] })
 		end
 
-		-- Swap arguments: reorder function parameters without retyping them.
 		vim.keymap.set("n", "<leader>sa", function()
 			swap.swap_next("@parameter.inner")
 		end, { desc = "Swap argument with next" })

@@ -1,7 +1,5 @@
--- Python-specific quality-of-life.
 return {
-	-- Sticky context header: keeps the enclosing def/class visible while you
-	-- scroll inside a long body. Indentation-sensitive languages need this most.
+	-- Keep the enclosing def/class visible while scrolling a long body.
 	{
 		"nvim-treesitter/nvim-treesitter-context",
 		event = "BufReadPost",
@@ -14,7 +12,7 @@ return {
 		},
 	},
 
-	-- Scope guides. Python has no braces, so a visual scope marker is not decoration.
+	-- Scope guides — Python has no braces.
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
@@ -28,13 +26,13 @@ return {
 		},
 	},
 
-	-- Auto-convert "..." to f"..." the moment you type `{` inside a string.
+	-- Auto-convert "..." to f"..." when you type `{` inside a string.
 	{
 		"chrisgrieser/nvim-puppeteer",
 		lazy = false,
 	},
 
-	-- Diagnostics list: workspace-wide errors in one pane instead of file-by-file.
+	-- Workspace-wide diagnostics in one pane.
 	{
 		"folke/trouble.nvim",
 		cmd = "Trouble",

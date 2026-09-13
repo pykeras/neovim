@@ -31,17 +31,50 @@ require("lazy").setup(
 require("keymaps")
 require("persian").setup()
 
--- Auto-save the current buffer only (not `wall`, which fights format_on_save
--- by rewriting every open buffer on each TextChanged).
-vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
+-- Auto-save, debounced. `cargo check`/clippy and other on-save LSP checks are
+-- expensive, so writing on every TextChanged makes them queue up and lag.
+local autosave = vim.api.nvim_create_augroup("AutoSave", { clear = true })
+local timers = {}
+
+local function save(buf)
+    if not vim.api.nvim_buf_is_valid(buf) or not vim.bo[buf].modified then
+        return
+    end
+    if vim.bo[buf].buftype ~= "" or not vim.bo[buf].modifiable then
+        return
+    end
+    if vim.api.nvim_buf_get_name(buf) == "" then
+        return
+    end
+    vim.api.nvim_buf_call(buf, function()
+        vim.cmd("silent! write")
+    end)
+end
+
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged", "FocusLost", "BufLeave" }, {
+    group = autosave,
     pattern = "*",
     callback = function(args)
-        if vim.bo[args.buf].buftype ~= "" or not vim.bo[args.buf].modifiable then
-            return
+        local buf = args.buf
+        if timers[buf] then
+            timers[buf]:stop()
+        else
+            timers[buf] = vim.uv.new_timer()
         end
-        if vim.api.nvim_buf_get_name(args.buf) == "" then
-            return
+        timers[buf]:start(1500, 0, vim.schedule_wrap(function()
+            save(buf)
+        end))
+    end,
+})
+
+vim.api.nvim_create_autocmd("BufDelete", {
+    group = autosave,
+    callback = function(args)
+        local t = timers[args.buf]
+        if t then
+            t:stop()
+            t:close()
+            timers[args.buf] = nil
         end
-        vim.cmd("silent! write")
     end,
 })

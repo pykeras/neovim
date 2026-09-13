@@ -1,4 +1,3 @@
--- Test runner: run/debug pytest from inside the editor.
 return {
 	"nvim-neotest/neotest",
 	ft = { "python" },
@@ -14,7 +13,6 @@ return {
 		require("neotest").setup({
 			adapters = {
 				require("neotest-python")({
-					-- Follow the venv picked by venv-selector; falls back to $VIRTUAL_ENV.
 					runner = "pytest",
 					args = { "-vv" },
 					dap = { justMyCode = false },

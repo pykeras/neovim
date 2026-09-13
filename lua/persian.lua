@@ -1,43 +1,28 @@
--- Persian / RTL support.
---
--- Neovim ships the `persian` keymap and is built with +rightleft +arabic, so
--- nothing needs installing — it just needs wiring up. Everything here is
--- per-buffer on purpose: enabling `rightleft` globally would flip source code
--- too.
+-- Persian / RTL support. Per-buffer on purpose: enabling it globally would
+-- flip source code too.
 
 local M = {}
 
--- Characters that only appear in Persian/Arabic script. Used to auto-detect
--- Persian buffers. Range covers Arabic (0600–06FF) plus the Persian-specific
--- letters پ چ ژ گ and the Farsi digits.
+-- UTF-8 lead bytes for the Arabic block (U+0600–U+06FF).
 local RTL_PATTERN = "[\216-\219][\128-\191]"
 
---- Turn RTL editing on for a buffer: right-aligned display, Persian keyboard
---- available on <C-^>, and English-only linters silenced.
 function M.enable(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	vim.api.nvim_buf_call(bufnr, function()
-		-- Deliberately NOT setting `rightleft`. In a terminal it reverses the
-		-- character cells itself, which fights the terminal's own bidi and on
-		-- VTE (gnome-terminal) blanks the line entirely. Leaving it off keeps
-		-- the logical byte order intact and lets the terminal and font do the
-		-- reordering — the only thing that produces readable Persian.
+		-- `rightleft` reverses cells itself, fighting the terminal's bidi and
+		-- blanking lines on VTE. Let the terminal do the reordering.
 		vim.opt_local.rightleft = false
 		vim.opt_local.delcombine = true
-		-- No Persian dictionary exists for Neovim, so spell would underline
-		-- every single word.
+		-- No Persian dictionary ships with Neovim.
 		vim.opt_local.spell = false
-		-- `persian` maps the standard Iranian layout; <C-^> toggles it in
-		-- insert mode without leaving Neovim.
+		-- Standard Iranian layout; <C-^> toggles it in insert mode.
 		vim.opt_local.keymap = "persian"
-		-- Start in Latin; <C-^> switches to Persian on demand.
 		vim.opt_local.iminsert = 0
 		vim.opt_local.imsearch = -1
 	end)
 	vim.b[bufnr].persian_enabled = true
 end
 
---- Restore the buffer to normal LTR editing.
 function M.disable(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	vim.api.nvim_buf_call(bufnr, function()
@@ -60,9 +45,7 @@ function M.toggle(bufnr)
 	end
 end
 
---- True if the buffer's first `limit` lines contain a meaningful proportion of
---- Persian characters. A single Persian word in a comment shouldn't flip an
---- entire source file to RTL, so require a run of them.
+-- Require several Persian lines so one word in a comment can't flip a file.
 local function looks_persian(bufnr, limit)
 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, limit or 50, false)
 	local hits = 0
@@ -80,16 +63,11 @@ end
 function M.setup()
 	local group = vim.api.nvim_create_augroup("PersianSupport", { clear = true })
 
-	-- `arabicshape` is global, not buffer-local, so it cannot be part of
-	-- enable/disable. Turn it off once here: it makes Neovim substitute
-	-- presentation-form glyphs itself and emit them in visual order, which
-	-- renders Persian words backwards. Modern terminals and fonts already
-	-- shape the text correctly from the logical byte order, so Neovim's
-	-- version is redundant at best. It has no effect on Latin text.
+	-- Global, so it can't live in enable/disable. Neovim's own shaping emits
+	-- glyphs in visual order, rendering Persian backwards; terminals do it right.
 	vim.opt.arabicshape = false
 
-	-- Auto-enable for prose buffers that are actually Persian. Restricted to
-	-- text filetypes: a .py file with Persian comments stays LTR.
+	-- Prose filetypes only: a .py file with Persian comments stays LTR.
 	vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 		group = group,
 		pattern = { "*.md", "*.txt", "*.tex", "*.org", "*.rst" },
@@ -100,8 +78,7 @@ function M.setup()
 		end,
 	})
 
-	-- Harper is an English grammar checker; on Persian text every sentence is
-	-- a false positive. Keep it away from RTL buffers.
+	-- Harper only checks English; on Persian every sentence is a false positive.
 	vim.api.nvim_create_autocmd("LspAttach", {
 		group = group,
 		callback = function(args)
