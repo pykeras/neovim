@@ -1,0 +1,26 @@
+return {
+	"nvim-neotest/neotest",
+	ft = { "python" },
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+		"nvim-neotest/nvim-nio",
+		"antoinemadec/FixCursorHold.nvim",
+		"nvim-treesitter/nvim-treesitter",
+		"nvim-neotest/neotest-python",
+		"mfussenegger/nvim-dap-python",
+	},
+	config = function()
+		require("neotest").setup({
+			adapters = {
+				require("neotest-python")({
+					runner = "pytest",
+					args = { "-vv" },
+					dap = { justMyCode = false },
+				}),
+			},
+			output = { open_on_run = false },
+			quickfix = { enabled = false },
+			status = { virtual_text = true, signs = true },
+		})
+	end,
+}

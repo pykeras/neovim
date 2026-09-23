@@ -135,6 +135,43 @@ return {
 							},
 						})
 					end,
+					["pyrefly"] = function()
+						lspconfig.pyrefly.setup({
+							capabilities = capabilities,
+							settings = {
+								pyrefly = {
+									displayTypeErrors = true,
+									disableLanguageServices = false,
+								},
+							},
+						})
+					end,
+					["yamlls"] = function()
+						lspconfig.yamlls.setup({
+							capabilities = capabilities,
+							settings = {
+								yaml = {
+									keyOrdering = false,
+									schemaStore = { enable = false, url = "" },
+									schemas = require("schemastore").yaml.schemas({
+										extra = {
+											{
+												name = "Docker Compose",
+												description = "compose-spec schema",
+												fileMatch = {
+													"docker-compose.yml",
+													"docker-compose.yaml",
+													"compose.yml",
+													"compose.yaml",
+												},
+												url = "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json",
+											},
+										},
+									}),
+								},
+							},
+						})
+					end,
 					["jsonls"] = function()
 						lspconfig.jsonls.setup({
 							capabilities = capabilities,

@@ -13,6 +13,11 @@ return {
 				enabled = false,
 			},
 			lsp = {
+				-- Stop the repeated LSP progress spam in the corner. Servers
+				-- report progress on every keystroke, which is pure noise.
+				progress = {
+					enabled = false,
+				},
 				override = {
 					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 					["vim.lsp.util.stylize_markdown"] = true,

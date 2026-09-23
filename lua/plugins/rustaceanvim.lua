@@ -16,7 +16,15 @@ return {
 					["rust-analyzer"] = {
 						cargo = { buildScripts = { enable = true } },
 						procMacro = { enable = true },
-						check = { command = "clippy" },
+						-- clippy is much slower than `cargo check`. Give it its own
+						-- target dir so it does not invalidate the build cache
+						-- `cargo build` shares.
+						check = {
+							command = "clippy",
+							extraArgs = { "--target-dir", "target/rust-analyzer" },
+						},
+						checkOnSave = true,
+						diagnostics = { enable = true },
 					},
 				},
 			},

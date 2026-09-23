@@ -2,6 +2,16 @@
 
 __If you are updating from previous versions, please make sure to run :Lazy sync and :Mason to update everything.__
 
+**Update: Aug 16, 2026** :snake:
+> - New: **Python testing** with `neotest` + `pytest` — run and debug tests without leaving the editor (`<leader>n…`)
+> - New: **Structural editing** via treesitter textobjects — select, jump and swap by function, class and argument (`vif`, `dac`, `]f`, `<leader>sa`)
+> - New: **Persian / RTL support** — `:Persian` or `<leader>rtl`, with auto-detection for prose files
+> - New: `trouble.nvim` workspace diagnostics, sticky context header, and scope indent guides
+> - New: Python cheat sheet in Persian, opened with `<leader>hp`
+> - Fix: removed a stray `pyright` setup that ran alongside `pyrefly`, causing duplicate diagnostics and hovers on every Python buffer
+> - Fix: `dockerls`/`yamlls` were registered twice, the second time without `capabilities`, degrading completion
+> - Fix: autosave used `wall`, rewriting every open buffer on each `TextChanged` and letting the formatter reformat background buffers mid-keystroke
+
 **Update: Jul 6, 2026** 
 > - Switching to `Pyrefly` instead `Mypy`
 > - Minor bug fixes and tested with Neovim v0.12.4 
@@ -53,8 +63,13 @@ _A basic set of key mappings is included and located in `lua/keymaps.lua`. You c
 
 Before proceeding, ensure you meet the following requirements:
 
-Neovim Version: `v0.11.0 - v.11.3`  
+Neovim Version: `v0.11.0+` (tested through `v0.12.4`)  
 Operating System: `Rocky Linux 9.4`, `PopOS 22.04`, `Debian 12.9`, `Android with termux`
+
+> ⚠️ **Neovim 0.11 is a hard requirement.** On 0.10 and earlier, `mason-lspconfig`
+> v2 fails to load (it calls `vim.lsp.enable`, added in 0.11) and `venv-selector`
+> raises on startup — the practical symptom is that **no LSP attaches to your
+> Python buffers at all**. Check with `nvim --version` before filing an issue.
 
 ## Dependencies:
 
@@ -99,6 +114,21 @@ Ensure the following dependencies are installed for a seamless experience:
   ```
   sudo dnf install fd-find
   ```
+
+- **Python toolchain** (for linting, formatting, testing and debugging):
+  ```bash
+  # uv — package/venv manager
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+
+  uv tool install ruff      # linter + formatter (replaces black, isort, flake8)
+  uv tool install pytest    # test runner driven by neotest
+
+  # inside the project venv, for the debugger
+  uv pip install debugpy
+  ```
+
+  Language servers themselves (`pyrefly`, `ruff`, …) are installed by Mason on
+  first launch — check with `:Mason`.
 
 ## How to install:
 
@@ -178,6 +208,72 @@ _By default if you have `.venv` in project directory this setup will use that ot
 
 - **Open selector**: `<leader>vs`
 - **Select cached venv**: `<leader>vc`
+
+---
+
+### Testing (Neotest + pytest)
+
+_Runs against the virtualenv selected with `<leader>vs`. If tests fail with
+`ModuleNotFoundError`, select the environment first._
+
+_Bindings live under `<leader>n…` rather than `<leader>t…`, which is already
+shared by themes, terminals, todo-comments and tabular._
+
+- **Run nearest test:** `<leader>nr`
+- **Run current file:** `<leader>nF`
+- **Run whole suite:** `<leader>na`
+- **Re-run last:** `<leader>nL`
+- **Debug nearest test:** `<leader>ndb` _stops on breakpoints_
+- **Stop run:** `<leader>nx`
+- **Show output of a failure:** `<leader>no`
+- **Toggle output panel:** `<leader>np`
+- **Toggle summary tree:** `<leader>ns`
+
+---
+
+### Structural Editing (Treesitter Textobjects)
+
+_Operate on functions, classes and arguments instead of lines. Combine with
+`v` (select), `d` (delete), `c` (change) or `y` (yank) — e.g. `dif` empties a
+function body._
+
+**Select**
+
+- **Function:** `af` _outer_ / `if` _body_
+- **Class:** `ac` / `ic`
+- **Argument:** `aa` / `ia`
+- **Loop:** `al` / `il`
+- **Conditional:** `ai` / `ii`
+- **Comment:** `a/`
+
+**Move & swap**
+
+- **Next/previous function:** `]f` / `[f`
+- **Next/previous class:** `]c` / `[c`
+- **Next/previous argument:** `]a` / `[a`
+- **Swap argument with next:** `<leader>sa`
+- **Swap argument with previous:** `<leader>sA`
+
+---
+
+### Diagnostics (Trouble)
+
+- **Workspace diagnostics:** `<leader>xx`
+- **Buffer diagnostics:** `<leader>xb`
+- **Symbol outline:** `<leader>xs`
+- **LSP references / definitions:** `<leader>xl`
+- **Quickfix list:** `<leader>xq`
+- **Next/previous diagnostic:** `]d` / `[d`
+- **Next/previous error only:** `]e` / `[e`
+
+---
+
+### Python Refactoring
+
+- **Rename symbol project-wide:** `<leader>rn` _semantic, unlike `:%s/`_
+- **Organize imports:** `<leader>oi`
+- **Ruff fix-all:** `<leader>fa`
+- **Format buffer:** `rf` _formatting also runs on save_
 
 ---
 
@@ -333,6 +429,57 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 
 - **View CSV as table:** `<leader>csv`
 - **View TSV as table:** `<leader>tsv`
+
+---
+
+### Persian / RTL Support
+
+_Typing and editing Persian, with Neovim kept out of the way of the terminal's
+own text rendering._
+
+- **Toggle Persian mode:** `<leader>rtl` _or_ `:Persian`
+- **Switch keyboard while typing:** `<C-^>` _insert mode; no need to leave Neovim_
+
+Turning it on loads the standard Iranian keyboard layout and disables `spell` —
+there is no Persian dictionary for Neovim, so every word would otherwise be
+underlined. Harper, being an English grammar checker, is detached from Persian
+buffers for the same reason.
+
+Prose files (`.md`, `.txt`, `.tex`, `.org`, `.rst`) switch on automatically when
+several of their first lines contain Persian script. The threshold is
+deliberate: a Python file with one Persian comment is left alone.
+
+**On display, and why `rightleft` is not used.** Neovim's own RTL features are
+built for GUI rendering and actively make things worse in a terminal:
+
+- `arabicshape` substitutes presentation-form glyphs and emits them in *visual*
+  order, so words render backwards (`سلام` becomes `ﺱﻼﻣ` reversed). This config
+  turns it off globally — it is a global option, not buffer-local, and it has no
+  effect on Latin text.
+- `rightleft` reverses the character cells itself, fighting whatever bidi the
+  terminal implements. On VTE-based terminals (gnome-terminal) it blanks the
+  line completely.
+
+With both off, the buffer keeps its logical byte order and the terminal and font
+do the shaping and reordering — which is the only combination that produces
+readable Persian.
+
+⚠️ **This means display quality is your terminal's job, not Neovim's.** Kitty,
+WezTerm and Konsole shape and reorder Arabic-script text properly. **VTE-based
+terminals (gnome-terminal, Tilix, Terminator) do not implement bidi at all**, so
+Persian will appear unshaped and in logical rather than visual order no matter
+how Neovim is configured. If Persian looks wrong, switch terminals before
+changing any setting here.
+
+---
+
+### Cheat Sheet
+
+- **Open the Python cheat sheet in your browser:** `<leader>hp`
+
+A Persian-language reference for the Python workflow above —
+environments, testing, debugging and structural editing — lives at
+`docs/python-cheatsheet.html`.
 
 ---
 
