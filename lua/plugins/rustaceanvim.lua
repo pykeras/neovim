@@ -1,7 +1,7 @@
 return {
 	"mrcjkb/rustaceanvim",
-	version = "^6", -- Recommended
-	lazy = false, -- This plugin is already lazy
+	version = "^9",
+	lazy = false,
 	config = function()
 		local data = vim.fn.stdpath("data")
 		local pkg_base = data .. "/mason/packages/codelldb/extension"
@@ -16,9 +16,6 @@ return {
 					["rust-analyzer"] = {
 						cargo = { buildScripts = { enable = true } },
 						procMacro = { enable = true },
-						-- clippy is much slower than `cargo check`. Give it its own
-						-- target dir so it does not invalidate the build cache
-						-- `cargo build` shares.
 						check = {
 							command = "clippy",
 							extraArgs = { "--target-dir", "target/rust-analyzer" },
