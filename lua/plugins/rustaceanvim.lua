@@ -11,7 +11,7 @@ return {
 		local cfg = require("rustaceanvim.config")
 		vim.g.rustaceanvim = {
 			server = {
-				capabilities = require("blink-cmp").get_lsp_capabilities(),
+				capabilities = require("blink.cmp").get_lsp_capabilities(),
 				default_settings = {
 					["rust-analyzer"] = {
 						cargo = { buildScripts = { enable = true } },

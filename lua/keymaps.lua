@@ -135,7 +135,7 @@ vim.keymap.set("n", "<leader>sd", ":SessionDelete<CR>", { desc = "Delete Session
 vim.keymap.set("n", "<leader>sl", ":Telescope persisted<CR>", { desc = "Delete Session" })
 
 -- Rustaceanvim
-vim.keymap.set("n", "<leader>rdt", "<cmd>'RustLsp testables'<CR>", { desc = "Debugger testables" })
+vim.keymap.set("n", "<leader>rdt", "<cmd>RustLsp testables<CR>", { desc = "Debugger testables" })
 
 -- tabular (csv view)
 vim.keymap.set("n", "<leader>csv", ":Tabularize /,<CR>", { desc = "Tabularize by comma" })
@@ -228,5 +228,5 @@ end, { desc = 'Focus topmost floating window' })
 
 -- Open a blank line below without leaving normal mode or moving the cursor.
 vim.keymap.set("n", "<S-CR>", function()
-    vim.fn.append(vim.fn.line("."), "")
+	vim.fn.append(vim.fn.line("."), "")
 end, { noremap = true, silent = true, desc = "Append blank line below" })
