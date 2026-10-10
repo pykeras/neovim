@@ -98,6 +98,37 @@ vim.keymap.set("n", "<leader>qo", ":only<CR>", { desc = "Close all splits except
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
 vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Show signature help" })
 
+-- Write the inlay type hints of the current line into the buffer
+vim.keymap.set("n", "<leader>ci", function()
+  local lnum = vim.fn.line(".") - 1
+  local hints = vim.lsp.inlay_hint.get({
+    bufnr = 0,
+    range = { start = { line = lnum, character = 0 }, ["end"] = { line = lnum + 1, character = 0 } },
+  })
+  local applied = 0
+  -- Right to left, so earlier edits don't shift later positions
+  table.sort(hints, function(a, b) return a.inlay_hint.position.character > b.inlay_hint.position.character end)
+  for _, item in ipairs(hints) do
+    local hint = item.inlay_hint
+    local client = vim.lsp.get_client_by_id(item.client_id)
+    local edits = hint.textEdits
+    if (not edits or #edits == 0) and hint.kind == 1 then
+      local label = hint.label
+      if type(label) == "table" then
+        label = table.concat(vim.tbl_map(function(part) return part.value end, label))
+      end
+      edits = { { range = { start = hint.position, ["end"] = hint.position }, newText = label } }
+    end
+    if client and edits and #edits > 0 then
+      vim.lsp.util.apply_text_edits(edits, item.bufnr, client.offset_encoding)
+      applied = applied + 1
+    end
+  end
+  if applied == 0 then
+    vim.notify("No insertable inlay hint on this line", vim.log.levels.INFO)
+  end
+end, { desc = "Insert inlay type hints of current line" })
+
 -- Copy diagnostics to system clipboard
 vim.keymap.set("n", "<leader>cd", function()
   local diag = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
