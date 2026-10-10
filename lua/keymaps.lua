@@ -240,6 +240,15 @@ vim.keymap.set("n", "<leader>hp", function()
     vim.ui.open(path)
 end, { desc = "Open Python cheat sheet in browser" })
 
+vim.keymap.set("n", "<leader>hv", function()
+    local path = vim.fn.stdpath("config") .. "/docs/vim-dojo.html"
+    if vim.fn.filereadable(path) == 0 then
+        vim.notify("Vim dojo not found: " .. path, vim.log.levels.ERROR)
+        return
+    end
+    vim.ui.open(path)
+end, { desc = "Open interactive Vim trainer in browser" })
+
 -- File opener
 vim.keymap.set("n", "<C-p>", ":FZFFilesProximity<CR>", { noremap = true, silent = true })
 

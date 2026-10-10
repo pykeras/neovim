@@ -481,6 +481,14 @@ A Persian-language reference for the Python workflow above —
 environments, testing, debugging and structural editing — lives at
 `docs/python-cheatsheet.html`.
 
+- **Open the interactive Vim trainer:** `<leader>hv`
+
+`docs/vim-dojo.html` is a typing-tutor–style trainer in Persian: a
+built-in Vim simulator with graded lessons (motions, operators, text
+objects, flash, surround, treesitter objects), a spaced-repetition drill
+for every keymap in this config, and a progress page. Progress is kept in
+the browser's local storage.
+
 ---
 
 ## Optional Features

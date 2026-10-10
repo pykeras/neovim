@@ -1,0 +1,1919 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دوجوی ویم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground: #FBFAF7; --panel: #F3F1EC; --card: #FFFFFF;
+    --ink: #1C1D26; --ink-soft: #4A4D5A; --muted: #6E7280; --rule: #DEDBD3;
+    --accent: #1F7A68; --accent-soft: #E4F0ED; --warn: #A76A22; --warn-soft: #F7EEDF;
+    --danger: #A63C33; --danger-soft: #F8E8E6; --star: #C98A12;
+    --key-bg: #FFFFFF; --key-edge: #CFCBC2;
+    --ed-bg: #16171F; --ed-gutter: #1B1C25; --ed-fg: #D7D9E0; --ed-dim: #5B5F70; --ed-num: #C9CBD3;
+    --ed-sel: #2F3F5E; --ed-kw: #C69CF2; --ed-st: #9ECE6A; --ed-cm: #6B7089; --ed-nu: #FF9E64; --ed-fn: #7AA2F7; --ed-br: #89DDFF;
+    --ed-cur: #E8E6E1; --ed-tgt: #4FB8A2; --ed-flash: #FF007C; --ed-match: #3B4261;
+    --mono: "JetBrains Mono", "Fira Code", "DejaVu Sans Mono", ui-monospace, monospace;
+    --sans: "Vazirmatn", "Noto Sans Arabic", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #12131A; --panel: #1A1C25; --card: #1E2029;
+      --ink: #E8E6E1; --ink-soft: #B6B8C0; --muted: #8A8D99; --rule: #2B2E39;
+      --accent: #4FB8A2; --accent-soft: #16302B; --warn: #D9A059; --warn-soft: #2E2517;
+      --danger: #D9776B; --danger-soft: #2E1B19; --star: #E8B84A;
+      --key-bg: #232630; --key-edge: #3A3E4B; --ed-bg: #0F1016; --ed-gutter: #13141B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #12131A; --panel: #1A1C25; --card: #1E2029;
+    --ink: #E8E6E1; --ink-soft: #B6B8C0; --muted: #8A8D99; --rule: #2B2E39;
+    --accent: #4FB8A2; --accent-soft: #16302B; --warn: #D9A059; --warn-soft: #2E2517;
+    --danger: #D9776B; --danger-soft: #2E1B19; --star: #E8B84A;
+    --key-bg: #232630; --key-edge: #3A3E4B; --ed-bg: #0F1016; --ed-gutter: #13141B;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { background: var(--ground); color: var(--ink); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  [hidden] { display: none !important; }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+
+  /* ---- top bar ---- */
+  header.top { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding: 1rem 1.5rem; border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: var(--ground); z-index: 10; }
+  .brand { display: flex; align-items: center; gap: .75rem; }
+  .logo { font-family: var(--mono); font-weight: 600; font-size: .85rem; background: var(--ink); color: var(--ground); padding: .3rem .55rem; border-radius: 6px; direction: ltr; }
+  .brand h1 { font-size: 1.15rem; font-weight: 800; line-height: 1.2; }
+  .brand p { font-size: .78rem; color: var(--muted); }
+  nav.tabs { display: flex; gap: .25rem; background: var(--panel); padding: .25rem; border-radius: 10px; }
+  nav.tabs button { border: 0; background: transparent; padding: .4rem .9rem; border-radius: 7px; font-size: .9rem; color: var(--ink-soft); }
+  nav.tabs button.on { background: var(--card); color: var(--ink); font-weight: 700; box-shadow: 0 1px 2px rgb(0 0 0 / .08); }
+  .meta { margin-inline-start: auto; display: flex; align-items: center; gap: 1rem; font-size: .85rem; color: var(--ink-soft); }
+  .meta b { color: var(--ink); }
+  .iconbtn { border: 1px solid var(--rule); background: var(--card); border-radius: 8px; padding: .25rem .55rem; font-size: .85rem; }
+  .layout-flag { font-size: .75rem; background: var(--warn-soft); color: var(--warn); padding: .15rem .5rem; border-radius: 6px; }
+
+  main { max-width: 84rem; margin: 0 auto; padding: 1.5rem; }
+
+  /* ---- dojo ---- */
+  #tab-dojo { display: grid; grid-template-columns: 16rem minmax(0, 1fr); gap: 2rem; align-items: start; }
+  .lessons { position: sticky; top: 5.5rem; max-height: calc(100vh - 7rem); overflow-y: auto; padding-inline-end: .25rem; }
+  .lessons h3 { font-size: .72rem; letter-spacing: .08em; color: var(--muted); margin: 1rem 0 .35rem; font-weight: 700; }
+  .lessons h3:first-child { margin-top: 0; }
+  .lesson-btn { display: flex; align-items: center; gap: .6rem; width: 100%; text-align: start; border: 0; background: transparent; padding: .45rem .6rem; border-radius: 8px; font-size: .88rem; color: var(--ink-soft); }
+  .lesson-btn:hover { background: var(--panel); }
+  .lesson-btn.on { background: var(--accent-soft); color: var(--ink); font-weight: 700; }
+  .lesson-btn .num { font-family: var(--mono); font-size: .72rem; color: var(--muted); width: 1.4rem; text-align: center; }
+  .lesson-btn .t { flex: 1; }
+  .stars { color: var(--star); font-size: .78rem; letter-spacing: -.05em; direction: ltr; white-space: nowrap; }
+  .stars .off { color: var(--rule); }
+
+  .stage { min-width: 0; position: relative; }
+  .eyebrow { font-size: .75rem; color: var(--accent); font-weight: 700; letter-spacing: .04em; }
+  .stage h2 { font-size: 1.6rem; font-weight: 800; line-height: 1.3; margin: .15rem 0 .5rem; }
+  .intro { color: var(--ink-soft); max-width: 46rem; font-size: .95rem; }
+  .keychips { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin: .9rem 0 1.25rem; }
+  .keychip { display: flex; align-items: center; gap: .45rem; font-size: .85rem; color: var(--ink-soft); }
+  kbd, .kbd { font-family: var(--mono); font-size: .82rem; background: var(--key-bg); border: 1px solid var(--key-edge); border-bottom-width: 2px; border-radius: 5px; padding: .05rem .4rem; color: var(--ink); direction: ltr; unicode-bidi: isolate; white-space: nowrap; display: inline-block; line-height: 1.5; }
+
+  .taskbar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: .6rem; }
+  .task { font-weight: 700; font-size: 1.02rem; flex: 1; min-width: 14rem; }
+  .dots { display: flex; gap: .3rem; direction: ltr; }
+  .dots i { width: .6rem; height: .6rem; border-radius: 50%; background: var(--rule); display: block; }
+  .dots i.done { background: var(--accent); }
+  .dots i.now { background: var(--ink); }
+  .timer { font-family: var(--mono); font-weight: 600; font-size: 1.1rem; direction: ltr; }
+
+  /* editor */
+  .editor { background: var(--ed-bg); border-radius: 12px; overflow: hidden; direction: ltr; box-shadow: 0 1px 0 rgb(0 0 0 / .04), 0 8px 24px rgb(0 0 0 / .08); outline: 2px solid transparent; transition: outline-color .2s; }
+  .editor.win { outline-color: var(--ed-tgt); }
+  .editor.shake { animation: shake .25s; }
+  @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+  .buf { font-family: var(--mono); font-size: 15px; line-height: 1.6; color: var(--ed-fg); padding: .7rem 0; overflow-x: auto; }
+  .ln { display: flex; white-space: pre; min-height: 1.6em; }
+  .gut { width: 3.2rem; flex: none; text-align: right; padding-right: .9rem; color: var(--ed-dim); user-select: none; }
+  .gut.gcur { color: var(--ed-num); font-weight: 600; }
+  .gut.diff::before { content: "●"; color: var(--ed-nu); font-size: .6em; margin-right: .5em; vertical-align: middle; }
+  .txt { flex: 1; padding-right: 1rem; }
+  .txt span { position: relative; }
+  .kw { color: var(--ed-kw); } .st { color: var(--ed-st); } .cm { color: var(--ed-cm); font-style: italic; } .nu { color: var(--ed-nu); } .fn { color: var(--ed-fn); } .br { color: var(--ed-br); }
+  .sel { background: var(--ed-sel); }
+  .tgt { outline: 2px solid var(--ed-tgt); outline-offset: -1px; border-radius: 2px; background: rgb(79 184 162 / .22); animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { background: rgb(79 184 162 / .45); } }
+  .cur { background: var(--ed-cur) !important; color: var(--ed-bg) !important; border-radius: 1px; outline: none; animation: none; }
+  .bar { box-shadow: inset 2px 0 0 var(--ed-cur); }
+  .flashing .txt span { color: var(--ed-dim); }
+  .flashing .txt span.fm { background: var(--ed-match); color: var(--ed-fg); }
+  .flashing .txt span.fl { background: var(--ed-flash); color: #fff; font-weight: 600; }
+  .status { display: flex; align-items: stretch; font-family: var(--mono); font-size: 12.5px; background: var(--ed-gutter); color: var(--ed-dim); }
+  .mode { padding: .2rem .8rem; font-weight: 600; color: #11121a; background: #7AA2F7; }
+  .mode.insert { background: #9ECE6A; } .mode.visual, .mode.vline { background: #C69CF2; } .mode.flash { background: var(--ed-flash); color: #fff; }
+  .status .file { padding: .2rem .8rem; color: var(--ed-fg); }
+  .status .pend { margin-left: auto; padding: .2rem .8rem; color: var(--ed-nu); }
+  .status .pos { padding: .2rem .8rem; }
+  .cmdline { font-family: var(--mono); font-size: 13px; padding: .25rem .9rem; min-height: 1.9em; color: var(--ed-fg); background: var(--ed-bg); white-space: pre; }
+  .cmdline.err { color: #F7768E; }
+  .cmdline .msg-fa { font-family: var(--sans); direction: rtl; unicode-bidi: isolate; }
+
+  .goal { margin-top: .9rem; border: 1px dashed var(--rule); border-radius: 12px; overflow: hidden; }
+  .goal .label { font-size: .78rem; font-weight: 700; color: var(--muted); padding: .4rem .9rem; background: var(--panel); }
+  .goal .buf { direction: ltr; background: var(--card); color: var(--ink); padding: .5rem 0; }
+  .goal .gut { color: var(--muted); }
+  .goal .kw { color: #8A4FCB; } .goal .st { color: #3F7F2A; } .goal .cm { color: var(--muted); } .goal .nu { color: #B25A1E; } .goal .fn { color: #2F5FC4; } .goal .br { color: #1F7A99; }
+  :root[data-theme="dark"] .goal .buf { color: var(--ed-fg); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .goal .kw { color: var(--ed-kw); } :root:not([data-theme="light"]) .goal .st { color: var(--ed-st); } :root:not([data-theme="light"]) .goal .fn { color: var(--ed-fn); } :root:not([data-theme="light"]) .goal .nu { color: var(--ed-nu); } }
+  :root[data-theme="dark"] .goal .kw { color: var(--ed-kw); } :root[data-theme="dark"] .goal .st { color: var(--ed-st); } :root[data-theme="dark"] .goal .fn { color: var(--ed-fn); } :root[data-theme="dark"] .goal .nu { color: var(--ed-nu); }
+
+  .scorebar { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-top: .9rem; font-size: .88rem; color: var(--ink-soft); }
+  .scorebar .count { font-family: var(--mono); direction: ltr; }
+  .scorebar .count b { font-size: 1.05rem; color: var(--ink); }
+  .scorebar .count.over b { color: var(--danger); }
+  .keylog { display: flex; gap: .2rem; flex-wrap: wrap; direction: ltr; flex: 1; min-width: 8rem; }
+  .keylog .kbd { font-size: .72rem; padding: 0 .3rem; opacity: .85; }
+  .btn { border: 1px solid var(--rule); background: var(--card); border-radius: 8px; padding: .3rem .8rem; font-size: .85rem; }
+  .btn:hover { border-color: var(--ink-soft); }
+  .btn.primary { background: var(--ink); color: var(--ground); border-color: var(--ink); font-weight: 700; }
+  .hint { margin-top: .75rem; padding: .6rem .9rem; border-radius: 10px; background: var(--warn-soft); color: var(--ink); font-size: .9rem; display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+  .hint .kbd { background: var(--card); }
+  .toast { position: absolute; inset-inline: 0; top: 40%; margin: auto; width: fit-content; background: var(--ink); color: var(--ground); padding: .8rem 1.4rem; border-radius: 12px; font-weight: 700; font-size: 1.05rem; box-shadow: 0 10px 30px rgb(0 0 0 / .25); pointer-events: none; animation: pop .25s ease-out; z-index: 5; text-align: center; }
+  .toast .stars { font-size: 1.3rem; color: var(--star); display: block; }
+  @keyframes pop { from { transform: scale(.9); opacity: 0; } }
+  .summary { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 2rem; text-align: center; }
+  .summary .big { font-size: 2.6rem; color: var(--star); direction: ltr; }
+  .summary h3 { font-size: 1.4rem; margin: .3rem 0; }
+  .summary p { color: var(--ink-soft); }
+  .summary .row { display: flex; gap: .75rem; justify-content: center; margin-top: 1.25rem; flex-wrap: wrap; }
+  .note { font-size: .8rem; color: var(--muted); margin-top: 1.25rem; }
+
+  /* ---- drill ---- */
+  .drill { max-width: 46rem; margin: 0 auto; }
+  .drill-top { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-bottom: 1rem; }
+  .seg { display: flex; background: var(--panel); border-radius: 9px; padding: .2rem; }
+  .seg button { border: 0; background: transparent; padding: .3rem .8rem; border-radius: 7px; font-size: .85rem; color: var(--ink-soft); }
+  .seg button.on { background: var(--card); color: var(--ink); font-weight: 700; }
+  .cats { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.25rem; }
+  .cat { border: 1px solid var(--rule); background: transparent; border-radius: 999px; padding: .2rem .75rem; font-size: .82rem; color: var(--ink-soft); }
+  .cat.on { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+  .cat small { color: var(--muted); margin-inline-start: .3rem; }
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 16px; padding: 2rem 1.5rem; text-align: center; min-height: 18rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .9rem; }
+  .card.good { border-color: var(--accent); }
+  .card.bad { border-color: var(--danger); animation: shake .25s; }
+  .card .ccat { font-size: .75rem; color: var(--muted); }
+  .card .prompt { font-size: 1.6rem; font-weight: 800; line-height: 1.4; }
+  .card .prompt .kbd { font-size: 1.6rem; padding: .1rem .6rem; }
+  .card .cmode { font-size: .78rem; background: var(--panel); padding: .1rem .6rem; border-radius: 6px; color: var(--ink-soft); }
+  .slots { display: flex; gap: .4rem; direction: ltr; flex-wrap: wrap; justify-content: center; }
+  .slot { min-width: 2.6rem; height: 2.6rem; border: 2px solid var(--rule); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 600; padding: 0 .4rem; }
+  .slot.ok { border-color: var(--accent); background: var(--accent-soft); }
+  .slot.next { border-color: var(--ink-soft); }
+  .answer { font-size: .95rem; color: var(--danger); }
+  .opts { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; width: 100%; max-width: 34rem; }
+  .opt { border: 1px solid var(--rule); background: var(--ground); border-radius: 10px; padding: .6rem .8rem; text-align: start; font-size: .92rem; display: flex; gap: .6rem; align-items: center; }
+  .opt .n { font-family: var(--mono); color: var(--muted); }
+  .opt.right { border-color: var(--accent); background: var(--accent-soft); }
+  .opt.wrong { border-color: var(--danger); background: var(--danger-soft); }
+  .dstats { display: flex; justify-content: space-between; gap: 1rem; font-size: .85rem; color: var(--ink-soft); margin-top: .8rem; flex-wrap: wrap; }
+  .dstats b { color: var(--ink); }
+  .speed { font-weight: 700; }
+  .misslist { text-align: start; margin-top: 1rem; display: grid; gap: .35rem; }
+  .misslist div { display: flex; gap: .75rem; align-items: center; font-size: .9rem; }
+
+  /* ---- stats ---- */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .kpi { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 1rem 1.2rem; }
+  .kpi .v { font-size: 1.8rem; font-weight: 800; line-height: 1.2; }
+  .kpi .l { font-size: .8rem; color: var(--muted); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .cols h3 { font-size: 1rem; margin-bottom: .75rem; }
+  .barrow { display: grid; grid-template-columns: 11rem 1fr 3.5rem; gap: .75rem; align-items: center; font-size: .85rem; margin-bottom: .5rem; }
+  .track { height: .55rem; background: var(--panel); border-radius: 999px; overflow: hidden; }
+  .fill { height: 100%; background: var(--accent); border-radius: 999px; }
+  .barrow .pct { font-family: var(--mono); color: var(--muted); text-align: left; direction: ltr; }
+  .lrow { display: flex; justify-content: space-between; font-size: .88rem; padding: .3rem 0; border-bottom: 1px solid var(--rule); }
+  .weak { display: grid; gap: .4rem; }
+  .weak div { display: flex; gap: .75rem; align-items: center; font-size: .88rem; }
+  .danger-btn { border-color: var(--danger); color: var(--danger); }
+
+  @media (max-width: 60rem) {
+    #tab-dojo { grid-template-columns: minmax(0, 1fr); }
+    .lessons { position: static; max-height: none; display: flex; flex-wrap: wrap; gap: .25rem; }
+    .lessons h3 { width: 100%; }
+    .lesson-btn { width: auto; }
+    .cols { grid-template-columns: 1fr; }
+    main { padding: 1rem; }
+    header.top { padding: .75rem 1rem; gap: .75rem; }
+    .opts { grid-template-columns: 1fr; }
+    .barrow { grid-template-columns: 7rem 1fr 3rem; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">:dojo</span><div><h1>دوجوی ویم</h1><p>تمرین تعاملی Neovim با کانفیگ خودت</p></div></div>
+  <nav class="tabs">
+    <button data-tab="dojo" class="on">تمرین تعاملی</button>
+    <button data-tab="drill">دریل میانبرها</button>
+    <button data-tab="stats">پیشرفت</button>
+  </nav>
+  <div class="meta">
+    <span id="layoutFlag" class="layout-flag" hidden>کیبورد فارسی → خودکار انگلیسی</span>
+    <span>🔥 <b id="streak">۰</b> روز</span>
+    <span>★ <b id="starTotal">۰</b></span>
+    <button class="iconbtn" id="themeBtn" title="تم">◐</button>
+  </div>
+</header>
+<main>
+  <section id="tab-dojo">
+    <aside class="lessons" id="lessonList"></aside>
+    <div class="stage" id="stage">
+      <div id="lessonView">
+        <div class="eyebrow" id="lEyebrow"></div>
+        <h2 id="lTitle"></h2>
+        <p class="intro" id="lIntro"></p>
+        <div class="keychips" id="lKeys"></div>
+        <div class="taskbar"><div class="task" id="taskText"></div><div class="timer" id="timer" hidden></div><div class="dots" id="dots"></div></div>
+        <div class="editor" id="editor">
+          <div class="buf" id="buf"></div>
+          <div class="status"><span class="mode" id="mode">NORMAL</span><span class="file" id="file">practice.py</span><span class="pend" id="pend"></span><span class="pos" id="pos"></span></div>
+          <div class="cmdline" id="cmdline"></div>
+        </div>
+        <div class="goal" id="goalBox" hidden><div class="label">هدف — متن بالا را به این شکل در بیاور</div><div class="buf" id="goalBuf"></div></div>
+        <div class="scorebar">
+          <span class="count" id="count"></span>
+          <div class="keylog" id="keylog"></div>
+          <button class="btn" id="hintBtn">راهنما</button>
+          <button class="btn" id="resetBtn">از اول</button>
+          <button class="btn" id="skipBtn">رد کن</button>
+        </div>
+        <div class="hint" id="hintBox" hidden></div>
+      </div>
+      <div id="summary" hidden></div>
+      <p class="note">همه‌ی کلیدها مستقیم از کیبورد خوانده می‌شوند — لازم نیست روی چیزی کلیک کنی. Space همان &lt;leader&gt; است.</p>
+    </div>
+  </section>
+
+  <section id="tab-drill" hidden>
+    <div class="drill">
+      <div class="drill-top">
+        <div class="seg" id="dMode">
+          <button data-m="recall" class="on">معنی ← کلید (تایپ کن)</button>
+          <button data-m="recog">کلید ← معنی (۱ تا ۴)</button>
+        </div>
+        <button class="btn primary" id="dStart">شروع دور تازه</button>
+      </div>
+      <div class="cats" id="dCats"></div>
+      <div class="card" id="dCard"></div>
+      <div class="dstats" id="dStats"></div>
+    </div>
+  </section>
+
+  <section id="tab-stats" hidden>
+    <div id="statsView"></div>
+  </section>
+</main>
+<script>
+"use strict";
+// ---- A small Vim engine: enough of normal/insert/visual mode to practice with.
+const KEYRE = /<(?:Esc|CR|BS|Tab|S-Tab|S-CR|leader|Left|Right|Up|Down|C-[a-z_]|F\d{1,2})>|[\s\S]/g;
+const toks = s => s.match(KEYRE) || [];
+const cls = (ch, big) => (ch === undefined || ch === ' ' || ch === '\t') ? 0 : big ? 1 : (/\w/.test(ch) ? 1 : 2);
+const OPEN = { '(': ')', '[': ']', '{': '}', '<': '>' };
+const CLOSE = { ')': '(', ']': '[', '}': '{', '>': '<' };
+const OBJ_BR = { '(': '(', ')': '(', b: '(', '[': '[', ']': '[', '{': '{', '}': '{', B: '{', '<': '<', '>': '<' };
+const AP_OPEN = { '(': ')', '[': ']', '{': '}' };
+const AP_ALL = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'", '`': '`' };
+const indentOf = s => s.match(/^\s*/)[0];
+const cmpPos = (a, b) => a.r - b.r || a.c - b.c;
+const FLASH_LABELS = 'asdfghjklqwertyuiopzxcvbnm';
+const ALIAS = { x: ['d', 'l'], X: ['d', 'h'], D: ['d', '$'], C: ['c', '$'], Y: ['y', '$'] };
+const escRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+class Vim {
+  constructor(lines, r = 0, c = 0) {
+    this.lines = lines.length ? lines.slice() : [''];
+    this.r = r; this.c = c; this.want = c;
+    this.mode = 'normal'; this.pending = [];
+    this.reg = { t: '', lw: false };
+    this.undoStack = []; this.redoStack = [];
+    this.dot = null; this.rec = null; this.chSnap = null;
+    this.lastFind = null; this.lastSearch = null;
+    this.cmd = null; this.flash = null; this.va = null;
+    this.msg = ''; this.err = false; this.jj = 0; this.prevJ = false; this.replaying = false;
+  }
+  snap() { return { lines: this.lines.slice(), r: this.r, c: this.c }; }
+  len(r) { return this.lines[r].length; }
+  firstNB(r) { const i = this.lines[r].search(/\S/); return i < 0 ? Math.max(0, this.len(r) - 1) : i; }
+  firstNBraw(r) { const i = this.lines[r].search(/\S/); return i < 0 ? this.len(r) : i; }
+  colFor(r, want) { const m = Math.max(0, this.len(r) - 1); return want === Infinity ? m : Math.min(want, m); }
+  clamp() {
+    this.r = Math.max(0, Math.min(this.r, this.lines.length - 1));
+    const max = this.mode === 'insert' ? this.len(this.r) : Math.max(0, this.len(this.r) - 1);
+    this.c = Math.max(0, Math.min(this.c, max));
+  }
+  setPos(r, c, want) { this.r = r; this.c = c; this.clamp(); this.want = want === undefined ? this.c : want; }
+  fail(m) { this.err = true; if (m) this.msg = m; }
+
+  // ---------- input ----------
+  feed(k) {
+    this.err = false;
+    if (!this.replaying) this.msg = '';
+    if (this.flash) return this.feedFlash(k);
+    if (this.cmd) return this.feedCmd(k);
+    if (this.mode === 'insert') return this.feedInsert(k);
+    if (['<Left>', '<Right>', '<Up>', '<Down>'].includes(k)) { this.pending = []; return this.fail('فلش‌ها ممنوع! از h j k l استفاده کن'); }
+    if (k === '<Esc>') { if (this.pending.length) this.pending = []; else if (this.mode !== 'normal') this.exitVisual(); return; }
+    this.pending.push(k);
+    const p = this.mode === 'normal' ? this.parseNormal(this.pending) : this.parseVisual(this.pending);
+    if (p === 'more') return;
+    const keys = this.pending; this.pending = [];
+    if (!p) return this.fail();
+    this.run(p, keys);
+  }
+  feedAll(keys) { for (const k of (typeof keys === 'string' ? toks(keys) : keys)) this.feed(k); }
+
+  // ---------- parsing ----------
+  readCount(t, i) { let s = ''; while (i < t.length && /^[0-9]$/.test(t[i]) && !(s === '' && t[i] === '0')) s += t[i++]; return [s ? +s : 0, i]; }
+  parseMotion(t, i) {
+    if (i >= t.length) return 'more';
+    const k = t[i];
+    if (k.length === 1 && 'hjklwbeWBE0^$G%{};,nN*#'.includes(k)) return { m: { k }, i: i + 1 };
+    if (k === '<BS>') return { m: { k: 'h' }, i: i + 1 };
+    if (k.length === 1 && 'fFtT'.includes(k)) {
+      if (i + 1 >= t.length) return 'more';
+      const a = t[i + 1]; if (a.length !== 1) return null;
+      return { m: { k, arg: a }, i: i + 2 };
+    }
+    if (k === 'g' || k === ']' || k === '[') {
+      if (i + 1 >= t.length) return 'more';
+      const a = t[i + 1];
+      if (k === 'g' && (a === 'g' || a === 'e' || a === 'E')) return { m: { k: 'g' + a }, i: i + 2 };
+      if (k !== 'g' && (a === 'f' || a === 'c')) return { m: { k: k + a }, i: i + 2 };
+    }
+    return null;
+  }
+  parseObj(t, i) {
+    const k = t[i]; if (k !== 'i' && k !== 'a') return null;
+    if (i + 1 >= t.length) return 'more';
+    const o = t[i + 1]; if (o.length !== 1 || !'wWp"\'`()b[]{}B<>fc'.includes(o)) return null;
+    return { o: { k, o }, i: i + 2 };
+  }
+  parseOpTarget(t, i, op, n1) {
+    const [n2, j] = this.readCount(t, i);
+    if (j >= t.length) return 'more';
+    const n = n1 || n2 ? (n1 || 1) * (n2 || 1) : 0;
+    const ob = this.parseObj(t, j);
+    if (ob === 'more') return 'more';
+    if (ob) return { type: 'op', op, obj: ob.o, n, end: ob.i };
+    const mo = this.parseMotion(t, j);
+    if (mo === 'more' || !mo) return mo;
+    return { type: 'op', op, m: mo.m, n, end: mo.i };
+  }
+  parseNormal(t) {
+    const [n1, i] = this.readCount(t, 0);
+    if (i >= t.length) return 'more';
+    const k = t[i], nx = t[i + 1], has = j => j < t.length;
+    if ((k.length === 1 && 'xXDCYJpPu.~iaIAoOvVs:/?S '.includes(k)) || ['<C-r>', '<S-CR>', '<C-_>', '<leader>', '<CR>', '<Tab>', '<S-Tab>'].includes(k))
+      return { type: k, n: n1 };
+    if (k === 'r') { if (!has(i + 1)) return 'more'; return nx.length === 1 ? { type: 'r', n: n1, arg: nx } : null; }
+    if (k === 'z') { if (!has(i + 1)) return 'more'; return { type: 'noop' }; }
+    if (k === 'g' && !has(i + 1)) return 'more';
+    if (k === 'g' && 'cuU~'.includes(nx)) {
+      const op = 'g' + nx;
+      if (!has(i + 2)) return 'more';
+      if (t[i + 2] === ({ gc: 'c', gu: 'u', gU: 'U', 'g~': '~' })[op]) return { type: 'opline', op, n: n1 || 1 };
+      return this.parseOpTarget(t, i + 2, op, n1);
+    }
+    if ((k === 'd' || k === 'c') && nx === 's') {
+      if (k === 'd') { if (!has(i + 2)) return 'more'; return t[i + 2].length === 1 ? { type: 'ds', arg: t[i + 2] } : null; }
+      if (!has(i + 3)) return 'more';
+      return (t[i + 2].length === 1 && t[i + 3].length === 1) ? { type: 'cs', arg: t[i + 2], arg2: t[i + 3] } : null;
+    }
+    if (k === 'y' && nx === 's') {
+      if (!has(i + 2)) return 'more';
+      if (t[i + 2] === 's') { if (!has(i + 3)) return 'more'; return { type: 'yss', arg: t[i + 3] }; }
+      const r = this.parseOpTarget(t, i + 2, 'ys', n1);
+      if (r === 'more' || !r) return r;
+      if (!has(r.end)) return 'more';
+      r.arg = t[r.end]; return r;
+    }
+    if (k.length === 1 && 'dcy<>'.includes(k)) {
+      if (!has(i + 1)) return 'more';
+      const [n2, j] = this.readCount(t, i + 1);
+      if (!has(j)) return 'more';
+      if (t[j] === k) return { type: 'opline', op: k, n: (n1 || 1) * (n2 || 1) };
+      return this.parseOpTarget(t, i + 1, k, n1);
+    }
+    const mo = this.parseMotion(t, i);
+    if (mo === 'more' || !mo) return mo;
+    return { type: 'move', m: mo.m, n: n1 };
+  }
+  parseVisual(t) {
+    const [n1, i] = this.readCount(t, 0);
+    if (i >= t.length) return 'more';
+    const k = t[i];
+    if (k === 'i' || k === 'a') { const ob = this.parseObj(t, i); if (ob === 'more' || !ob) return ob; return { type: 'vobj', obj: ob.o, n: n1 }; }
+    if (k === 'g') { if (i + 1 >= t.length) return 'more'; if ('cuU~'.includes(t[i + 1])) return { type: 'vop', op: 'g' + t[i + 1] }; }
+    if (k === 'r') { if (i + 1 >= t.length) return 'more'; return t[i + 1].length === 1 ? { type: 'vop', op: 'r', arg: t[i + 1] } : null; }
+    if ((k.length === 1 && 'dxyc<>~uUJoOpPvVsDXYC:'.includes(k)) || k === '<C-_>') return { type: 'v', k, n: n1 };
+    const mo = this.parseMotion(t, i); if (mo === 'more' || !mo) return mo;
+    return { type: 'move', m: mo.m, n: n1 };
+  }
+}
+
+// ---------- motions ----------
+Object.assign(Vim.prototype, {
+  motion(m, n, P, op) {
+    const L = this.lines, N = L.length, cnt = n || 1, r = P.r, c = P.c;
+    const R = (r, c, x) => Object.assign({ r, c, want: c }, x);
+    switch (m.k) {
+      case 'h': return R(r, Math.max(0, c - cnt));
+      case 'l': return R(r, Math.min(c + cnt, op ? this.len(r) : Math.max(0, this.len(r) - 1)));
+      case 'j': case 'k': {
+        const nr = m.k === 'j' ? Math.min(N - 1, r + cnt) : Math.max(0, r - cnt);
+        if (nr === r) return { fail: true };
+        return { r: nr, c: this.colFor(nr, P.want), want: P.want, lw: true };
+      }
+      case '0': return R(r, 0);
+      case '^': return R(r, this.firstNB(r));
+      case '$': { const nr = Math.min(N - 1, r + cnt - 1); return { r: nr, c: Math.max(0, this.len(nr) - 1), want: Infinity, inc: true }; }
+      case 'w': case 'W': {
+        let p = { r, c };
+        for (let i = 0; i < cnt; i++) p = this.nextWordStart(p.r, p.c, m.k === 'W');
+        return R(p.r, p.eob ? Math.max(0, this.len(p.r) - 1) : p.c);
+      }
+      case 'e': case 'E': { let p = { r, c }; for (let i = 0; i < cnt; i++) p = this.wordEnd(p.r, p.c, m.k === 'E'); return R(p.r, p.c, { inc: true }); }
+      case 'b': case 'B': { let p = { r, c }; for (let i = 0; i < cnt; i++) p = this.wordBack(p.r, p.c, m.k === 'B'); return R(p.r, p.c); }
+      case 'ge': case 'gE': { let p = { r, c }; for (let i = 0; i < cnt; i++) p = this.wordEndBack(p.r, p.c, m.k === 'gE'); return R(p.r, p.c, { inc: true }); }
+      case 'gg': case 'G': { const nr = n ? Math.min(N, n) - 1 : (m.k === 'G' ? N - 1 : 0); return R(nr, this.firstNB(nr), { lw: true }); }
+      case 'f': case 'F': case 't': case 'T': return this.findChar(m.k, m.arg, cnt, P, false);
+      case ';': case ',': {
+        const lf = this.lastFind; if (!lf) return { fail: true };
+        const k = m.k === ',' ? { f: 'F', F: 'f', t: 'T', T: 't' }[lf.k] : lf.k;
+        return this.findChar(k, lf.arg, cnt, P, true);
+      }
+      case '%': return this.matchPair(r, c);
+      case '}': case '{': return this.para(m.k, cnt, r);
+      case 'n': case 'N': {
+        const s = this.lastSearch; if (!s) return { fail: true, msg: 'هنوز جستجویی نکرده‌ای' };
+        return this.searchFrom(P, s.pat, m.k === 'n' ? s.dir : -s.dir, s.word, cnt);
+      }
+      case '*': case '#': {
+        const w = this.wordUnder(r, c); if (!w) return { fail: true };
+        const dir = m.k === '*' ? 1 : -1;
+        const res = this.searchFrom({ r, c: w.s }, w.text, dir, true, cnt);
+        if (!res.fail) res.search = { pat: w.text, dir, word: true };
+        return res;
+      }
+      case ']f': case '[f': case ']c': case '[c': {
+        const re = m.k[1] === 'f' ? /^\s*(async\s+)?def\s/ : /^\s*class\s/, d = m.k[0] === ']' ? 1 : -1;
+        let i = r;
+        for (let t = 0; t < cnt; t++) {
+          let found = -1;
+          for (let j = i + d; j >= 0 && j < N; j += d) if (re.test(L[j])) { found = j; break; }
+          if (found < 0) return { fail: true };
+          i = found;
+        }
+        return R(i, this.firstNB(i));
+      }
+    }
+    return { fail: true };
+  },
+  nextWordStart(r, c, big) {
+    const L = this.lines, N = L.length;
+    let l = L[r];
+    if (c < l.length) { const k = cls(l[c], big); if (k) while (c < l.length && cls(l[c], big) === k) c++; }
+    for (;;) {
+      l = L[r];
+      if (c >= l.length) {
+        if (r + 1 >= N) return { r, c: l.length, eob: true };
+        r++; c = 0;
+        if (L[r].length === 0) return { r, c: 0 };
+        continue;
+      }
+      if (cls(l[c], big) === 0) c++; else return { r, c };
+    }
+  },
+  wordEnd(r, c, big) {
+    const L = this.lines, N = L.length;
+    const step = () => { if (c < L[r].length - 1) { c++; return true; } if (r + 1 >= N) return false; r++; c = 0; return true; };
+    if (!step()) return { r, c };
+    while (L[r].length === 0 || cls(L[r][c], big) === 0) if (!step()) return { r, c };
+    const k = cls(L[r][c], big);
+    while (c + 1 < L[r].length && cls(L[r][c + 1], big) === k) c++;
+    return { r, c };
+  },
+  wordBack(r, c, big) {
+    const L = this.lines;
+    const step = () => { if (c > 0) { c--; return true; } if (r === 0) return false; r--; c = Math.max(0, L[r].length - 1); return true; };
+    if (!step()) return { r, c };
+    for (;;) {
+      if (L[r].length === 0) return { r, c: 0 };
+      if (cls(L[r][c], big) !== 0) break;
+      if (!step()) return { r, c };
+    }
+    const k = cls(L[r][c], big);
+    while (c > 0 && cls(L[r][c - 1], big) === k) c--;
+    return { r, c };
+  },
+  wordEndBack(r, c, big) {
+    const L = this.lines, k0 = cls(L[r][c], big);
+    let crossed = false;
+    const step = () => { if (c > 0) { c--; return true; } if (r === 0) return false; r--; crossed = true; c = Math.max(0, L[r].length - 1); return true; };
+    for (;;) {
+      if (!step()) return { r: 0, c: 0 };
+      if (L[r].length === 0) return { r, c: 0 };
+      if (crossed || cls(L[r][c], big) !== k0) break;
+    }
+    while (cls(L[r][c], big) === 0) { if (!step()) return { r, c }; if (L[r].length === 0) return { r, c: 0 }; }
+    return { r, c };
+  },
+  findChar(k, ch, cnt, P, rep) {
+    const l = this.lines[P.r], dir = (k === 'f' || k === 't') ? 1 : -1, till = k === 't' || k === 'T';
+    let pos = P.c;
+    for (let i = 0; i < cnt; i++) {
+      let s = pos + dir;
+      if (till && rep && i === 0) s += dir;
+      while (s >= 0 && s < l.length && l[s] !== ch) s += dir;
+      if (s < 0 || s >= l.length) return { fail: true };
+      pos = s;
+    }
+    const c = till ? pos - dir : pos;
+    return { r: P.r, c, want: c, inc: dir > 0, find: rep ? null : { k, arg: ch } };
+  },
+  matchFrom(r, c) {
+    const L = this.lines, ch = L[r][c], fwd = !!OPEN[ch], other = fwd ? OPEN[ch] : CLOSE[ch];
+    let depth = 0, pr = r, pc = c;
+    for (;;) {
+      const x = L[pr][pc];
+      if (x === ch) depth++;
+      else if (x === other && --depth === 0) return { r: pr, c: pc };
+      if (fwd) { pc++; while (pc >= L[pr].length) { pr++; pc = 0; if (pr >= L.length) return null; } }
+      else { pc--; while (pc < 0) { pr--; if (pr < 0) return null; pc = L[pr].length - 1; } }
+    }
+  },
+  matchPair(r, c) {
+    const l = this.lines[r]; let s = c;
+    while (s < l.length && !'()[]{}'.includes(l[s])) s++;
+    if (s >= l.length) return { fail: true };
+    const p = this.matchFrom(r, s);
+    return p ? { r: p.r, c: p.c, want: p.c, inc: true } : { fail: true };
+  },
+  para(k, cnt, r) {
+    const L = this.lines, N = L.length; let i = r;
+    for (let t = 0; t < cnt; t++) {
+      if (k === '}') {
+        while (i < N && L[i] === '') i++;
+        while (i < N && L[i] !== '') i++;
+        if (i >= N) return { r: N - 1, c: Math.max(0, this.len(N - 1) - 1), want: Infinity, inc: true };
+      } else {
+        while (i >= 0 && L[i] === '') i--;
+        while (i >= 0 && L[i] !== '') i--;
+        if (i < 0) return { r: 0, c: 0, want: 0 };
+      }
+    }
+    return { r: i, c: 0, want: 0 };
+  },
+  wordUnder(r, c) {
+    const l = this.lines[r]; let s = c;
+    while (s < l.length && !/\w/.test(l[s])) s++;
+    if (s >= l.length) return null;
+    while (s > 0 && /\w/.test(l[s - 1])) s--;
+    let e = s; while (e < l.length && /\w/.test(l[e])) e++;
+    return { s, text: l.slice(s, e) };
+  },
+  searchFrom(P, pat, dir, word, cnt) {
+    const re = new RegExp((word ? '\\b' : '') + escRe(pat) + (word ? '\\b' : ''), 'g');
+    const hits = [];
+    this.lines.forEach((l, r) => { re.lastIndex = 0; let m; while ((m = re.exec(l))) { hits.push({ r, c: m.index }); if (!m[0].length) re.lastIndex++; } });
+    if (!hits.length) return { fail: true, msg: 'پیدا نشد: ' + pat };
+    let cur = { r: P.r, c: P.c };
+    for (let t = 0; t < (cnt || 1); t++) {
+      cur = dir > 0 ? (hits.find(h => cmpPos(h, cur) > 0) || hits[0])
+                    : ([...hits].reverse().find(h => cmpPos(h, cur) < 0) || hits[hits.length - 1]);
+    }
+    return { r: cur.r, c: cur.c, want: cur.c };
+  },
+});
+
+// ---------- text objects & ranges ----------
+// A range is { s, e, lw, inc }: linewise rows, or charwise with e inclusive/exclusive.
+Object.assign(Vim.prototype, {
+  objRange(ob, n) {
+    const o = ob.o, inner = ob.k === 'i';
+    if (o === 'w' || o === 'W') return this.objWord(inner, o === 'W', n || 1);
+    if (o === '"' || o === "'" || o === '`') return this.objQuote(o, inner);
+    if (OBJ_BR[o]) return this.objBracket(OBJ_BR[o], inner, n || 1);
+    if (o === 'p') return this.objPara(inner);
+    if (o === 'f' || o === 'c') return this.objPy(o, inner);
+    return null;
+  },
+  objWord(inner, big, n) {
+    const l = this.lines[this.r], r = this.r; if (!l.length) return null;
+    const seg = i => { const k = cls(l[i], big); let s = i, e = i; while (s > 0 && cls(l[s - 1], big) === k) s--; while (e < l.length - 1 && cls(l[e + 1], big) === k) e++; return [s, e, k]; };
+    let [s, e, k] = seg(Math.min(this.c, l.length - 1));
+    if (inner) { for (let i = 1; i < n && e + 1 < l.length; i++) e = seg(e + 1)[1]; }
+    else if (k === 0) { if (e + 1 < l.length) e = seg(e + 1)[1]; }
+    else if (e + 1 < l.length && cls(l[e + 1], big) === 0) e = seg(e + 1)[1];
+    else { let s2 = s; while (s2 > 0 && cls(l[s2 - 1], big) === 0) s2--; if (s2 > 0) s = s2; }
+    return { s: { r, c: s }, e: { r, c: e }, inc: true };
+  },
+  quotePair(q) {
+    const l = this.lines[this.r], c = this.c, pos = [];
+    for (let i = 0; i < l.length; i++) if (l[i] === q && l[i - 1] !== '\\') pos.push(i);
+    for (let i = 0; i + 1 < pos.length; i += 2) if (pos[i] <= c && c <= pos[i + 1]) return [pos[i], pos[i + 1]];
+    for (let i = 0; i + 1 < pos.length; i += 2) if (pos[i] > c) return [pos[i], pos[i + 1]];
+    return null;
+  },
+  objQuote(q, inner) {
+    const P = this.quotePair(q); if (!P) return null;
+    const l = this.lines[this.r], r = this.r; let [s, e] = P;
+    if (inner) return e - s === 1 ? { s: { r, c: s + 1 }, e: { r, c: s + 1 } } : { s: { r, c: s + 1 }, e: { r, c: e - 1 }, inc: true };
+    let e2 = e; while (e2 + 1 < l.length && l[e2 + 1] === ' ') e2++;
+    if (e2 > e) e = e2; else while (s > 0 && l[s - 1] === ' ') s--;
+    return { s: { r, c: s }, e: { r, c: e }, inc: true };
+  },
+  bracketPair(open, n) {
+    const L = this.lines, close = OPEN[open];
+    let o = L[this.r][this.c] === open ? { r: this.r, c: this.c } : null;
+    for (let t = 0; t < n; t++) {
+      if (t === 0 && o) continue;
+      let sr = o ? o.r : this.r, sc = o ? o.c : this.c, depth = 0; o = null;
+      const back = () => { sc--; while (sc < 0) { sr--; if (sr < 0) return false; sc = L[sr].length - 1; } return true; };
+      while (back()) {
+        const ch = L[sr][sc];
+        if (ch === close) depth++;
+        else if (ch === open) { if (depth === 0) { o = { r: sr, c: sc }; break; } depth--; }
+      }
+      if (!o) return null;
+    }
+    const cl = this.matchFrom(o.r, o.c);
+    return cl ? { o, cl } : null;
+  },
+  objBracket(open, inner, n) {
+    const P = this.bracketPair(open, n); if (!P) return null;
+    const { o, cl } = P, L = this.lines;
+    if (!inner) return { s: o, e: cl, inc: true };
+    let s = { r: o.r, c: o.c + 1 }, e = { r: cl.r, c: cl.c };
+    if (s.c >= L[s.r].length && s.r < e.r) s = { r: s.r + 1, c: 0 };
+    if (e.r > s.r && e.c <= this.firstNBraw(e.r)) {
+      if (s.c === 0) return { s: { r: s.r, c: 0 }, e: { r: e.r - 1, c: 0 }, lw: true };
+      e = { r: e.r - 1, c: L[e.r - 1].length };
+    }
+    return { s, e };
+  },
+  objPara(inner) {
+    const L = this.lines, N = L.length, blank = i => L[i].trim() === '', b = blank(this.r);
+    let s = this.r, e = this.r;
+    while (s > 0 && blank(s - 1) === b) s--;
+    while (e < N - 1 && blank(e + 1) === b) e++;
+    if (!inner) {
+      if (e < N - 1) { e++; while (e < N - 1 && blank(e + 1) !== b) e++; }
+      else while (s > 0 && blank(s - 1) !== b) s--;
+    }
+    return { s: { r: s, c: 0 }, e: { r: e, c: 0 }, lw: true };
+  },
+  objPy(o, inner) {
+    const L = this.lines, re = o === 'f' ? /^\s*(async\s+)?def\s/ : /^\s*class\s/, ind = i => indentOf(L[i]).length;
+    for (let i = this.r; i >= 0; i--) {
+      if (!re.test(L[i])) continue;
+      let end = i;
+      for (let j = i + 1; j < L.length; j++) { if (L[j].trim() === '') continue; if (ind(j) > ind(i)) end = j; else break; }
+      if (this.r > end) continue;
+      const e = { r: end, c: L[end].length - 1 };
+      if (!inner) return { s: { r: i, c: this.firstNB(i) }, e, inc: true };
+      if (end === i) return null;
+      let s0 = i + 1; while (L[s0].trim() === '') s0++;
+      return { s: { r: s0, c: this.firstNB(s0) }, e, inc: true };
+    }
+    return null;
+  },
+  rangeFromMotion(m, n, op) {
+    const from = { r: this.r, c: this.c, want: this.want };
+    let res;
+    if ((m.k === 'w' || m.k === 'W') && op === 'c' && cls(this.lines[this.r][this.c], m.k === 'W') !== 0) {
+      const big = m.k === 'W', l = this.lines[this.r], k = cls(l[this.c], big);
+      let c = this.c; while (c + 1 < l.length && cls(l[c + 1], big) === k) c++;
+      let p = { r: this.r, c };
+      for (let i = 1; i < (n || 1); i++) p = this.wordEnd(p.r, p.c, big);
+      return { s: { r: this.r, c: this.c }, e: p, inc: true };
+    }
+    if (m.k === 'w' || m.k === 'W') res = this.opWord(m.k === 'W', n || 1);
+    else res = this.motion(m, n, from, true);
+    if (!res || res.fail) { if (res && res.msg) this.msg = res.msg; return null; }
+    if (res.find) this.lastFind = res.find;
+    if (res.search) this.lastSearch = res.search;
+    let s = { r: from.r, c: from.c }, e = { r: res.r, c: res.c };
+    if (cmpPos(e, s) < 0) [s, e] = [e, s];
+    const R = { s, e, lw: !!res.lw, inc: !!res.inc };
+    if (!R.lw && !R.inc && e.c === 0 && e.r > s.r && !res.noAdj) {
+      R.e = { r: e.r - 1, c: this.len(e.r - 1) };
+      if (s.c <= this.firstNBraw(s.r)) R.lw = true;
+    }
+    return R;
+  },
+  opWord(big, n) {
+    let p = { r: this.r, c: this.c };
+    for (let i = 0; i < n; i++) {
+      const q = this.nextWordStart(p.r, p.c, big);
+      if ((q.r > p.r && i === n - 1) || q.eob) return { r: p.r, c: this.len(p.r), noAdj: true };
+      p = q;
+    }
+    return p;
+  },
+  getText(s, E) {
+    const L = this.lines;
+    if (s.r === E.r) return L[s.r].slice(s.c, E.c);
+    return [L[s.r].slice(s.c), ...L.slice(s.r + 1, E.r), L[E.r].slice(0, E.c)].join('\n');
+  },
+  delText(s, E) { const L = this.lines; L.splice(s.r, E.r - s.r + 1, L[s.r].slice(0, s.c) + L[E.r].slice(E.c)); },
+  endOf(R) { return { r: R.e.r, c: Math.min(R.inc ? R.e.c + 1 : R.e.c, this.len(R.e.r)) }; },
+  shiftLine(l, dir) {
+    if (!l.length) return l;
+    return dir > 0 ? '    ' + l : l.replace(/^ {1,4}/, '');
+  },
+  caseFn(op) { return op === 'gu' || op === 'u' ? s => s.toLowerCase() : op === 'gU' || op === 'U' ? s => s.toUpperCase() : s => [...s].map(ch => ch === ch.toUpperCase() ? ch.toLowerCase() : ch.toUpperCase()).join(''); },
+  toggleComment(s, e) {
+    const L = this.lines, rows = [];
+    for (let i = s; i <= e; i++) if (L[i].trim()) rows.push(i);
+    if (!rows.length) return;
+    const all = rows.every(i => /^\s*#/.test(L[i]));
+    if (all) rows.forEach(i => { L[i] = L[i].replace(/^(\s*)# ?/, '$1'); });
+    else { const ind = Math.min(...rows.map(i => indentOf(L[i]).length)); rows.forEach(i => { L[i] = L[i].slice(0, ind) + '# ' + L[i].slice(ind); }); }
+    this.clamp();
+  },
+  applyOp(op, R) {
+    const L = this.lines;
+    if (R.lw) {
+      const s = R.s.r, e = R.e.r, rows = L.slice(s, e + 1);
+      if (op === 'y') { this.reg = { t: rows.join('\n'), lw: true }; if (s !== this.r) this.setPos(s, this.c); return; }
+      if (op === 'd') { this.reg = { t: rows.join('\n'), lw: true }; L.splice(s, e - s + 1); if (!L.length) L.push(''); this.setPos(Math.min(s, L.length - 1), 0); this.setPos(this.r, this.firstNB(this.r)); return; }
+      if (op === 'c') { this.reg = { t: rows.join('\n'), lw: true }; const ind = indentOf(L[s]); L.splice(s, e - s + 1, ind); this.mode = 'insert'; this.r = s; this.c = ind.length; return; }
+      if (op === '>' || op === '<') { for (let i = s; i <= e; i++) L[i] = this.shiftLine(L[i], op === '>' ? 1 : -1); this.setPos(s, this.firstNB(s)); return; }
+      if (op === 'gc') { this.toggleComment(s, e); return; }
+      if (op[0] === 'g') { const f = this.caseFn(op); for (let i = s; i <= e; i++) L[i] = f(L[i]); this.setPos(s, this.c); return; }
+      if (op === 'ys') return this.applyOp(op, { s: { r: s, c: this.firstNB(s) }, e: { r: e, c: this.len(e) } });
+      return;
+    }
+    const s = R.s, E = this.endOf(R), text = this.getText(s, E);
+    switch (op) {
+      case 'y': this.reg = { t: text, lw: false }; this.setPos(s.r, s.c); break;
+      case 'd': this.reg = { t: text, lw: false }; this.delText(s, E); this.setPos(s.r, s.c); break;
+      case 'c': this.reg = { t: text, lw: false }; this.delText(s, E); this.mode = 'insert'; this.r = s.r; this.c = s.c; break;
+      case '>': case '<': case 'gc': this.applyOp(op, { s, e: E, lw: true }); break;
+      case 'gu': case 'gU': case 'g~': {
+        const f = this.caseFn(op);
+        for (let r = s.r; r <= E.r; r++) {
+          const a = r === s.r ? s.c : 0, b = r === E.r ? E.c : this.len(r), l = L[r];
+          L[r] = l.slice(0, a) + f(l.slice(a, b)) + l.slice(b);
+        }
+        this.setPos(s.r, s.c); break;
+      }
+    }
+  },
+  surPair(ch) {
+    const m = { '(': ['( ', ' )'], ')': ['(', ')'], b: ['(', ')'], '[': ['[ ', ' ]'], ']': ['[', ']'], '{': ['{ ', ' }'], '}': ['{', '}'], B: ['{', '}'], '<': ['<', '>'], '>': ['<', '>'] };
+    return m[ch] || [ch, ch];
+  },
+  surroundAdd(R, ch) {
+    if (R.lw) R = { s: { r: R.s.r, c: this.firstNB(R.s.r) }, e: { r: R.e.r, c: this.len(R.e.r) } };
+    const [a, b] = this.surPair(ch), L = this.lines, s = R.s, E = this.endOf(R);
+    L[E.r] = L[E.r].slice(0, E.c) + b + L[E.r].slice(E.c);
+    L[s.r] = L[s.r].slice(0, s.c) + a + L[s.r].slice(s.c);
+    this.setPos(s.r, s.c);
+  },
+  surroundChange(ch, to) {
+    let o, cl;
+    const trim = '([{'.includes(ch);
+    if (OBJ_BR[ch]) { const P = this.bracketPair(OBJ_BR[ch], 1); if (!P) return false; ({ o, cl } = P); }
+    else { const P = this.quotePair(ch); if (!P) return false; o = { r: this.r, c: P[0] }; cl = { r: this.r, c: P[1] }; }
+    const [na, nb] = to === null ? ['', ''] : this.surPair(to), L = this.lines;
+    let lc = L[cl.r], cc = cl.c, cn = 1;
+    if (trim && lc[cc - 1] === ' ' && !(cl.r === o.r && cc - 1 <= o.c + 1)) { cc--; cn = 2; }
+    L[cl.r] = lc.slice(0, cc) + nb + lc.slice(cc + cn);
+    const lo = L[o.r], on = trim && lo[o.c + 1] === ' ' ? 2 : 1;
+    L[o.r] = lo.slice(0, o.c) + na + lo.slice(o.c + on);
+    this.setPos(o.r, o.c);
+    return true;
+  },
+});
+
+// ---------- commands ----------
+Object.assign(Vim.prototype, {
+  change(keys, fn) {
+    if (!this.chSnap) this.chSnap = this.snap();
+    fn();
+    if (this.mode === 'insert') { this.rec = keys ? keys.slice() : null; return; }
+    this.commit(keys);
+  },
+  commit(keys) {
+    const s = this.chSnap; this.chSnap = null;
+    if (!s) return;
+    if (s.lines.join('\n') !== this.lines.join('\n')) { this.undoStack.push(s); this.redoStack = []; }
+    if (keys) this.dot = keys;
+  },
+  doMove(p) {
+    const res = this.motion(p.m, p.n, { r: this.r, c: this.c, want: this.want }, false);
+    if (!res || res.fail) return this.fail(res && res.msg);
+    if (res.find) this.lastFind = res.find;
+    if (res.search) this.lastSearch = res.search;
+    this.r = res.r; this.c = res.c; this.clamp();
+    this.want = res.want === undefined ? this.c : res.want;
+  },
+  doOp(p, keys) {
+    const R = p.obj ? this.objRange(p.obj, p.n) : this.rangeFromMotion(p.m, p.n, p.op);
+    if (!R) return this.fail();
+    if (p.op === 'y') return this.applyOp('y', R);
+    this.change(keys, () => p.op === 'ys' ? this.surroundAdd(R, p.arg) : this.applyOp(p.op, R));
+  },
+  run(p, keys) {
+    const T = p.type, n = p.n || 1;
+    if (T === 'move') return this.doMove(p);
+    if (this.mode !== 'normal') return this.runVisual(p, keys);
+    if (ALIAS[T]) { const [op, k] = ALIAS[T]; return this.doOp({ op, m: { k }, n: p.n }, keys); }
+    switch (T) {
+      case 'op': return this.doOp(p, keys);
+      case 'opline': {
+        const e = Math.min(this.lines.length - 1, this.r + n - 1);
+        const R = { s: { r: this.r, c: 0 }, e: { r: e, c: 0 }, lw: true };
+        if (p.op === 'y') return this.applyOp('y', R);
+        return this.change(keys, () => this.applyOp(p.op, R));
+      }
+      case 'noop': return;
+      case ' ': case '<leader>': this.msg = 'Space همان <leader> است — میانبرهای leader را در «دریل» تمرین کن'; return;
+      case '<Tab>': case '<S-Tab>': this.msg = 'Tab = بافر بعدی (اینجا فقط یک بافر داریم)'; return;
+      case 'S': this.msg = 'S = Flash Treesitter (در شبیه‌ساز نیست)'; return;
+      case '<CR>': this.doMove({ m: { k: 'j' }, n: p.n }); this.setPos(this.r, this.firstNB(this.r)); return;
+      case 'J': return this.change(keys, () => this.join(this.r, Math.max(2, n)));
+      case 'p': case 'P': return this.change(keys, () => this.put(T === 'P', n));
+      case 'u': for (let i = 0; i < n; i++) this.undo(); return;
+      case '<C-r>': for (let i = 0; i < n; i++) this.redo(); return;
+      case '.': return this.repeat(p.n);
+      case '~': return this.change(keys, () => {
+        const l = this.lines[this.r]; if (!l.length) return;
+        const e = Math.min(this.c + n, l.length);
+        this.lines[this.r] = l.slice(0, this.c) + this.caseFn('g~')(l.slice(this.c, e)) + l.slice(e);
+        this.setPos(this.r, e);
+      });
+      case 'r': {
+        const l = this.lines[this.r];
+        if (this.c + n > l.length) return this.fail();
+        return this.change(keys, () => { this.lines[this.r] = l.slice(0, this.c) + p.arg.repeat(n) + l.slice(this.c + n); this.setPos(this.r, this.c + n - 1); });
+      }
+      case 'i': case 'a': case 'I': case 'A': case 'o': case 'O': return this.change(keys, () => this.enterInsert(T));
+      case '<S-CR>': return this.change(null, () => this.lines.splice(this.r + 1, 0, ''));
+      case '<C-_>': return this.change(null, () => this.toggleComment(this.r, Math.min(this.lines.length - 1, this.r + n - 1)));
+      case 'v': case 'V': this.mode = T === 'V' ? 'vline' : 'visual'; this.va = { r: this.r, c: this.c }; return;
+      case 's': this.flash = { pat: '', matches: [] }; return;
+      case ':': case '/': case '?': this.cmd = { type: T, text: '' }; return;
+      case 'ds': return this.change(keys, () => { if (!this.surroundChange(p.arg, null)) this.fail(); });
+      case 'cs': return this.change(keys, () => { if (!this.surroundChange(p.arg, p.arg2)) this.fail(); });
+      case 'yss': return this.change(keys, () => this.surroundAdd({ s: { r: this.r, c: 0 }, e: { r: this.r, c: 0 }, lw: true }, p.arg));
+    }
+  },
+  join(r, n) {
+    const L = this.lines;
+    if (r + 1 >= L.length) return this.fail();
+    let pos = 0;
+    for (let t = 0; t < n - 1 && r + 1 < L.length; t++) {
+      const a = L[r], b = L[r + 1].replace(/^\s+/, '');
+      const sep = b.length && a.length && !/\s$/.test(a) && b[0] !== ')' ? ' ' : '';
+      pos = a.length;
+      L.splice(r, 2, a + sep + b);
+    }
+    this.setPos(r, pos);
+  },
+  put(before, n) {
+    const { t, lw } = this.reg; if (!t && !lw) return;
+    const L = this.lines;
+    if (lw) {
+      const rows = []; for (let i = 0; i < n; i++) rows.push(...t.split('\n'));
+      const at = before ? this.r : this.r + 1;
+      L.splice(at, 0, ...rows); this.setPos(at, 0); this.setPos(at, this.firstNB(at));
+      return;
+    }
+    const txt = t.repeat(n), l = L[this.r], at = before ? this.c : Math.min(this.c + 1, l.length), parts = txt.split('\n');
+    if (parts.length === 1) { L[this.r] = l.slice(0, at) + txt + l.slice(at); this.setPos(this.r, at + txt.length - 1); }
+    else { L.splice(this.r, 1, l.slice(0, at) + parts[0], ...parts.slice(1, -1), parts[parts.length - 1] + l.slice(at)); this.setPos(this.r, at); }
+  },
+  undo() {
+    const s = this.undoStack.pop(); if (!s) { this.msg = 'در قدیمی‌ترین تغییر هستی'; return; }
+    this.redoStack.push(this.snap()); this.lines = s.lines; this.mode = 'normal'; this.setPos(s.r, s.c);
+  },
+  redo() {
+    const s = this.redoStack.pop(); if (!s) { this.msg = 'در جدیدترین تغییر هستی'; return; }
+    this.undoStack.push(this.snap()); this.lines = s.lines; this.setPos(s.r, s.c);
+  },
+  repeat(n) {
+    if (!this.dot) { this.msg = 'هنوز تغییری برای تکرار نیست'; return; }
+    let keys = this.dot;
+    if (n) { const [, i] = this.readCount(keys, 0); keys = [...String(n), ...keys.slice(i)]; }
+    const was = this.replaying; this.replaying = true;
+    this.feedAll(keys.slice());
+    this.replaying = was;
+  },
+  enterInsert(k) {
+    const L = this.lines, l = L[this.r];
+    this.mode = 'insert'; this.prevJ = false;
+    if (k === 'a') this.c = Math.min(this.c + 1, l.length);
+    if (k === 'A') this.c = l.length;
+    if (k === 'I') this.c = this.firstNBraw(this.r);
+    if (k === 'o' || k === 'O') {
+      let ind = indentOf(l); if (k === 'o' && /:\s*$/.test(l)) ind += '    ';
+      const at = k === 'o' ? this.r + 1 : this.r;
+      L.splice(at, 0, ind); this.r = at; this.c = ind.length;
+    }
+  },
+  ins(s) { const l = this.lines[this.r]; this.lines[this.r] = l.slice(0, this.c) + s + l.slice(this.c); this.c += s.length; },
+  feedInsert(k) {
+    const L = this.lines;
+    if (this.rec) this.rec.push(k);
+    if (k === '<Esc>') return this.exitInsert();
+    if (k === 'j' && this.prevJ && this.c > 0 && L[this.r][this.c - 1] === 'j') {
+      L[this.r] = L[this.r].slice(0, this.c - 1) + L[this.r].slice(this.c); this.c--;
+      if (this.rec) this.rec.splice(-2, 2, '<Esc>');
+      if (!this.replaying) this.jj++;
+      return this.exitInsert();
+    }
+    this.prevJ = k === 'j';
+    const l = L[this.r], c = this.c, nx = l[c], pv = l[c - 1];
+    if (k === '<BS>') {
+      this.prevJ = false;
+      if (c > 0) { L[this.r] = l.slice(0, c - 1) + l.slice(AP_ALL[pv] && nx === AP_ALL[pv] ? c + 1 : c); this.c--; }
+      else if (this.r > 0) { const pl = L[this.r - 1]; L.splice(this.r - 1, 2, pl + l); this.r--; this.c = pl.length; }
+      return;
+    }
+    if (k === '<CR>') {
+      const before = l.slice(0, c), after = l.slice(c), base = indentOf(l);
+      if (AP_OPEN[pv] && nx === AP_OPEN[pv]) {
+        L.splice(this.r, 1, before, base + '    ', base + after); this.r++; this.c = base.length + 4; return;
+      }
+      const ind = base + (/:\s*$/.test(before) ? '    ' : '');
+      L.splice(this.r, 1, before.replace(/\s+$/, ''), ind + after.replace(/^\s+/, '')); this.r++; this.c = ind.length;
+      return;
+    }
+    if (k === '<Tab>') return this.ins(' '.repeat(4 - (c % 4)));
+    if (k.length !== 1) return;
+    if ((k === ')' || k === ']' || k === '}') && nx === k) { this.c++; return; }
+    if (k === '"' || k === "'" || k === '`') {
+      if (nx === k) { this.c++; return; }
+      if ((nx === undefined || /[\s)\]},:;]/.test(nx)) && !(pv && /\w/.test(pv))) { this.ins(k + k); this.c--; return; }
+      return this.ins(k);
+    }
+    if (AP_OPEN[k] && (nx === undefined || /[\s)\]}]/.test(nx))) {
+      const rest = l.slice(c), close = AP_OPEN[k];
+      if (rest.split(close).length - 1 <= rest.split(k).length - 1) { this.ins(k + close); this.c--; return; }
+    }
+    this.ins(k);
+  },
+  exitInsert() {
+    const l = this.lines[this.r];
+    if (l.length && !l.trim()) this.lines[this.r] = '';
+    this.mode = 'normal'; this.prevJ = false;
+    this.c = Math.max(0, this.c - 1); this.clamp(); this.want = this.c;
+    const rec = this.rec; this.rec = null; this.commit(rec);
+  },
+
+  // ---------- visual ----------
+  exitVisual() { this.mode = 'normal'; this.va = null; this.clamp(); },
+  vRange() {
+    let s = this.va, e = { r: this.r, c: this.c };
+    if (cmpPos(e, s) < 0) [s, e] = [e, s];
+    if (this.mode === 'vline') return { s: { r: s.r, c: 0 }, e: { r: e.r, c: 0 }, lw: true };
+    return { s: { ...s }, e: { ...e }, inc: true };
+  },
+  runVisual(p, keys) {
+    if (p.type === 'vobj') {
+      const R = this.objRange(p.obj, p.n); if (!R) return this.fail();
+      if (R.lw) this.mode = 'vline';
+      this.va = { ...R.s };
+      const ec = R.inc || R.lw ? R.e.c : Math.max(R.s.c, R.e.c - 1);
+      this.r = R.e.r; this.c = ec; this.clamp(); this.want = this.c;
+      return;
+    }
+    let R = this.vRange();
+    const k = p.type === 'vop' ? p.op : p.k, n = p.n || 1;
+    if ('DXYC'.includes(k) && k.length === 1) R = { s: { r: R.s.r, c: 0 }, e: { r: R.e.r, c: 0 }, lw: true };
+    const done = () => { this.mode = 'normal'; this.va = null; };
+    switch (k) {
+      case 'o': case 'O': { const a = this.va; this.va = { r: this.r, c: this.c }; this.setPos(a.r, a.c); return; }
+      case 'v': case 'V': { const m = k === 'V' ? 'vline' : 'visual'; if (this.mode === m) this.exitVisual(); else this.mode = m; return; }
+      case 's': this.flash = { pat: '', matches: [] }; return;
+      case ':': this.cmd = { type: ':', text: '' }; done(); return;
+      case 'y': case 'Y': done(); return this.applyOp('y', R);
+      case 'd': case 'x': case 'D': case 'X': return this.change(null, () => { done(); this.applyOp('d', R); });
+      case 'c': case 'C': return this.change(null, () => { done(); this.applyOp('c', R); });
+      case '>': case '<': return this.change(null, () => { done(); for (let i = 0; i < n; i++) this.applyOp(k, { ...R, lw: true }); });
+      case '<C-_>': case 'gc': return this.change(null, () => { done(); this.toggleComment(R.s.r, R.e.r); });
+      case '~': case 'u': case 'U': case 'gu': case 'gU': case 'g~':
+        return this.change(null, () => { done(); this.applyOp(k.length === 1 ? { '~': 'g~', u: 'gu', U: 'gU' }[k] : k, R); });
+      case 'J': return this.change(null, () => { done(); this.join(R.s.r, Math.max(2, R.e.r - R.s.r + 1)); });
+      case 'r': return this.change(null, () => {
+        done();
+        const E = this.endOf(R);
+        for (let r = R.s.r; r <= E.r; r++) {
+          const a = R.lw ? 0 : r === R.s.r ? R.s.c : 0, b = R.lw ? this.len(r) : r === E.r ? E.c : this.len(r), l = this.lines[r];
+          this.lines[r] = l.slice(0, a) + l.slice(a, b).replace(/./g, p.arg) + l.slice(b);
+        }
+        this.setPos(R.s.r, R.lw ? 0 : R.s.c);
+      });
+      case 'p': case 'P': return this.change(null, () => {
+        const saved = this.reg; done();
+        this.applyOp('d', R);
+        const deleted = this.reg; this.reg = saved;
+        if (R.lw && saved.lw) this.put(true, 1);
+        else if (R.lw) { this.lines.splice(this.r, 0, ''); this.setPos(this.r, 0); this.put(true, 1); }
+        else this.put(R.s.c < this.len(this.r), 1);
+        this.reg = deleted;
+      });
+    }
+    this.fail();
+  },
+
+  // ---------- command line & search ----------
+  feedCmd(k) {
+    const C = this.cmd;
+    if (k === '<Esc>') { this.cmd = null; return; }
+    if (k === '<BS>') { if (!C.text) this.cmd = null; else C.text = C.text.slice(0, -1); return; }
+    if (k === '<CR>') { this.cmd = null; return this.execCmd(C); }
+    if (k.length === 1) C.text += k;
+  },
+  execCmd(C) {
+    if (C.type !== ':') {
+      if (C.text) this.lastSearch = { pat: C.text, dir: C.type === '/' ? 1 : -1, word: false };
+      else if (!this.lastSearch) return this.fail();
+      return this.doMove({ m: { k: 'n' }, n: 0 });
+    }
+    const t = C.text.trim();
+    if (/^\d+$/.test(t)) { const r = Math.max(0, Math.min(+t, this.lines.length) - 1); return this.setPos(r, this.firstNB(r)); }
+    const m = t.match(/^(%)?s\/([^/]*)\/([^/]*)(?:\/(g?))?$/);
+    if (m) {
+      const [, all, pat, rep, g] = m; if (!pat) return this.fail();
+      const rows = all ? this.lines.map((_, i) => i) : [this.r];
+      let hits = 0;
+      this.change(null, () => {
+        for (const i of rows) {
+          const l = this.lines[i];
+          const nl = g ? l.split(pat).join(rep) : l.replace(pat, () => rep);
+          if (nl !== l) { this.lines[i] = nl; hits++; this.r = i; }
+        }
+        this.setPos(this.r, this.firstNB(this.r));
+      });
+      if (!hits) this.fail('الگو پیدا نشد: ' + pat); else this.msg = `${hits} خط تغییر کرد`;
+      return;
+    }
+    const known = { w: 'ذخیره شد ✓ (شبیه‌سازی)', q: 'اینجا خروجی نداریم 🙂', wq: 'ذخیره و خروج (شبیه‌سازی)', x: 'ذخیره و خروج (شبیه‌سازی)', 'q!': 'خروج بدون ذخیره (شبیه‌سازی)', noh: 'هایلایت جستجو پاک شد' };
+    if (known[t]) { this.msg = known[t]; return; }
+    this.fail('دستور ناشناخته: :' + t);
+  },
+
+  // ---------- flash.nvim ----------
+  flashMatches(pat, from) {
+    const out = [];
+    this.lines.forEach((l, r) => {
+      for (let i = l.indexOf(pat); i >= 0; i = l.indexOf(pat, i + 1))
+        if (!(r === from.r && i === from.c)) out.push({ r, c: i, nx: l[i + pat.length] });
+    });
+    out.sort((a, b) => (Math.abs(a.r - from.r) - Math.abs(b.r - from.r)) || (Math.abs(a.c - from.c) - Math.abs(b.c - from.c)));
+    const skip = new Set(out.map(m => (m.nx || '').toLowerCase()));
+    const labels = [...FLASH_LABELS].filter(ch => !skip.has(ch));
+    out.forEach((m, i) => { m.label = labels[i] || null; });
+    return out;
+  },
+  feedFlash(k) {
+    const f = this.flash;
+    const jump = m => { this.flash = null; this.r = m.r; this.c = m.c; this.clamp(); this.want = this.c; };
+    if (k === '<Esc>') { this.flash = null; return; }
+    if (k === '<CR>') { if (f.matches[0]) jump(f.matches[0]); else this.flash = null; return; }
+    if (k === '<BS>') { f.pat = f.pat.slice(0, -1); f.matches = f.pat ? this.flashMatches(f.pat, this) : []; return; }
+    if (k.length !== 1) { this.flash = null; return; }
+    const hit = f.pat && f.matches.find(m => m.label === k);
+    if (hit) return jump(hit);
+    f.pat += k;
+    f.matches = this.flashMatches(f.pat, this);
+    if (!f.matches.length) { this.flash = null; this.msg = 'Flash: مطابقتی نبود'; }
+  },
+});
+
+// ---------- shortest key path between two cursor positions (for "par") ----------
+const COUNTABLE = new Set(['h', 'j', 'k', 'l', 'w', 'b', 'e', 'W', 'B', 'E', '{', '}']);
+function solveMoves(lines, from, cfg) {
+  const v = new Vim(lines), N = lines.length, MAX = 16;
+  const K = (r, c, w) => r + ':' + c + ':' + (w === Infinity ? 'I' : w);
+  const dist = new Map(), prev = new Map(), best = new Map(), buckets = [];
+  const edges = [];
+  for (const m of cfg.m) {
+    const mk = m.length === 2 ? { k: m } : { k: m };
+    edges.push([mk, 0, m.length, m]);
+    if (cfg.counts && COUNTABLE.has(m)) {
+      const max = 'jk'.includes(m) ? 15 : 9;
+      for (let n = 2; n <= max; n++) edges.push([mk, n, String(n).length + 1, n + m]);
+    }
+  }
+  if (cfg.counts && cfg.m.includes('G')) for (let n = 1; n <= N; n++) edges.push([{ k: 'G' }, n, String(n).length + 1, n + 'G']);
+  const push = (key, st, d) => (buckets[d] || (buckets[d] = [])).push([key, st]);
+  const k0 = K(from.r, from.c, from.want);
+  dist.set(k0, 0); push(k0, from, 0);
+  for (let d = 0; d <= MAX; d++) {
+    const b = buckets[d]; if (!b) continue;
+    for (let bi = 0; bi < b.length; bi++) {
+      const [key, st] = b[bi];
+      if (dist.get(key) !== d) continue;
+      const pc = st.r + ':' + st.c;
+      if (!best.has(pc)) best.set(pc, key);
+      const relax = (res, cost, label) => {
+        if (!res || res.fail) return;
+        const nd = d + cost; if (nd > MAX) return;
+        const w = res.want === undefined ? res.c : res.want, nk = K(res.r, res.c, w);
+        if (dist.has(nk) && dist.get(nk) <= nd) return;
+        dist.set(nk, nd); prev.set(nk, [key, label]); push(nk, { r: res.r, c: res.c, want: w }, nd);
+      };
+      for (const [m, n, cost, label] of edges) relax(v.motion(m, n, st, false), cost, label);
+      if (cfg.finds) {
+        const seen = new Set();
+        for (const ch of lines[st.r]) {
+          if (ch === ' ' || seen.has(ch)) continue;
+          seen.add(ch);
+          for (const f of 'fFtT') relax(v.motion({ k: f, arg: ch }, 0, st, false), 2, f + ch);
+        }
+      }
+    }
+  }
+  return {
+    cost: (r, c) => { const k = best.get(r + ':' + c); return k ? dist.get(k) : Infinity; },
+    path: (r, c) => { let k = best.get(r + ':' + c); const out = []; while (k && prev.has(k)) { const [pk, l] = prev.get(k); out.unshift(l); k = pk; } return out; },
+  };
+}
+function flashCost(lines, from, t) {
+  const v = new Vim(lines), l = lines[t.r];
+  for (let n = 1; n <= 3; n++) {
+    const pat = l.slice(t.c, t.c + n); if (pat.length < n) break;
+    const m = v.flashMatches(pat, from).find(x => x.r === t.r && x.c === t.c);
+    if (m && m.label) return { cost: n + 2, path: ['s', ...pat, m.label] };
+  }
+  return { cost: Infinity, path: [] };
+}
+
+// ---------- lessons ----------
+const SMALL = [
+  'def greet(name):',
+  '    msg = "hello " + name',
+  '    print(msg)',
+  '    return len(msg)',
+];
+const MAIN = [
+  'import json',
+  'from pathlib import Path',
+  '',
+  '',
+  'def load_users(path, active_only=True):',
+  '    """Read users from a JSON file."""',
+  '    raw = Path(path).read_text(encoding="utf-8")',
+  '    users = json.loads(raw)',
+  '    if active_only:',
+  '        users = [u for u in users if u["active"]]',
+  '    return sorted(users, key=lambda u: u["name"])',
+  '',
+  '',
+  'class Report:',
+  '    def __init__(self, title, rows=None):',
+  '        self.title = title.strip().upper()',
+  '        self.rows = rows or []',
+  '',
+  '    def add(self, name, score=0.0):',
+  '        self.rows.append({"name": name, "score": score})',
+];
+const PY2 = [
+  'def load(path):',
+  '    with open(path) as f:',
+  '        return f.read()',
+  '',
+  '',
+  'def save(path, data):',
+  '    with open(path, "w") as f:',
+  '        f.write(data)',
+];
+const M1 = ['h', 'j', 'k', 'l'], M2 = [...M1, 'w', 'b', 'e'], M3 = [...M2, 'W', 'B', 'E'], M4 = [...M3, '0', '^', '$'];
+const C5 = { m: M4, finds: true }, C6 = { m: [...M4, 'gg', 'G'], finds: true, counts: true }, C7 = { m: [...M4, 'gg', 'G', '%', '{', '}'], finds: true, counts: true };
+
+const LESSONS = [
+  { id: 'hjkl', group: 'حرکت', title: 'قدم اول: h j k l', kind: 'move', text: SMALL, cfg: { m: M1 }, par: [2, 6], rounds: 8,
+    intro: 'دستت روی ردیف اصلی کیبورد بماند. h چپ‌ترین کلید است پس «چپ»؛ j قلاب رو به پایین دارد؛ k بالا؛ l راست. فلش‌های کیبورد اینجا عمداً کار نمی‌کنند.',
+    keys: [['h', 'چپ'], ['j', 'پایین'], ['k', 'بالا'], ['l', 'راست']] },
+  { id: 'word', group: 'حرکت', title: 'پرش کلمه‌ای: w b e', kind: 'move', text: MAIN, cfg: { m: M2 }, base: { m: M1 }, par: [1, 5], rounds: 8,
+    intro: 'به‌جای حرف‌به‌حرف، کلمه‌به‌کلمه بپر. علامت‌هایی مثل ( . , برای ویم خودشان یک «کلمه»‌اند.',
+    keys: [['w', 'word — ابتدای کلمه‌ی بعد'], ['b', 'back — ابتدای کلمه'], ['e', 'end — انتهای کلمه']] },
+  { id: 'WORD', group: 'حرکت', title: 'کلمه‌های بزرگ: W B E', kind: 'move', text: MAIN, cfg: { m: M3 }, base: { m: M2 }, par: [1, 5], rounds: 6,
+    intro: 'نسخه‌ی بزرگ: فقط فاصله کلمه‌ها را جدا می‌کند، پس Path(path).read_text یک WORD است. در کد پر از نقطه و پرانتز خیلی سریع‌ترند.',
+    keys: [['W', 'WORD بعدی'], ['B', 'WORD قبلی'], ['E', 'انتهای WORD']] },
+  { id: 'line', group: 'حرکت', title: 'ابتدا و انتهای خط: 0 ^ $', kind: 'move', text: MAIN, cfg: { m: M4 }, base: { m: M3 }, par: [1, 4], rounds: 6,
+    intro: 'مثل regex: ^ شروع و $ پایان. 0 ستون صفر است حتی اگر خط تورفتگی داشته باشد.',
+    keys: [['0', 'ستون صفر'], ['^', 'اولین حرف واقعی'], ['$', 'آخر خط']] },
+  { id: 'find', group: 'حرکت', title: 'شکار حرف: f t F T ; ,', kind: 'move', text: MAIN, cfg: C5, base: { m: M4 }, par: [2, 4], rounds: 8,
+    intro: 'f{حرف} روی اولین آن حرف در خط می‌پرد، t{حرف} تا یکی قبلش. F و T همین‌ها رو به عقب‌اند. ; تکرار و , تکرار برعکس. سریع‌ترین حرکت داخل یک خط.',
+    keys: [['f', 'find — روی حرف'], ['t', 'till — قبل از حرف'], ['F', 'find به عقب'], [';', 'تکرار f/t'], [',', 'تکرار برعکس']] },
+  { id: 'count', group: 'حرکت', title: 'عدد + حرکت، gg و G', kind: 'move', text: MAIN, cfg: C6, base: C5, par: [2, 5], rounds: 8,
+    intro: 'قبل از هر حرکت عدد بزن: 5j یعنی پنج خط پایین. شماره‌ی کنار خط‌ها نسبی است تا عدد را مستقیم از رویش بخوانی. gg اول فایل، G آخر فایل، 12G خط دوازده.',
+    keys: [['5j', 'پنج خط پایین'], ['3w', 'سه کلمه جلو'], ['gg', 'اول فایل'], ['G', 'آخر فایل']] },
+  { id: 'jump', group: 'حرکت', title: 'پرانتز و پاراگراف: % { }', kind: 'move', text: MAIN, cfg: C7, base: C6, par: [1, 5], rounds: 6,
+    intro: '% روی جفتِ پرانتز یا براکت می‌پرد (اگر رویش نباشی، اولین پرانتز خط را پیدا می‌کند). } و { بین بلوک‌ها (خط‌های خالی) جابه‌جا می‌شوند.',
+    keys: [['%', 'جفت پرانتز'], ['}', 'بلوک بعدی'], ['{', 'بلوک قبلی']] },
+  { id: 'flash', group: 'حرکت', title: 'Flash: پرش با برچسب (s)', kind: 'move', text: MAIN, cfg: { flash: true }, base: C7, par: [3, 4], rounds: 8,
+    intro: 'در کانفیگ تو s یعنی Flash. s بزن، حرف اول مقصد را تایپ کن؛ روی هر مورد یک برچسب صورتی ظاهر می‌شود؛ حرف برچسب را بزن. با حدود سه کلید به هرجای صفحه می‌رسی.',
+    keys: [['s', 'شروع Flash'], ['حرف', 'حرف مقصد'], ['برچسب', 'پرش']] },
+
+  { id: 'insert', group: 'ویرایش', title: 'ورود به Insert: i a I A o O', kind: 'edit',
+    intro: 'i قبل از مکان‌نما، a بعد از آن، I اول خط، A آخر خط، o خط تازه پایین، O بالا. خروج با jj (کانفیگ تو) یا Esc. autopairs هم روشن است: ( که بزنی ) خودش می‌آید، و ) را که تایپ کنی از رویش رد می‌شود.',
+    keys: [['i', 'insert'], ['a', 'append'], ['I', 'اول خط'], ['A', 'آخر خط'], ['o', 'خط پایین'], ['O', 'خط بالا'], ['jj', 'خروج'], ['<S-CR>', 'خط خالی پایین']],
+    tasks: [
+      { d: 'بعد از 2 یک کاما بگذار (a)', t: ['nums = [1, 2 3]'], c: [0, 0], g: ['nums = [1, 2, 3]'], h: 'f2a,<Esc>' },
+      { d: 'قبل از compute کلمه‌ی await بگذار (i)', t: ['result = compute(x)'], c: [0, 0], g: ['result = await compute(x)'], h: 'fciawait <Esc>' },
+      { d: 'آخر خط « * tax» اضافه کن (A)', t: ['total = price * count'], c: [0, 3], g: ['total = price * count * tax'], h: 'A * tax<Esc>' },
+      { d: 'اول خط user_ اضافه کن (I)', t: ['name = input()'], c: [0, 8], g: ['user_name = input()'], h: 'Iuser_<Esc>' },
+      { d: 'زیر def یک خط log(name) باز کن (o) — تورفتگی خودکار است', t: ['def greet(name):', '    return f"Hi {name}"'], c: [0, 0], g: ['def greet(name):', '    log(name)', '    return f"Hi {name}"'], h: 'olog(name)<Esc>' },
+      { d: 'بالای x = 1 خط import sys بساز (O)', t: ['import os', 'x = 1'], c: [1, 0], g: ['import os', 'import sys', 'x = 1'], h: 'Oimport sys<Esc>' },
+      { d: 'بین دو تابع یک خط خالی بگذار (Shift+Enter در کانفیگ تو)', t: ['def a():', '    pass', 'def b():', '    pass'], c: [1, 4], g: ['def a():', '    pass', '', 'def b():', '    pass'], h: '<S-CR>' },
+    ] },
+  { id: 'small', group: 'ویرایش', title: 'ویرایش‌های کوچک: x r ~ J', kind: 'edit',
+    intro: 'x یک حرف را پاک می‌کند، r{حرف} بدون رفتن به Insert جایگزین می‌کند، ~ بزرگی/کوچکی را برعکس می‌کند و J خط بعدی را می‌چسباند. xp دو حرف را جابه‌جا می‌کند.',
+    keys: [['x', 'حذف حرف'], ['r', 'replace'], ['~', 'تغییر بزرگی'], ['J', 'join'], ['xp', 'جابه‌جایی']],
+    tasks: [
+      { d: 'heelo را hello کن (r)', t: ['print("heelo")'], c: [0, 0], g: ['print("hello")'], h: '2ferl' },
+      { d: 'retrun را return کن (xp)', t: ['retrun result'], c: [0, 0], g: ['return result'], h: 'frxp' },
+      { d: 'value را بزرگ کن (~ با عدد)', t: ['CONSTANT_value = 3'], c: [0, 0], g: ['CONSTANT_VALUE = 3'], h: 'fv5~' },
+      { d: 'سه خط را یکی کن (J با عدد)', t: ['items = [', '    1, 2, 3', ']'], c: [0, 0], g: ['items = [ 1, 2, 3 ]'], h: '3J' },
+      { d: '+ را به - تبدیل کن', t: ['total = a + b'], c: [0, 0], g: ['total = a - b'], h: 'f+r-' },
+      { d: 'e اضافه را پاک کن (x)', t: ['print(valuee)'], c: [0, 0], g: ['print(value)'], h: 't)x' },
+    ] },
+  { id: 'delete', group: 'ویرایش', title: 'عملگر d: dw dd D dt', kind: 'edit',
+    intro: 'd یک «فعل» است و بعدش «مفعول» می‌آید: d + هر حرکتی که یاد گرفتی. dw تا کلمه‌ی بعد، D تا آخر خط، dt) تا قبل از )، dd کل خط، 3dd سه خط.',
+    keys: [['dw', 'تا کلمه‌ی بعد'], ['dd', 'کل خط'], ['D', 'تا آخر خط'], ['dt', 'تا قبل از حرف'], ['dW', 'تا WORD بعد']],
+    tasks: [
+      { d: 'آرگومان "debug", را پاک کن', t: ['print("debug", value)'], c: [0, 0], g: ['print(value)'], h: 'f"dW' },
+      { d: 'خط DEBUG را پاک کن (dd)', t: ['x = compute()', 'print("DEBUG")', 'return x'], c: [0, 0], g: ['x = compute()', 'return x'], h: 'jdd' },
+      { d: 'کامنت آخر خط را پاک کن (D)', t: ['result = fetch(url)  # TODO: remove'], c: [0, 0], g: ['result = fetch(url)'], h: 'f)lD' },
+      { d: 'raw_ را پاک کن (dt)', t: ['value = int(raw_input)'], c: [0, 0], g: ['value = int(input)'], h: 'frdti' },
+      { d: 'and تکراری را پاک کن (dw)', t: ['if x and and y:'], c: [0, 0], g: ['if x and y:'], h: 'fadw' },
+      { d: 'سه خط وسط را پاک کن (3dd)', t: ['def f():', '    a = 1', '    b = 2', '    c = 3', '    return a'], c: [0, 0], g: ['def f():', '    return a'], h: 'j3dd' },
+    ] },
+  { id: 'change', group: 'ویرایش', title: 'عملگر c: cw C cc ct', kind: 'edit',
+    intro: 'c مثل d است، اما بعدش مستقیم وارد Insert می‌شوی. cw کلمه، C تا آخر خط، cc کل خط (تورفتگی حفظ می‌شود)، ct{حرف} تا قبل از حرف.',
+    keys: [['cw', 'تغییر کلمه'], ['C', 'تا آخر خط'], ['cc', 'کل خط'], ['ct', 'تا قبل از حرف']],
+    tasks: [
+      { d: '10 را 25 کن (cw)', t: ['speed = 10'], c: [0, 0], g: ['speed = 25'], h: 'f1cw25<Esc>' },
+      { d: 'رنگ را blue کن (ci" از هرجای خط)', t: ['color = "red"'], c: [0, 0], g: ['color = "blue"'], h: 'ci"blue<Esc>' },
+      { d: 'بعد از = را با 60 عوض کن (C)', t: ['timeout = 30  # seconds'], c: [0, 0], g: ['timeout = 60'], h: 'f3C60<Esc>' },
+      { d: 'خط دوم را start() کن (cc)', t: ['if ready:', '    stop_all(force=True)'], c: [0, 0], g: ['if ready:', '    start()'], h: 'jccstart()<Esc>' },
+      { d: 'old را new کن (ct)', t: ['result = old_value + 1'], c: [0, 0], g: ['result = new_value + 1'], h: 'foct_new<Esc>' },
+      { d: 'calc را compute کن', t: ['def calc(a, b):'], c: [0, 0], g: ['def compute(a, b):'], h: 'wcwcompute<Esc>' },
+    ] },
+  { id: 'textobj', group: 'ویرایش', title: 'اشیای متنی: iw aw i" i( i{', kind: 'edit',
+    intro: 'به‌جای حرکت، «شیء» بده: i یعنی inside (داخل) و a یعنی around (با اطرافش). ciw کلمه، ci" داخل نقل‌قول، di( داخل پرانتز. مکان‌نما هرجای شیء باشد کافی است.',
+    keys: [['iw', 'کلمه'], ['aw', 'کلمه + فاصله'], ['i"', 'داخل نقل‌قول'], ['i(', 'داخل پرانتز'], ['a(', 'پرانتز با محتوا'], ['i{', 'داخل آکولاد']],
+    tasks: [
+      { d: 'همه‌ی آرگومان‌ها را message کن (ci()', t: ['send(email, subject, body)'], c: [0, 6], g: ['send(message)'], h: 'ci(message<Esc>' },
+      { d: 'پرانتز را خالی کن (di()', t: ['connect(host, port, retries=3)'], c: [0, 8], g: ['connect()'], h: 'di(' },
+      { d: 'not را با فاصله‌اش پاک کن (daw)', t: ['if not user is None:'], c: [0, 3], g: ['if user is None:'], h: 'daw' },
+      { d: 'مسیر را data.csv کن (ci")', t: ['path = "/tmp/old/file.txt"'], c: [0, 0], g: ['path = "data.csv"'], h: 'ci"data.csv<Esc>' },
+      { d: 'دیکشنری را خالی کن (di{ از روی })', t: ['config = {"debug": True, "level": 3}'], c: [0, 0], g: ['config = {}'], h: '$di{' },
+      { d: 'data_list را rows کن (ciw)', t: ['for item in data_list:'], c: [0, 0], g: ['for item in rows:'], h: '3wciwrows<Esc>' },
+    ] },
+  { id: 'ts', group: 'ویرایش', title: 'تابع و کلاس پایتون: af if ]f', kind: 'edit',
+    intro: 'با nvim-treesitter-textobjects در کانفیگ تو: af و if تابع (کامل/بدنه)، ac و ic کلاس، ]f و [f تابع بعدی/قبلی. daf یک تابع را کامل حذف می‌کند و cif بدنه را از نو می‌نویسد.',
+    keys: [['af', 'کل تابع'], ['if', 'بدنه‌ی تابع'], [']f', 'تابع بعد'], ['[f', 'تابع قبل'], ['ac', 'کل کلاس']],
+    tasks: [
+      { d: 'به تابع بعدی برو و کلش را پاک کن', t: PY2, c: [0, 0], g: [...PY2.slice(0, 5), ''], h: ']fdaf' },
+      { d: 'بدنه‌ی load را با pass عوض کن (cif)', t: PY2, c: [2, 10], g: ['def load(path):', '    pass', ...PY2.slice(3)], h: 'cifpass<Esc>' },
+      { d: 'اسم save را store کن ([f)', t: PY2, c: [7, 8], g: [...PY2.slice(0, 5), 'def store(path, data):', ...PY2.slice(6)], h: '[fwcwstore<Esc>' },
+      { d: 'تابع load را از داخل خودش حذف کن (daf)', t: PY2, c: [1, 4], g: ['', ...PY2.slice(3)], h: 'daf' },
+    ] },
+  { id: 'yank', group: 'ویرایش', title: 'کپی و پیست: yy p P', kind: 'edit',
+    intro: 'y (yank) همان منطق d را دارد: yy خط، yiw کلمه، yi( داخل پرانتز. p بعد/پایین، P قبل/بالا. هرچه d پاک کند قابل پیست است؛ ddp دو خط را جابه‌جا می‌کند. برای کلیپ‌بورد سیستم: <leader>y و <leader>p.',
+    keys: [['yy', 'کپی خط'], ['p', 'پیست بعد'], ['P', 'پیست قبل'], ['ddp', 'جابه‌جایی خط'], ['yi(', 'کپی داخل پرانتز']],
+    tasks: [
+      { d: 'خط را تکثیر کن', t: ['x = 0'], c: [0, 0], g: ['x = 0', 'x = 0'], h: 'yyp' },
+      { d: 'دو خط را جابه‌جا کن', t: ['second()', 'first()'], c: [0, 0], g: ['first()', 'second()'], h: 'ddp' },
+      { d: 'خط b را یک خط بالا ببر', t: ['a = 1', 'c = 3', 'b = 2'], c: [2, 0], g: ['a = 1', 'b = 2', 'c = 3'], h: 'ddP' },
+      { d: 'name را داخل greet() هم بگذار', t: ['print(name)', 'greet()'], c: [0, 0], g: ['print(name)', 'greet(name)'], h: 'f(yi(jP' },
+      { d: 'این خط را سه بار دیگر پیست کن', t: ['row = []'], c: [0, 0], g: ['row = []', 'row = []', 'row = []', 'row = []'], h: 'yy3p' },
+    ] },
+  { id: 'dot', group: 'ویرایش', title: 'undo و تکرار: u Ctrl+r .', kind: 'edit',
+    intro: 'u برمی‌گرداند و Ctrl+r دوباره انجام می‌دهد. نقطه (.) آخرین تغییر را تکرار می‌کند: یک بار درست انجامش بده و بعد فقط . بزن. قوی‌ترین کلید ویم همین است.',
+    keys: [['u', 'undo'], ['<C-r>', 'redo'], ['.', 'تکرار تغییر']],
+    tasks: [
+      { d: 'آخر هر سه خط ; بگذار (A و بعد j.)', t: ['a = 1', 'b = 2', 'c = 3'], c: [0, 0], g: ['a = 1;', 'b = 2;', 'c = 3;'], h: 'A;<Esc>j.j.' },
+      { d: 'هر دو old را new کن (ciw، ; و .)', t: ['x = old + old'], c: [0, 0], g: ['x = new + new'], h: 'fociwnew<Esc>;.' },
+      { d: 'خطی که پاک شد را برگردان', t: ['a = 1', 'b = 2'], setup: 'jdd', c: [0, 0], g: ['a = 1', 'b = 2'], h: 'u' },
+      { d: 'حالا حذف را دوباره انجام بده', t: ['a = 1', 'b = 2'], setup: 'jddu', c: [0, 0], g: ['a = 1'], h: '<C-r>' },
+      { d: 'هر سه خط را تو ببر (>> و .)', t: ['x = 1', 'y = 2', 'z = 3'], c: [0, 0], g: ['    x = 1', '    y = 2', '    z = 3'], h: '>>j.j.' },
+    ] },
+  { id: 'visual', group: 'ویرایش', title: 'انتخاب: v V', kind: 'edit',
+    intro: 'v انتخاب حرفی، V انتخاب خطی. با هر حرکتی انتخاب را بزرگ کن و بعد عملگر بزن: d y c > < U u. o سر دیگر انتخاب را می‌گیرد. viw و vi( هم کار می‌کنند.',
+    keys: [['v', 'انتخاب حرفی'], ['V', 'انتخاب خطی'], ['o', 'سر دیگر'], ['U', 'بزرگ کردن'], ['gc', 'کامنت']],
+    tasks: [
+      { d: 'warning را با حروف بزرگ بنویس (v و U)', t: ['print("warning")'], c: [0, 0], g: ['print("WARNING")'], h: 'fwveU' },
+      { d: 'دو خط زیر if را تو ببر (V و >)', t: ['if ok:', 'run()', 'stop()'], c: [0, 0], g: ['if ok:', '    run()', '    stop()'], h: 'jVj>' },
+      { d: 'سه خط drop را پاک کن', t: ['keep', 'drop 1', 'drop 2', 'drop 3', 'keep'], c: [1, 0], g: ['keep', 'keep'], h: 'Vjjd' },
+      { d: 'old_name را با new_name جایگزین کن (viwp)', t: ['new_name', 'old_name = 5'], c: [0, 0], g: ['new_name', 'new_name = 5'], h: 'yiwjviwp' },
+      { d: 'هر سه خط را کامنت کن (V و gc)', t: ['x = 1', 'y = 2', 'z = 3'], c: [0, 0], g: ['# x = 1', '# y = 2', '# z = 3'], h: 'Vjjgc' },
+    ] },
+  { id: 'search', group: 'ویرایش', title: 'جستجو: / n N * :%s', kind: 'edit',
+    intro: '/متن و Enter جستجو می‌کند؛ n بعدی و N قبلی. * کلمه‌ی زیر مکان‌نما را جستجو می‌کند. ترکیب طلایی: * بعد ciw بعد n . n . — و برای کل فایل :%s/قدیم/جدید/g',
+    keys: [['/', 'جستجو'], ['n', 'بعدی'], ['N', 'قبلی'], ['*', 'همین کلمه'], [':%s', 'جایگزینی']],
+    tasks: [
+      { d: 'TODO را پیدا کن و DONE کن', t: ['def fetch(url):', '    # TODO: add retries', '    resp = get(url)', '    return resp.json()'], c: [0, 0], g: ['def fetch(url):', '    # DONE: add retries', '    resp = get(url)', '    return resp.json()'], h: '/TODO<CR>cwDONE<Esc>' },
+      { d: 'همه‌ی tmp ها را data کن (* و n.)', t: ['tmp = load()', 'clean(tmp)', 'save(tmp)'], c: [0, 0], g: ['data = load()', 'clean(data)', 'save(data)'], h: '*Nciwdata<Esc>n.n.' },
+      { d: 'همه‌ی red ها را blue کن (:%s)', t: ['color = "red"', 'border = "red"'], c: [0, 0], g: ['color = "blue"', 'border = "blue"'], h: ':%s/red/blue/g<CR>' },
+    ] },
+  { id: 'plugins', group: 'ویرایش', title: 'surround و کامنت', kind: 'edit',
+    intro: 'nvim-surround: ys{حرکت}{علامت} اضافه می‌کند، cs{قدیم}{جدید} عوض می‌کند، ds{علامت} حذف می‌کند. ( با فاصله‌ی داخلی است و ) بدون فاصله. کامنت: Ctrl+/ یا gcc.',
+    keys: [['ysiw"', 'دور کلمه "'], ['cs"\'', '" به \''], ['ds(', 'حذف پرانتز'], ['<C-_>', 'کامنت خط'], ['gcc', 'کامنت خط']],
+    tasks: [
+      { d: 'دور name نقل‌قول بگذار', t: ['print(name)'], c: [0, 6], g: ['print("name")'], h: 'ysiw"' },
+      { d: '" را به \' تبدیل کن', t: ['msg = "hello"'], c: [0, 8], g: ["msg = 'hello'"], h: 'cs"\'' },
+      { d: 'پرانتز اضافه را بردار', t: ['x = (a + b)'], c: [0, 6], g: ['x = a + b'], h: 'ds)' },
+      { d: 'دور value پرانتز بدون فاصله بگذار', t: ['result = value'], c: [0, 9], g: ['result = (value)'], h: 'ysiw)' },
+      { d: 'خط print را کامنت کن (Ctrl+/)', t: ['print("debug")', 'return value'], c: [0, 0], g: ['# print("debug")', 'return value'], h: '<C-_>' },
+      { d: 'نقل‌قول دور x را حذف کن', t: ['print("x")'], c: [0, 7], g: ['print(x)'], h: 'ds"' },
+    ] },
+  { id: 'challenge', group: 'چالش', title: 'چالش ۶۰ ثانیه', kind: 'challenge', text: MAIN, cfg: C7, par: [3, 9], seconds: 60,
+    intro: 'هرچه در ۶۰ ثانیه بتوانی به خانه‌های روشن برس. هر حرکتی آزاد است؛ Flash هم. با اولین کلید زمان شروع می‌شود.',
+    keys: [['s', 'Flash'], ['f', 'find'], ['5j', 'عدد'], ['w', 'کلمه']] },
+];
+
+// ---------- shortcut drill cards: [keys, meaning, mode?] ----------
+const CATS = [
+  ['move', 'حرکت پایه', [
+    ['h', 'یک خانه چپ'], ['j', 'یک خط پایین'], ['k', 'یک خط بالا'], ['l', 'یک خانه راست'],
+    ['w', 'ابتدای کلمه‌ی بعد'], ['b', 'ابتدای کلمه (یا کلمه‌ی قبل)'], ['e', 'انتهای کلمه'], ['W', 'WORD بعدی (فقط فاصله جداکننده است)'],
+    ['0', 'ستون صفر خط'], ['^', 'اولین حرف غیر فاصله‌ی خط'], ['$', 'انتهای خط'], ['gg', 'اول فایل'], ['G', 'آخر فایل'],
+    ['%', 'پرش به پرانتز/براکت جفت'], ['}', 'بلوک بعدی (خط خالی بعدی)'], ['{', 'بلوک قبلی'],
+    ['<C-d>', 'نصف صفحه پایین'], ['<C-u>', 'نصف صفحه بالا'], ['zz', 'خط جاری را وسط صفحه بیاور'], ['<C-o>', 'برگشت به مکان پرش قبلی'],
+    ['f(', 'روی اولین ( بعدی در همین خط'], ['t,', 'تا قبل از , بعدی'], [';', 'تکرار آخرین f/t'], ['5j', 'پنج خط پایین'],
+    ['*', 'جستجوی کلمه‌ی زیر مکان‌نما'], ['n', 'نتیجه‌ی بعدی جستجو'], ['N', 'نتیجه‌ی قبلی جستجو'], ['/', 'شروع جستجو رو به جلو'],
+  ]],
+  ['edit', 'ویرایش پایه', [
+    ['x', 'حذف یک حرف'], ['dd', 'حذف کل خط'], ['dw', 'حذف تا کلمه‌ی بعد'], ['D', 'حذف تا آخر خط'], ['C', 'تغییر تا آخر خط'],
+    ['cc', 'بازنویسی کل خط'], ['ciw', 'تغییر کلمه‌ی زیر مکان‌نما'], ['ci"', 'تغییر داخل نقل‌قول'], ['ci(', 'تغییر داخل پرانتز'],
+    ['da(', 'حذف پرانتز با محتوایش'], ['dt)', 'حذف تا قبل از )'], ['yy', 'کپی خط'], ['yiw', 'کپی کلمه'],
+    ['p', 'پیست بعد از مکان‌نما / زیر خط'], ['P', 'پیست قبل / بالای خط'], ['ddp', 'جابه‌جایی خط با خط پایینی'],
+    ['u', 'undo'], ['<C-r>', 'redo'], ['.', 'تکرار آخرین تغییر'], ['J', 'چسباندن خط بعد به این خط'],
+    ['>>', 'یک پله تورفتگی بیشتر'], ['<<', 'یک پله تورفتگی کمتر'], ['~', 'عوض کردن بزرگی/کوچکی حرف'], ['gUiw', 'کلمه با حروف بزرگ'],
+    ['rx', 'جایگزینی حرف زیر مکان‌نما با x'], ['o', 'خط تازه پایین + Insert'], ['O', 'خط تازه بالا + Insert'],
+    ['A', 'آخر خط + Insert'], ['I', 'اول خط + Insert'], ['a', 'Insert بعد از مکان‌نما'], ['i', 'Insert قبل از مکان‌نما'],
+    ['v', 'انتخاب حرفی'], ['V', 'انتخاب خطی'], ['viw', 'انتخاب کلمه'], ['gv', 'انتخاب دوباره‌ی آخرین انتخاب'], ['gcc', 'کامنت/آنکامنت خط'],
+    [':w<CR>', 'ذخیره'], [':q<CR>', 'بستن پنجره'], [':wq<CR>', 'ذخیره و بستن'], [':q!<CR>', 'بستن بدون ذخیره'],
+    [':vsp<CR>', 'تقسیم عمودی پنجره'], [':sp<CR>', 'تقسیم افقی پنجره'],
+  ]],
+  ['win', 'پنجره و بافر', [
+    ['<C-h>', 'رفتن به اسپلیت چپ'], ['<C-l>', 'رفتن به اسپلیت راست'], ['<C-j>', 'رفتن به اسپلیت پایین'], ['<C-k>', 'رفتن به اسپلیت بالا'],
+    ['<Tab>', 'بافر بعدی (bufferline)'], ['<S-Tab>', 'بافر قبلی'], ['<leader><leader>', 'برگشت به آخرین بافر'], ['<leader>1', 'بافر شماره‌ی ۱'],
+    ['<leader>bs', 'انتخاب بافر با حرف'], ['<leader>bx', 'انتخاب و بستن بافر'], ['<leader>bxa', 'بستن همه‌ی بافرها جز این'],
+    ['bl', 'جابه‌جا کردن تب بافر به راست'], ['bh', 'جابه‌جا کردن تب بافر به چپ'], ['<leader>qo', 'بستن همه‌ی اسپلیت‌ها جز این'],
+    ['<leader>z', 'فوکوس روی پنجره‌ی شناور'], ['<leader>re', 'بارگذاری دوباره‌ی همه‌ی فایل‌های باز'], ['<Esc>', 'پاک کردن هایلایت جستجو'],
+  ]],
+  ['files', 'فایل، جستجو و ابزار', [
+    ['<leader>ff', 'پیدا کردن فایل با اسم (Telescope)'], ['<leader>fg', 'جستجوی متن در کل پروژه'], ['<C-p>', 'فایل‌یاب FZF (بر اساس نزدیکی)'],
+    ['<leader>e', 'باز/بسته کردن درخت فایل'], ['<leader>E', 'نمایش فایل جاری در درخت'], ['<leader>nf', 'Neo-tree: فایل‌سیستم'],
+    ['<leader>u', 'درخت undo'], ['<leader>ss', 'ذخیره‌ی سشن'], ['<leader>sl', 'لیست سشن‌ها'], ['<leader>sd', 'حذف سشن'],
+    ['<leader>tt', 'همه‌ی TODOها در Telescope'], ['<leader>tl', 'TODOها در location list'],
+    ['<leader>y', 'کپی به کلیپ‌بورد سیستم'], ['<leader>p', 'پیست از کلیپ‌بورد سیستم'],
+    ['<leader>nl', 'همه‌ی پیام‌های Noice'], ['<leader>nd', 'بستن پیام‌های Noice'], ['<leader>?', 'کلیدهای این بافر (which-key)'],
+    ['<leader>hp', 'چیت‌شیت پایتون'], ['<leader>hv', 'باز کردن همین دوجو'], ['<leader>rl', 'روشن/خاموش شماره‌ی خط نسبی'],
+    ['<leader>rtl', 'حالت فارسی/راست‌به‌چپ'], ['<leader>tsm', 'منوی تم'], ['<leader>tn', 'تم بعدی'], ['<leader>csv', 'جدول‌بندی CSV'],
+    ['zR', 'باز کردن همه‌ی foldها'], ['zM', 'بستن همه‌ی foldها'], ['za', 'باز/بسته کردن fold جاری'],
+  ]],
+  ['code', 'کد، LSP و پایتون', [
+    ['K', 'مستندات زیر مکان‌نما'], ['gd', 'رفتن به تعریف'], ['<leader>gdv', 'تعریف در اسپلیت عمودی'], ['<leader>gds', 'تعریف در اسپلیت افقی'],
+    ['<leader>gdp', 'نگاه سریع به تعریف (peek)'], ['<leader>ca', 'Code action'], ['<leader>rn', 'تغییر نام در کل پروژه'],
+    [']d', 'خطا/هشدار بعدی'], ['[d', 'خطا/هشدار قبلی'], [']e', 'فقط Error بعدی'], ['[e', 'Error قبلی'], ['<leader>cd', 'کپی پیام خطای این خط'],
+    ['<leader>xx', 'خطاهای کل پروژه (Trouble)'], ['<leader>xb', 'خطاهای همین بافر'], ['<leader>xs', 'نمای کلی سمبل‌ها'], ['<leader>xl', 'ارجاع‌ها و تعریف‌ها'],
+    ['<leader>oi', 'مرتب کردن importها'], ['<leader>fa', 'رفع خودکار ایرادهای ruff'], ['rf', 'فرمت فایل (Conform)'],
+    ['<C-k>', 'راهنمای امضای تابع', 'insert'], ['<leader>vs', 'انتخاب venv پایتون'], ['<leader>vc', 'venv قبلی همین پروژه'],
+  ]],
+  ['struct', 'Flash، surround و treesitter', [
+    ['s', 'Flash: پرش با برچسب'], ['S', 'Flash Treesitter: انتخاب گره‌ی کد'], ['ysiw"', 'دور کلمه " بگذار'], ['cs"\'', '" را به \' تبدیل کن'],
+    ['ds(', 'حذف پرانتزهای دور'], ['yss)', 'کل خط را در پرانتز بگذار'], ['<C-_>', 'کامنت/آنکامنت خط (Ctrl+/)'],
+    ['vif', 'انتخاب بدنه‌ی تابع'], ['daf', 'حذف کل تابع'], ['cic', 'بازنویسی بدنه‌ی کلاس'], ['daa', 'حذف یک آرگومان با کاما'], ['cia', 'تغییر یک آرگومان'],
+    [']f', 'تابع بعدی'], ['[f', 'تابع قبلی'], [']c', 'کلاس بعدی'], ['<leader>sa', 'جابه‌جایی آرگومان با بعدی'], ['<leader>sA', 'جابه‌جایی آرگومان با قبلی'],
+    ['jj', 'خروج از Insert', 'insert'], ['<S-CR>', 'خط خالی پایین بدون ترک Normal'],
+  ]],
+  ['git', 'گیت', [
+    ['<leader>gp', 'پیش‌نمایش تغییر (hunk)'], ['<leader>gb', 'git blame'], ['<leader>gl', 'لاگ گرافیکی گیت'], ['gfd', 'diff فایل جاری'], ['<leader>gs', 'وضعیت گیت در Neo-tree'],
+  ]],
+  ['test', 'تست، دیباگ و ترمینال', [
+    ['<leader>nr', 'اجرای نزدیک‌ترین تست'], ['<leader>nF', 'تست‌های این فایل'], ['<leader>na', 'همه‌ی تست‌ها'], ['<leader>nL', 'اجرای دوباره‌ی آخرین تست'],
+    ['<leader>nx', 'توقف تست'], ['<leader>ndb', 'دیباگ نزدیک‌ترین تست'], ['<leader>no', 'خروجی تست'], ['<leader>np', 'پنل خروجی تست'], ['<leader>ns', 'درخت خلاصه‌ی تست‌ها'],
+    ['<leader>b', 'گذاشتن/برداشتن breakpoint'], ['<F5>', 'شروع/ادامه‌ی دیباگ'], ['<F2>', 'Step into'], ['<F3>', 'Step over'], ['<F4>', 'Step out'],
+    ['<F6>', 'breakpoint شرطی'], ['<F7>', 'پایان دیباگ'], ['<F8>', 'اجرای دوباره‌ی آخرین دیباگ'],
+    ['<leader>th', 'ترمینال پایین'], ['<leader>tf', 'ترمینال شناور'], ['<leader>tst', 'فرستادن خط به ترمینال'],
+    ['<leader>rs', 'فرستادن انتخاب به ترمینال', 'visual'], ['<leader>rb', 'فرستادن کل فایل به ترمینال'],
+  ]],
+];
+const CARDS = [];
+for (const [cat, name, list] of CATS) for (const [keys, desc, mode] of list)
+  CARDS.push({ id: cat + ':' + keys, cat, keys, t: toks(keys), desc, mode: mode || 'normal' });
+
+// ================= app =================
+const $ = s => document.querySelector(s);
+const fa = n => Number(n).toLocaleString('fa-IR');
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+// Isolate Latin runs (keys, code) inside Persian text so bidi doesn't scramble them.
+const BIDI_RE = /[!-9;-~](?:[ -~]*[!-9;-~])?/g;
+function bidi(s) {
+  let out = '', last = 0;
+  for (const m of s.matchAll(BIDI_RE)) { out += esc(s.slice(last, m.index)) + `<span class="ltr">${esc(m[0])}</span>`; last = m.index + m[0].length; }
+  return out + esc(s.slice(last));
+}
+const rand = a => a[Math.floor(Math.random() * a.length)];
+const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+
+// ---------- storage ----------
+const SKEY = 'vimdojo.v1';
+const defaults = () => ({ lessons: {}, cards: {}, days: {}, challenge: 0, cur: 'hjkl', drillMode: 'recall', drillCats: null, theme: '' });
+let S = defaults();
+try { S = Object.assign(defaults(), JSON.parse(localStorage.getItem(SKEY) || '{}')); } catch (e) { /* private mode */ }
+const save = () => { try { localStorage.setItem(SKEY, JSON.stringify(S)); } catch (e) { /* ignore */ } };
+let lastAct = 0;
+function activity() {
+  const now = Date.now(), d = now - lastAct;
+  if (lastAct && d < 30000) { const k = today(); S.days[k] = (S.days[k] || 0) + d / 1000; }
+  lastAct = now;
+}
+function streak() {
+  let n = 0; const d = new Date();
+  const key = x => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+  if (!S.days[key(d)]) d.setDate(d.getDate() - 1);
+  while (S.days[key(d)]) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+const starTotal = () => Object.values(S.lessons).reduce((a, l) => a + (l.stars || 0), 0);
+function refreshMeta() { $('#streak').textContent = fa(streak()); $('#starTotal').textContent = fa(starTotal()); }
+setInterval(save, 15000);
+document.addEventListener('visibilitychange', save);
+
+// ---------- keyboard ----------
+const CODE_US = { Backquote: ['`', '~'], Minus: ['-', '_'], Equal: ['=', '+'], BracketLeft: ['[', '{'], BracketRight: [']', '}'], Backslash: ['\\', '|'], Semicolon: [';', ':'], Quote: ["'", '"'], Comma: [',', '<'], Period: ['.', '>'], Slash: ['/', '?'], Digit1: ['1', '!'], Digit2: ['2', '@'], Digit3: ['3', '#'], Digit4: ['4', '$'], Digit5: ['5', '%'], Digit6: ['6', '^'], Digit7: ['7', '&'], Digit8: ['8', '*'], Digit9: ['9', '('], Digit0: ['0', ')'] };
+function keyName(e) {
+  let k = e.key;
+  if (!k || ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'AltGraph', 'Dead', 'Unidentified', 'Process', 'F11', 'F12'].includes(k)) return null;
+  if (k.length === 1 && /[^\x20-\x7e]/.test(k)) {
+    const m = /^Key([A-Z])$/.exec(e.code);
+    if (m) k = e.shiftKey ? m[1] : m[1].toLowerCase();
+    else if (CODE_US[e.code]) k = CODE_US[e.code][e.shiftKey ? 1 : 0];
+    else return null;
+    $('#layoutFlag').hidden = false;
+  }
+  if (e.metaKey || e.altKey) return null;
+  if (e.ctrlKey) {
+    if (k === '/' || k === '_' || e.code === 'Slash') return '<C-_>';
+    if (k.length === 1 && /[a-z]/i.test(k)) return '<C-' + k.toLowerCase() + '>';
+    return null;
+  }
+  const named = { Escape: '<Esc>', Backspace: '<BS>', ArrowLeft: '<Left>', ArrowRight: '<Right>', ArrowUp: '<Up>', ArrowDown: '<Down>' };
+  if (named[k]) return named[k];
+  if (k === 'Enter') return e.shiftKey ? '<S-CR>' : '<CR>';
+  if (k === 'Tab') return e.shiftKey ? '<S-Tab>' : '<Tab>';
+  if (/^F\d{1,2}$/.test(k)) return '<' + k + '>';
+  return k.length === 1 ? k : null;
+}
+const PRETTY = { '<leader>': 'Space', ' ': 'Space', '<Esc>': 'Esc', '<CR>': 'Enter', '<S-CR>': 'Shift+Enter', '<BS>': '⌫', '<Tab>': 'Tab', '<S-Tab>': 'Shift+Tab', '<C-_>': 'Ctrl+/' };
+const pretty = k => PRETTY[k] || (/^<C-(.)>$/.test(k) ? 'Ctrl+' + k[3] : /^<(F\d+)>$/.test(k) ? k.slice(1, -1) : k);
+const kbds = (keys, cls = 'kbd') => (typeof keys === 'string' ? toks(keys) : keys).map(k => `<span class="${cls}">${esc(pretty(k))}</span>`).join('');
+// Group runs of plain characters ("ciw") into one chip, keep named keys separate.
+function chipKeys(s) {
+  const out = []; let run = '';
+  for (const k of toks(s)) { if (k.length === 1 && k !== ' ') run += k; else { if (run) out.push(run); run = ''; out.push(pretty(k)); } }
+  if (run) out.push(run);
+  return out.map(x => `<span class="kbd">${esc(x)}</span>`).join(' ');
+}
+
+// ---------- editor rendering ----------
+const PYKW = new Set('def class return if elif else for while in not and or is import from as with try except finally raise pass break continue lambda yield async await None True False self global assert del'.split(' '));
+function hlLine(line) {
+  const out = new Array(line.length).fill('');
+  let i = 0;
+  while (i < line.length) {
+    const ch = line[i];
+    if (ch === '#') { for (let j = i; j < line.length; j++) out[j] = 'cm'; break; }
+    if (ch === '"' || ch === "'") { let j = i + 1; while (j < line.length && line[j] !== ch) j += line[j] === '\\' ? 2 : 1; for (let x = i; x <= Math.min(j, line.length - 1); x++) out[x] = 'st'; i = j + 1; continue; }
+    if (/[A-Za-z_]/.test(ch)) { let j = i; while (j < line.length && /\w/.test(line[j])) j++; const w = line.slice(i, j), c = PYKW.has(w) ? 'kw' : line[j] === '(' ? 'fn' : ''; if (c) for (let x = i; x < j; x++) out[x] = c; i = j; continue; }
+    if (/[0-9]/.test(ch)) { let j = i; while (j < line.length && /[\w.]/.test(line[j])) j++; for (let x = i; x < j; x++) out[x] = 'nu'; i = j; continue; }
+    if ('()[]{}'.includes(ch)) out[i] = 'br';
+    i++;
+  }
+  return out;
+}
+function renderEditor(v, target) {
+  const L = v.lines, sel = v.va ? v.vRange() : null;
+  const fl = v.flash && v.flash.pat ? v.flash : null, fm = new Set(), lab = new Map();
+  if (fl) for (const m of fl.matches) { for (let i = 0; i < fl.pat.length; i++) fm.add(m.r + ':' + (m.c + i)); if (m.label) lab.set(m.r + ':' + (m.c + fl.pat.length), m.label); }
+  const inSel = (r, c) => {
+    if (!sel) return false;
+    if (sel.lw) return r >= sel.s.r && r <= sel.e.r;
+    const p = { r, c }; return cmpPos(p, sel.s) >= 0 && cmpPos(p, sel.e) <= 0 && c < Math.max(1, L[r].length);
+  };
+  let html = '';
+  for (let r = 0; r < L.length; r++) {
+    const line = L[r], hl = hlLine(line), num = r === v.r ? r + 1 : Math.abs(r - v.r);
+    let cells = '';
+    for (let c = 0; c <= line.length; c++) {
+      const key = r + ':' + c, cl = [];
+      let ch = c < line.length ? line[c] : ' ';
+      if (hl[c]) cl.push(hl[c]);
+      if (inSel(r, c)) cl.push('sel');
+      if (target && target.r === r && target.c === c) cl.push('tgt');
+      if (fm.has(key)) cl.push('fm');
+      if (lab.has(key)) { cl.push('fl'); ch = lab.get(key); }
+      if (r === v.r && c === v.c && !fl) cl.push(v.mode === 'insert' ? 'bar' : 'cur');
+      if (c === line.length && !cl.length) continue;
+      cells += cl.length ? `<span class="${cl.join(' ')}">${esc(ch)}</span>` : esc(ch);
+    }
+    html += `<div class="ln"><span class="gut${r === v.r ? ' gcur' : ''}">${num}</span><span class="txt">${cells}</span></div>`;
+  }
+  $('#buf').innerHTML = html;
+  $('#editor').classList.toggle('flashing', !!fl);
+  const mode = v.flash ? 'flash' : v.mode, ML = { normal: 'NORMAL', insert: 'INSERT', visual: 'VISUAL', vline: 'V-LINE', flash: 'FLASH' };
+  $('#mode').className = 'mode ' + mode; $('#mode').textContent = ML[mode];
+  $('#pend').textContent = v.flash ? 's' + v.flash.pat : v.pending.map(pretty).join('');
+  $('#pos').textContent = (v.r + 1) + ':' + (v.c + 1);
+  const cl = $('#cmdline');
+  cl.classList.toggle('err', v.err && !!v.msg);
+  if (v.cmd) cl.innerHTML = esc(v.cmd.type + v.cmd.text) + '<span class="cur"> </span>';
+  else if (v.msg) cl.innerHTML = `<span class="msg-fa">${esc(v.msg)}</span>`;
+  else cl.textContent = v.mode === 'insert' ? '-- INSERT --' : v.mode === 'visual' ? '-- VISUAL --' : v.mode === 'vline' ? '-- VISUAL LINE --' : '';
+}
+function renderGoal(goal, lines) {
+  let html = '';
+  goal.forEach((line, r) => {
+    const hl = hlLine(line); let cells = '';
+    for (let c = 0; c < line.length; c++) cells += hl[c] ? `<span class="${hl[c]}">${esc(line[c])}</span>` : esc(line[c]);
+    html += `<div class="ln"><span class="gut${lines[r] !== line ? ' diff' : ''}">${r + 1}</span><span class="txt">${cells}</span></div>`;
+  });
+  $('#goalBuf').innerHTML = html;
+}
+const starStr = n => '★'.repeat(n) + `<span class="off">${'★'.repeat(3 - n)}</span>`;
+
+// ---------- move targets ----------
+function pickTarget(L, v) {
+  const from = { r: v.r, c: v.c, want: v.c };
+  const useFlash = L.cfg.flash || L.kind === 'challenge';
+  const A = L.cfg.m ? solveMoves(v.lines, from, L.cfg) : null;
+  const B = L.base ? solveMoves(v.lines, from, L.base) : null;
+  const cands = [], loose = [];
+  v.lines.forEach((line, r) => {
+    for (let c = 0; c < line.length; c++) {
+      if (line[c] === ' ' || (r === from.r && c === from.c)) continue;
+      let cost = A ? A.cost(r, c) : Infinity, path = A && cost < Infinity ? A.path(r, c) : [];
+      if (useFlash) { const f = flashCost(v.lines, from, { r, c }); if (f.cost < cost) { cost = f.cost; path = f.path; } }
+      if (cost === Infinity || cost < L.par[0] || cost > L.par[1]) continue;
+      const item = { pos: { r, c }, par: cost, path };
+      loose.push(item);
+      if (!B || B.cost(r, c) > cost + (L.cfg.flash ? 1 : 0)) cands.push(item);
+    }
+  });
+  return rand(cands.length ? cands : loose.length ? loose : [{ pos: { r: 0, c: 0 }, par: 3, path: ['g', 'g'] }]);
+}
+
+// ---------- dojo (lessons) ----------
+const Dojo = {
+  L: null, v: null, round: 0, task: null, keys: 0, log: [], stars: [], locked: false, summary: false,
+  chal: null, hintShown: false,
+
+  renderList() {
+    let html = '', group = '';
+    LESSONS.forEach((L, i) => {
+      if (L.group !== group) { group = L.group; html += `<h3>${esc(group)}</h3>`; }
+      const st = (S.lessons[L.id] || {}).stars || 0;
+      const right = L.kind === 'challenge' ? `<span class="stars">${S.challenge ? fa(S.challenge) : ''}</span>` : `<span class="stars">${starStr(st)}</span>`;
+      html += `<button class="lesson-btn${this.L === L ? ' on' : ''}" data-id="${L.id}"><span class="num">${i + 1}</span><span class="t">${bidi(L.title)}</span>${right}</button>`;
+    });
+    $('#lessonList').innerHTML = html;
+  },
+  total() { return this.L.kind === 'edit' ? this.L.tasks.length : this.L.rounds || 0; },
+  open(id) {
+    const L = LESSONS.find(l => l.id === id) || LESSONS[0];
+    this.L = L; S.cur = L.id; save();
+    this.round = 0; this.stars = []; this.summary = false; this.v = null; this.chal = null;
+    $('#summary').hidden = true; $('#lessonView').hidden = false;
+    const idx = LESSONS.indexOf(L) + 1;
+    $('#lEyebrow').textContent = `درس ${fa(idx)} از ${fa(LESSONS.length)} · ${L.group}`;
+    $('#lTitle').innerHTML = bidi(L.title);
+    $('#lIntro').innerHTML = bidi(L.intro);
+    $('#lKeys').innerHTML = L.keys.map(([k, d]) => `<span class="keychip">${/^[؀-ۿ]/.test(k) ? `<span class="kbd">${esc(k)}</span>` : chipKeys(k)}${bidi(d)}</span>`).join('');
+    $('#timer').hidden = L.kind !== 'challenge';
+    $('#skipBtn').hidden = L.kind === 'challenge';
+    this.renderList();
+    this.start();
+  },
+  start() {
+    const L = this.L;
+    this.keys = 0; this.log = []; this.hintShown = false; this.locked = false;
+    $('#hintBox').hidden = true;
+    if (L.kind === 'edit') {
+      const T = L.tasks[this.round];
+      this.v = new Vim(T.t, T.c[0], T.c[1]);
+      if (T.setup) { this.v.feedAll(T.setup); this.v.msg = ''; }
+      this.task = { type: 'edit', goal: T.g, par: toks(T.h).length, hint: chipKeys(T.h), d: T.d };
+    } else {
+      if (!this.v) this.v = new Vim(L.text, L.kind === 'challenge' ? 4 : 0, 0);
+      const t = pickTarget(L, this.v);
+      this.task = { type: 'move', target: t.pos, par: t.par, hint: t.path.map(p => `<span class="kbd">${esc(pretty(p))}</span>`).join(' '), d: 'مکان‌نما را به خانه‌ی سبز روشن ببر' };
+      if (L.kind === 'challenge') this.task.d = this.chal ? `امتیاز: ${fa(this.chal.score)}` : 'با اولین کلید، ۶۰ ثانیه شروع می‌شود';
+    }
+    this.render();
+  },
+  render() {
+    const t = this.task, v = this.v;
+    renderEditor(v, t.type === 'move' ? t.target : null);
+    $('#taskText').innerHTML = bidi(t.d);
+    $('#goalBox').hidden = t.type !== 'edit';
+    if (t.type === 'edit') renderGoal(t.goal, v.lines);
+    const n = this.total();
+    $('#dots').innerHTML = n ? Array.from({ length: n }, (_, i) => `<i class="${i < this.round ? 'done' : i === this.round ? 'now' : ''}"></i>`).join('') : '';
+    const over = this.keys > t.par;
+    $('#count').className = 'count' + (over ? ' over' : '');
+    $('#count').innerHTML = this.L.kind === 'challenge' ? '' : `کلید: <b>${this.keys}</b> / بهینه ${t.par}`;
+    $('#keylog').innerHTML = this.log.map(k => `<span class="kbd">${esc(pretty(k))}</span>`).join('');
+    if (!this.hintShown && this.L.kind !== 'challenge' && this.keys >= t.par * 2 + 2) this.showHint();
+  },
+  showHint() {
+    this.hintShown = true;
+    $('#hintBox').hidden = false;
+    $('#hintBox').innerHTML = `<span>یک راه بهینه:</span> <span class="ltr">${this.task.hint}</span>`;
+  },
+  done() {
+    const v = this.v;
+    if (v.mode !== 'normal' || v.pending.length || v.flash || v.cmd) return false;
+    const t = this.task;
+    if (t.type === 'move') return v.r === t.target.r && v.c === t.target.c;
+    return v.lines.join('\n') === t.goal.join('\n');
+  },
+  key(k) {
+    if (!this.L) return false;
+    if (this.summary) {
+      if (k === '<CR>') { const i = LESSONS.indexOf(this.L); this.open(LESSONS[Math.min(i + 1, LESSONS.length - 1)].id); }
+      else if (k === 'r') this.open(this.L.id);
+      return true;
+    }
+    if (this.locked) return true;
+    activity();
+    if (this.L.kind === 'challenge' && !this.chal) this.startChallenge();
+    const jj = this.v.jj;
+    this.v.feed(k);
+    this.keys += this.v.jj > jj ? 0 : 1;
+    this.log.push(k); if (this.log.length > 28) this.log.shift();
+    if (this.v.err) { $('#editor').classList.remove('shake'); void $('#editor').offsetWidth; $('#editor').classList.add('shake'); }
+    if (this.done()) this.success(); else this.render();
+    return true;
+  },
+  success() {
+    const t = this.task, L = this.L;
+    if (L.kind === 'challenge') { this.chal.score++; this.chal.keys += this.keys; this.chal.par += t.par; this.start(); return; }
+    const st = this.keys <= t.par ? 3 : this.keys <= Math.ceil(t.par * 1.5) + 1 ? 2 : 1;
+    this.stars.push(st);
+    this.locked = true;
+    this.render();
+    $('#editor').classList.add('win');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<span class="stars">${starStr(st)}</span>${st === 3 ? 'عالی!' : st === 2 ? 'خوب بود' : 'رسیدی — حالا کوتاه‌ترش کن'} <small>(${fa(this.keys)} کلید، بهینه ${fa(t.par)})</small>`;
+    $('#stage').appendChild(toast);
+    if (st < 3) this.showHint();
+    setTimeout(() => {
+      toast.remove(); $('#editor').classList.remove('win');
+      this.round++;
+      if (this.round >= this.total()) this.finish(); else this.start();
+    }, st < 3 ? 1800 : 900);
+  },
+  finish() {
+    const L = this.L, avg = this.stars.reduce((a, b) => a + b, 0) / this.stars.length;
+    const st = Math.max(1, Math.floor(avg + 0.001));
+    const rec = S.lessons[L.id] || {};
+    const better = st > (rec.stars || 0);
+    S.lessons[L.id] = { stars: Math.max(st, rec.stars || 0), plays: (rec.plays || 0) + 1 };
+    save(); refreshMeta(); this.renderList();
+    this.showSummary(`<div class="big">${starStr(st)}</div>
+      <h3>${st === 3 ? 'درس را کامل بلدی!' : st === 2 ? 'خوب بود — یک دور دیگر برای سه ستاره؟' : 'رد شدی؛ حالا با راه کوتاه‌تر تکرار کن'}</h3>
+      <p>میانگین ${fa(avg.toFixed(1))} ستاره در ${fa(this.stars.length)} تمرین${better ? ' · رکورد تازه!' : ''}</p>`);
+  },
+  showSummary(inner) {
+    this.summary = true;
+    $('#lessonView').hidden = true;
+    const s = $('#summary'); s.hidden = false;
+    s.innerHTML = `<div class="summary">${inner}<div class="row"><button class="btn primary" data-act="next">درس بعد (Enter)</button><button class="btn" data-act="again">تکرار (r)</button></div></div>`;
+  },
+  startChallenge() {
+    const L = this.L;
+    this.chal = { score: 0, keys: 0, par: 0, end: Date.now() + L.seconds * 1000 };
+    const tick = () => {
+      if (!this.chal || this.L !== L) return;
+      const left = Math.max(0, this.chal.end - Date.now());
+      $('#timer').textContent = (left / 1000).toFixed(1) + 's';
+      if (left <= 0) return this.endChallenge();
+      requestAnimationFrame(tick);
+    };
+    tick();
+  },
+  endChallenge() {
+    const c = this.chal; this.chal = null; this.locked = true;
+    const best = c.score > S.challenge;
+    if (best) S.challenge = c.score;
+    save(); this.renderList();
+    const eff = c.keys ? Math.round(100 * c.par / c.keys) : 0;
+    this.showSummary(`<div class="big">${fa(c.score)}</div><h3>${best ? 'رکورد تازه!' : 'هدف در ۶۰ ثانیه'}</h3>
+      <p>بهترین: ${fa(S.challenge)} · بهره‌وری کلیدها: ${fa(eff)}٪ (۱۰۰٪ یعنی همیشه کوتاه‌ترین راه)</p>`);
+  },
+};
+$('#lessonList').addEventListener('click', e => { const b = e.target.closest('.lesson-btn'); if (b) { b.blur(); Dojo.open(b.dataset.id); } });
+$('#summary').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; Dojo.key(b.dataset.act === 'next' ? '<CR>' : 'r'); });
+$('#hintBtn').onclick = e => { e.currentTarget.blur(); Dojo.showHint(); };
+$('#resetBtn').onclick = e => { e.currentTarget.blur(); if (Dojo.L.kind === 'edit') Dojo.start(); else Dojo.open(Dojo.L.id); };
+$('#skipBtn').onclick = e => { e.currentTarget.blur(); Dojo.stars.push(1); Dojo.round++; if (Dojo.round >= Dojo.total()) Dojo.finish(); else Dojo.start(); };
+
+// ---------- drill (spaced repetition, Leitner boxes 0..5) ----------
+const CAT_NAME = Object.fromEntries(CATS.map(([id, name]) => [id, name]));
+const MODE_FA = { normal: 'در حالت Normal', insert: 'در حالت Insert', visual: 'در حالت Visual' };
+const SESSION = 15;
+const Drill = {
+  mode: S.drillMode, cats: new Set(S.drillCats || CATS.map(c => c[0])),
+  queue: [], i: 0, cur: null, typed: 0, miss: false, t0: 0, res: [], wait: false, over: false, opts: null,
+
+  card(id) { return S.cards[id] || (S.cards[id] = { box: 0, ok: 0, bad: 0, ms: 0, seen: 0 }); },
+  renderCats() {
+    $('#dCats').innerHTML = CATS.map(([id, name, list]) => {
+      const m = list.filter(x => ((S.cards[id + ':' + x[0]] || {}).box || 0) >= 4).length;
+      return `<button class="cat${this.cats.has(id) ? ' on' : ''}" data-cat="${id}">${esc(name)}<small>${fa(m)}/${fa(list.length)}</small></button>`;
+    }).join('');
+    document.querySelectorAll('#dMode button').forEach(b => b.classList.toggle('on', b.dataset.m === this.mode));
+  },
+  start() {
+    const pool = CARDS.filter(c => this.cats.has(c.cat));
+    if (!pool.length) { $('#dCard').innerHTML = '<p>حداقل یک دسته را انتخاب کن.</p>'; return; }
+    const W = [8, 5, 3, 2, 1, .5];
+    const weighted = pool.map(c => { const s = S.cards[c.id]; const w = !s ? 3 : W[s.box] * (s.bad > s.ok ? 2 : 1); return { c, k: Math.random() ** (1 / w) }; });
+    weighted.sort((a, b) => b.k - a.k);
+    this.queue = weighted.slice(0, SESSION).map(x => x.c);
+    this.i = 0; this.res = []; this.over = false;
+    this.show();
+  },
+  show() {
+    this.cur = this.queue[this.i]; this.typed = 0; this.miss = false; this.wait = false; this.t0 = performance.now();
+    const c = this.cur;
+    let body;
+    if (this.mode === 'recall') {
+      body = `<div class="prompt">${bidi(c.desc)}</div><div class="cmode">${MODE_FA[c.mode]}</div><div class="slots">${this.slots()}</div><div class="answer" id="dAns"></div>
+        <button class="btn" id="dIdk">نمی‌دانم — نشانم بده</button>`;
+    } else {
+      const same = CARDS.filter(x => x.cat === c.cat && x.desc !== c.desc && x.keys !== c.keys);
+      const others = CARDS.filter(x => x.desc !== c.desc && x.keys !== c.keys);
+      const pick = []; const src = same.length >= 3 ? same : others;
+      while (pick.length < 3) { const x = rand(src); if (!pick.includes(x)) pick.push(x); }
+      this.opts = [c, ...pick].sort(() => Math.random() - .5);
+      body = `<div class="prompt"><span class="ltr">${kbds(c.t)}</span></div><div class="cmode">${MODE_FA[c.mode]}</div>
+        <div class="opts">${this.opts.map((o, i) => `<button class="opt" data-i="${i}"><span class="n">${i + 1}</span><span>${bidi(o.desc)}</span></button>`).join('')}</div>`;
+    }
+    const el = $('#dCard'); el.className = 'card';
+    el.innerHTML = `<div class="ccat">${esc(CAT_NAME[c.cat])} · کارت ${fa(this.i + 1)} از ${fa(this.queue.length)}</div>${body}`;
+    this.stats();
+  },
+  slots() {
+    return this.cur.t.map((k, i) => `<span class="slot${i < this.typed ? ' ok' : i === this.typed ? ' next' : ''}">${i < this.typed ? esc(pretty(k)) : ''}</span>`).join('');
+  },
+  stats() {
+    const n = this.res.length, ok = this.res.filter(r => r.ok).length;
+    const avg = n ? this.res.reduce((a, r) => a + r.ms, 0) / n / 1000 : 0;
+    const mastered = CARDS.filter(c => ((S.cards[c.id] || {}).box || 0) >= 4).length;
+    $('#dStats').innerHTML = `<span>دقت: <b>${n ? fa(Math.round(100 * ok / n)) + '٪' : '—'}</b></span><span>میانگین زمان: <b>${n ? fa(avg.toFixed(1)) + ' ثانیه' : '—'}</b></span><span>تسلط کامل: <b>${fa(mastered)}</b> از ${fa(CARDS.length)} میانبر</span>`;
+  },
+  reveal() {
+    this.miss = true; this.typed = 0;
+    const el = $('#dCard'); el.classList.remove('bad'); void el.offsetWidth; el.classList.add('bad');
+    $('#dAns').innerHTML = `جواب: <span class="ltr">${kbds(this.cur.t)}</span> — حالا خودت تایپش کن`;
+    el.querySelector('.slots').innerHTML = this.slots();
+  },
+  key(k) {
+    if (this.over) { if (k === '<CR>') this.start(); return k === '<CR>'; }
+    if (!this.cur || this.wait) return true;
+    activity();
+    if (this.mode === 'recog') {
+      const n = '1234'.indexOf(k);
+      if (n < 0 || !this.opts[n]) return true;
+      return this.answer(this.opts[n] === this.cur, n), true;
+    }
+    const want = this.cur.t[this.typed];
+    const got = k === ' ' ? '<leader>' : k;
+    if (got === want) {
+      this.typed++;
+      $('#dCard .slots').innerHTML = this.slots();
+      if (this.typed === this.cur.t.length) this.grade(!this.miss);
+    } else this.reveal();
+    return true;
+  },
+  answer(ok, n) {
+    const btns = document.querySelectorAll('#dCard .opt');
+    btns[this.opts.indexOf(this.cur)].classList.add('right');
+    if (!ok) btns[n].classList.add('wrong');
+    this.grade(ok, true);
+  },
+  grade(ok, recog) {
+    this.wait = true;
+    const ms = performance.now() - this.t0, s = this.card(this.cur.id);
+    s.seen++;
+    if (ok) {
+      s.ok++;
+      const cap = recog ? 2 : 5;
+      if (ms < 4000 && s.box < cap) s.box++;
+      s.ms = s.ms ? s.ms * .6 + ms * .4 : ms;
+    } else { s.bad++; s.box = 0; }
+    this.res.push({ ok, ms, c: this.cur });
+    save();
+    const el = $('#dCard'); el.classList.add(ok ? 'good' : 'bad');
+    const sp = ms < 1500 ? '⚡ آنی' : ms < 3000 ? 'خوب' : 'کمی کند';
+    if (ok) el.insertAdjacentHTML('beforeend', `<div class="speed">${fa((ms / 1000).toFixed(1))} ثانیه · ${sp}</div>`);
+    this.stats(); this.renderCats();
+    setTimeout(() => { this.i++; if (this.i >= this.queue.length) this.end(); else this.show(); }, ok ? 650 : 1600);
+  },
+  end() {
+    this.over = true;
+    const n = this.res.length, ok = this.res.filter(r => r.ok).length, miss = this.res.filter(r => !r.ok);
+    const avg = this.res.reduce((a, r) => a + r.ms, 0) / n / 1000;
+    $('#dCard').className = 'card';
+    $('#dCard').innerHTML = `<div class="prompt">${fa(ok)} از ${fa(n)} درست</div>
+      <p>میانگین ${fa(avg.toFixed(1))} ثانیه برای هر میانبر. هدف: همه زیر ۱٫۵ ثانیه.</p>
+      ${miss.length ? `<div class="misslist"><b>این‌ها را مرور کن:</b>${miss.map(r => `<div><span class="ltr">${kbds(r.c.t)}</span><span>${bidi(r.c.desc)}</span></div>`).join('')}</div>` : '<p>بدون اشتباه 👏</p>'}
+      <button class="btn primary" id="dAgain">دور بعد (Enter)</button>`;
+    refreshMeta();
+  },
+};
+$('#dCats').addEventListener('click', e => {
+  const b = e.target.closest('.cat'); if (!b) return; b.blur();
+  const id = b.dataset.cat;
+  if (Drill.cats.has(id)) Drill.cats.delete(id); else Drill.cats.add(id);
+  S.drillCats = [...Drill.cats]; save(); Drill.renderCats();
+});
+$('#dMode').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; b.blur(); Drill.mode = S.drillMode = b.dataset.m; save(); Drill.renderCats(); Drill.start(); });
+$('#dStart').onclick = e => { e.currentTarget.blur(); Drill.start(); };
+$('#dCard').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; b.blur();
+  if (b.id === 'dIdk') { if (!Drill.wait) Drill.reveal(); }
+  else if (b.id === 'dAgain') Drill.start();
+  else if (b.dataset.i !== undefined && !Drill.wait) Drill.answer(Drill.opts[+b.dataset.i] === Drill.cur, +b.dataset.i);
+});
+
+// ---------- stats ----------
+function renderStats() {
+  const mins = Object.values(S.days).reduce((a, b) => a + b, 0) / 60;
+  const mastered = CARDS.filter(c => ((S.cards[c.id] || {}).box || 0) >= 4).length;
+  const lessonsDone = LESSONS.filter(l => (S.lessons[l.id] || {}).stars).length;
+  const kpi = (v, l) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+  const bars = CATS.map(([id, name, list]) => {
+    const pts = list.reduce((a, x) => a + Math.min(4, (S.cards[id + ':' + x[0]] || {}).box || 0), 0) / (list.length * 4);
+    return `<div class="barrow"><span>${esc(name)}</span><div class="track"><div class="fill" style="width:${Math.round(pts * 100)}%"></div></div><span class="pct">${Math.round(pts * 100)}%</span></div>`;
+  }).join('');
+  const lrows = LESSONS.filter(l => l.kind !== 'challenge').map(l => `<div class="lrow"><span>${bidi(l.title)}</span><span class="stars">${starStr((S.lessons[l.id] || {}).stars || 0)}</span></div>`).join('');
+  const weak = CARDS.filter(c => S.cards[c.id] && S.cards[c.id].bad).sort((a, b) => (S.cards[b.id].bad - S.cards[b.id].ok) - (S.cards[a.id].bad - S.cards[a.id].ok)).slice(0, 10);
+  $('#statsView').innerHTML = `
+    <div class="kpis">${kpi(fa(streak()) + ' روز', 'روزهای پشت سر هم')}${kpi(fa(Math.round(mins)) + ' دقیقه', 'کل زمان تمرین')}${kpi(fa(starTotal()) + ' / ' + fa((LESSONS.length - 1) * 3), 'ستاره‌ی درس‌ها')}${kpi(fa(mastered) + ' / ' + fa(CARDS.length), 'میانبرِ ملکه‌ی ذهن')}${kpi(fa(S.challenge), 'رکورد چالش ۶۰ ثانیه')}</div>
+    <div class="cols">
+      <div><h3>تسلط بر میانبرها</h3>${bars}<p class="note">هر میانبر وقتی «ملکه‌ی ذهن» حساب می‌شود که چند بار پشت سر هم، درست و زیر ۴ ثانیه تایپش کنی.</p>
+        <h3 style="margin-top:1.5rem">سخت‌ترین‌ها برای تو</h3><div class="weak">${weak.length ? weak.map(c => `<div><span class="ltr">${kbds(c.t)}</span><span>${bidi(c.desc)}</span></div>`).join('') : '<p class="note">هنوز اشتباهی ثبت نشده.</p>'}</div></div>
+      <div><h3>درس‌ها (${fa(lessonsDone)} از ${fa(LESSONS.length - 1)})</h3>${lrows}
+        <button class="btn danger-btn" id="resetAll" style="margin-top:1.5rem">پاک کردن همه‌ی پیشرفت</button></div>
+    </div>`;
+  $('#resetAll').onclick = e => {
+    const b = e.currentTarget;
+    if (b.dataset.sure) { const theme = S.theme; S = defaults(); S.theme = theme; save(); refreshMeta(); Dojo.renderList(); Drill.renderCats(); renderStats(); }
+    else { b.dataset.sure = '1'; b.textContent = 'مطمئنی؟ دوباره بزن'; }
+  };
+}
+
+// ---------- tabs, theme, keys ----------
+let tab = 'dojo';
+function setTab(t) {
+  tab = t;
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
+  for (const x of ['dojo', 'drill', 'stats']) $('#tab-' + x).hidden = x !== t;
+  refreshMeta();
+  if (t === 'stats') renderStats();
+  if (t === 'drill' && !Drill.cur && !Drill.over) Drill.start();
+}
+document.querySelector('nav.tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { b.blur(); setTab(b.dataset.tab); } });
+function applyTheme() { if (S.theme) document.documentElement.dataset.theme = S.theme; else delete document.documentElement.dataset.theme; }
+$('#themeBtn').onclick = e => { e.currentTarget.blur(); S.theme = { '': 'dark', dark: 'light', light: '' }[S.theme || '']; applyTheme(); save(); };
+document.addEventListener('keydown', e => {
+  if (e.isComposing) return;
+  const k = keyName(e); if (!k) return;
+  const used = tab === 'dojo' ? Dojo.key(k) : tab === 'drill' ? Drill.key(k) : false;
+  if (used) e.preventDefault();
+});
+
+applyTheme();
+refreshMeta();
+Drill.renderCats();
+Dojo.open(S.cur);
+</script>
+</body>
+</html>
