@@ -310,12 +310,28 @@ return {
 	{
 		"stevearc/conform.nvim",
 		event = { "BufReadPre", "BufNewFile" },
+		init = function()
+			-- Autosave can write while still in insert mode. Formatting then would
+			-- strip the empty line just opened, so it's skipped and done on InsertLeave.
+			vim.api.nvim_create_autocmd("InsertLeave", {
+				group = vim.api.nvim_create_augroup("FormatAfterInsert", { clear = true }),
+				callback = function(args)
+					if vim.b[args.buf].format_pending then
+						vim.b[args.buf].format_pending = false
+						require("conform").format({ bufnr = args.buf, timeout_ms = 500, lsp_fallback = true })
+					end
+				end,
+			})
+		end,
 		opts = {
 			notify_on_error = false,
-			format_on_save = {
-				timeout_ms = 500,
-				lsp_fallback = true,
-			},
+			format_on_save = function(bufnr)
+				if vim.fn.mode():match("^[iR]") then
+					vim.b[bufnr].format_pending = true
+					return
+				end
+				return { timeout_ms = 500, lsp_fallback = true }
+			end,
 			formatters_by_ft = {
 				lua = { "stylua" },
 				python = { "ruff_format", "ruff_fix" },

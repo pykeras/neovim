@@ -1,0 +1,211 @@
+{
+  "__slots__": {
+    "prefix": ["__slots__", "slots"],
+    "body": ["__slots__ = (\"${1:attr}\",$0)"],
+    "description": "__slots__ tuple"
+  },
+  "__init__": {
+    "prefix": ["__init__", "init"],
+    "body": ["def __init__(self${1:, ${2:arg}}) -> None:", "\t${0:pass}"],
+    "description": "__init__ method"
+  },
+  "__repr__": {
+    "prefix": ["__repr__", "repr"],
+    "body": ["def __repr__(self) -> str:", "\treturn f\"${1:{type(self).__name__\\}}(${2})\"$0"],
+    "description": "__repr__ method"
+  },
+  "__str__": {
+    "prefix": ["__str__", "str"],
+    "body": ["def __str__(self) -> str:", "\treturn ${0:f\"\"}"],
+    "description": "__str__ method"
+  },
+  "__eq__": {
+    "prefix": ["__eq__", "eq"],
+    "body": [
+      "def __eq__(self, other: object) -> bool:",
+      "\tif not isinstance(other, ${1:type(self)}):",
+      "\t\treturn NotImplemented",
+      "\treturn ${0:self.${2:attr} == other.${2:attr}}"
+    ],
+    "description": "__eq__ method"
+  },
+  "__hash__": {
+    "prefix": ["__hash__", "hash"],
+    "body": ["def __hash__(self) -> int:", "\treturn hash((${0:self.attr}))"],
+    "description": "__hash__ method"
+  },
+  "__len__": {
+    "prefix": ["__len__", "len"],
+    "body": ["def __len__(self) -> int:", "\treturn len(${0:self.items})"],
+    "description": "__len__ method"
+  },
+  "__iter__": {
+    "prefix": ["__iter__", "iter"],
+    "body": ["def __iter__(self) -> Iterator[${1:Any}]:", "\t${0:return iter(self.items)}"],
+    "description": "__iter__ method"
+  },
+  "__getitem__": {
+    "prefix": ["__getitem__", "getitem"],
+    "body": ["def __getitem__(self, ${1:key}: ${2:int}) -> ${3:Any}:", "\treturn ${0:self.items[$1]}"],
+    "description": "__getitem__ method"
+  },
+  "__contains__": {
+    "prefix": ["__contains__", "contains"],
+    "body": ["def __contains__(self, ${1:item}: object) -> bool:", "\treturn ${0:$1 in self.items}"],
+    "description": "__contains__ method"
+  },
+  "__call__": {
+    "prefix": ["__call__", "call"],
+    "body": ["def __call__(self${1:, ${2:arg}}) -> ${3:None}:", "\t${0:pass}"],
+    "description": "__call__ method"
+  },
+  "__enter__/__exit__": {
+    "prefix": ["__enter__", "enterexit"],
+    "body": [
+      "def __enter__(self) -> Self:",
+      "\t${1:return self}",
+      "",
+      "def __exit__(self, exc_type, exc, tb) -> None:",
+      "\t${0:pass}"
+    ],
+    "description": "context manager methods"
+  },
+  "__post_init__": {
+    "prefix": ["__post_init__", "postinit"],
+    "body": ["def __post_init__(self) -> None:", "\t${0:pass}"],
+    "description": "dataclass __post_init__"
+  },
+  "dataclass": {
+    "prefix": ["dataclass"],
+    "body": [
+      "@dataclass${1:(slots=True)}",
+      "class ${2:Name}:",
+      "\t${3:field}: ${4:int}$0"
+    ],
+    "description": "dataclass"
+  },
+  "staticmethod": {
+    "prefix": ["staticmethod", "sm"],
+    "body": ["@staticmethod", "def ${1:name}(${2}) -> ${3:None}:", "\t${0:pass}"],
+    "description": "staticmethod"
+  },
+  "classmethod": {
+    "prefix": ["classmethod", "cm"],
+    "body": ["@classmethod", "def ${1:name}(cls${2}) -> Self:", "\t${0:return cls()}"],
+    "description": "classmethod"
+  },
+  "abstractmethod": {
+    "prefix": ["abstractmethod", "abm"],
+    "body": ["@abstractmethod", "def ${1:name}(self${2}) -> ${3:None}:", "\t${0:...}"],
+    "description": "abstractmethod"
+  },
+  "setter": {
+    "prefix": ["setter"],
+    "body": ["@${1:name}.setter", "def ${1:name}(self, value: ${2:Any}) -> None:", "\t${0:self._$1 = value}"],
+    "description": "property setter"
+  },
+  "Enum": {
+    "prefix": ["enum"],
+    "body": ["class ${1:Name}(${2:Enum}):", "\t${3:A} = ${4:auto()}$0"],
+    "description": "Enum class"
+  },
+  "Protocol": {
+    "prefix": ["protocol"],
+    "body": ["class ${1:Name}(Protocol):", "\tdef ${2:method}(self${3}) -> ${4:None}: ...$0"],
+    "description": "typing.Protocol"
+  },
+  "TypedDict": {
+    "prefix": ["typeddict", "td"],
+    "body": ["class ${1:Name}(TypedDict):", "\t${2:key}: ${3:str}$0"],
+    "description": "TypedDict"
+  },
+  "contextmanager": {
+    "prefix": ["contextmanager", "ctxm"],
+    "body": [
+      "@contextmanager",
+      "def ${1:name}(${2}) -> Iterator[${3:None}]:",
+      "\t${4:# setup}",
+      "\ttry:",
+      "\t\tyield${5}",
+      "\tfinally:",
+      "\t\t${0:pass}"
+    ],
+    "description": "contextlib.contextmanager"
+  },
+  "pytest test": {
+    "prefix": ["test"],
+    "body": ["def test_${1:name}(${2}) -> None:", "\t${0:assert True}"],
+    "description": "pytest test function"
+  },
+  "pytest fixture": {
+    "prefix": ["fixture"],
+    "body": ["@pytest.fixture", "def ${1:name}() -> ${2:Any}:", "\t${0:return None}"],
+    "description": "pytest fixture"
+  },
+  "pytest parametrize": {
+    "prefix": ["parametrize"],
+    "body": [
+      "@pytest.mark.parametrize(",
+      "\t(\"${1:arg}\", \"${2:expected}\"),",
+      "\t[",
+      "\t\t(${3}, ${4}),",
+      "\t],",
+      ")",
+      "def test_${5:name}($1, $2) -> None:",
+      "\t${0:assert $1 == $2}"
+    ],
+    "description": "pytest parametrize"
+  },
+  "pytest raises": {
+    "prefix": ["raises"],
+    "body": ["with pytest.raises(${1:ValueError}):", "\t${0:pass}"],
+    "description": "pytest.raises"
+  },
+  "logger": {
+    "prefix": ["logger"],
+    "body": ["logger = logging.getLogger(__name__)$0"],
+    "description": "module logger"
+  },
+  "argparse main": {
+    "prefix": ["argparse"],
+    "body": [
+      "def main() -> None:",
+      "\tparser = argparse.ArgumentParser(description=\"${1}\")",
+      "\tparser.add_argument(\"${2:path}\")",
+      "\targs = parser.parse_args()",
+      "\t${0:print(args)}",
+      "",
+      "",
+      "if __name__ == \"__main__\":",
+      "\tmain()"
+    ],
+    "description": "argparse skeleton"
+  },
+  "async main": {
+    "prefix": ["amain"],
+    "body": [
+      "async def main() -> None:",
+      "\t${0:pass}",
+      "",
+      "",
+      "if __name__ == \"__main__\":",
+      "\tasyncio.run(main())"
+    ],
+    "description": "async main with asyncio.run"
+  },
+  "json load": {
+    "prefix": ["jload"],
+    "body": ["with open(${1:path}, encoding=\"utf-8\") as f:", "\t${2:data} = json.load(f)$0"],
+    "description": "read JSON file"
+  },
+  "json dump": {
+    "prefix": ["jdump"],
+    "body": ["with open(${1:path}, \"w\", encoding=\"utf-8\") as f:", "\tjson.dump(${2:data}, f, ensure_ascii=False, indent=2)$0"],
+    "description": "write JSON file"
+  },
+  "here path": {
+    "prefix": ["here"],
+    "body": ["${1:HERE} = Path(__file__).resolve().parent$0"],
+    "description": "directory of current file"
+  }
+}
