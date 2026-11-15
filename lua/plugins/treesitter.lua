@@ -11,6 +11,24 @@ return {
 
 		ts.setup({})
 
+		-- The legacy `master` branch registers this directive expecting a single
+		-- node, but Neovim 0.12 passes a list. Without the override every fenced
+		-- code block in markdown (hover, completion docs) throws in get_range().
+		if pcall(require, "nvim-treesitter.query_predicates") then
+			vim.treesitter.query.add_directive("set-lang-from-info-string!", function(match, _, source, pred, metadata)
+				local node = match[pred[2]]
+				if type(node) == "table" then
+					node = node[#node]
+				end
+				if not node then
+					return
+				end
+				local alias = vim.treesitter.get_node_text(node, source):lower()
+				local ft = vim.filetype.match({ filename = "a." .. alias })
+				metadata["injection.language"] = vim.treesitter.language.get_lang(ft or alias) or alias
+			end, { force = true })
+		end
+
 		local parsers = {
 			"lua",
 			"python",
