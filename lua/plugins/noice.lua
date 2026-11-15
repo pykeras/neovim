@@ -13,6 +13,8 @@ return {
 				enabled = false,
 			},
 			lsp = {
+				-- blink.cmp owns the automatic signature popup (see lua/settings.lua).
+				signature = { auto_open = { enabled = false } },
 				-- Stop the repeated LSP progress spam in the corner. Servers
 				-- report progress on every keystroke, which is pure noise.
 				progress = {
