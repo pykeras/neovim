@@ -2,7 +2,13 @@
 
 __If you are updating from previous versions, please make sure to run :Lazy sync and :Mason to update everything.__
 
+**Update: Sep 25, 2026**
+> - Fix: idle autosave no longer runs rustfmt/Conform — format only on `:w` or `rf`
+> - Fix:`vim.lsp.get_buffers_by_client_id() is deprecated` warning is fixed, please re-run the `:Lazy update`
+> - Minor bug fixes and tested with Neovim v0.12.5 
+
 **Update: Aug 16, 2026** :snake:
+
 > - New: **Python testing** with `neotest` + `pytest` — run and debug tests without leaving the editor (`<leader>n…`)
 > - New: **Structural editing** via treesitter textobjects — select, jump and swap by function, class and argument (`vif`, `dac`, `]f`, `<leader>sa`)
 > - New: **Persian / RTL support** — `:Persian` or `<leader>rtl`, with auto-detection for prose files
@@ -11,16 +17,6 @@ __If you are updating from previous versions, please make sure to run :Lazy sync
 > - Fix: removed a stray `pyright` setup that ran alongside `pyrefly`, causing duplicate diagnostics and hovers on every Python buffer
 > - Fix: `dockerls`/`yamlls` were registered twice, the second time without `capabilities`, degrading completion
 > - Fix: autosave used `wall`, rewriting every open buffer on each `TextChanged` and letting the formatter reformat background buffers mid-keystroke
-
-**Update: Jul 6, 2026** 
-> - Switching to `Pyrefly` instead `Mypy`
-> - Minor bug fixes and tested with Neovim v0.12.4 
-
-**Update: May 26, 2026** :sparkles:
-
-> - New: `<C>-p` fuzzy file finder. 
->   - Searches all files under the Git project root, sorted by proximity to the currently open file.
-> - Fix: `neo-tree` auto opening on focus
 
 To enable copy/yank & paste over SSH using OSC52, add the following snippet **to the end of your `init.lua`**:
 
@@ -85,7 +81,7 @@ Ensure the following dependencies are installed for a seamless experience:
   ```bash
   # Install via package manager (e.g., dnf)
   sudo dnf install fzf
-
+  
   # Or install manually from https://github.com/junegunn/fzf
   ```
 
@@ -116,19 +112,26 @@ Ensure the following dependencies are installed for a seamless experience:
   ```
 
 - **Python toolchain** (for linting, formatting, testing and debugging):
+  
   ```bash
   # uv — package/venv manager
   curl -LsSf https://astral.sh/uv/install.sh | sh
-
+  
   uv tool install ruff      # linter + formatter (replaces black, isort, flake8)
   uv tool install pytest    # test runner driven by neotest
-
+  
   # inside the project venv, for the debugger
   uv pip install debugpy
   ```
-
+  
   Language servers themselves (`pyrefly`, `ruff`, …) are installed by Mason on
   first launch — check with `:Mason`.
+  
+- **Rust analyzer** :
+
+  ```bash
+  rustup component add rust-analyzer
+  ```
 
 ## How to install:
 

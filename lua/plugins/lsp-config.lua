@@ -306,6 +306,11 @@ return {
 		opts = {
 			notify_on_error = false,
 			format_on_save = function(bufnr)
+				-- Autosave writes are never formatted (init.lua sets the flag).
+				if vim.b[bufnr].skip_format_on_save then
+					return
+				end
+				-- A manual write from insert mode is formatted on InsertLeave instead.
 				if vim.fn.mode():match("^[iR]") then
 					vim.b[bufnr].format_pending = true
 					return
