@@ -41,16 +41,6 @@ return {
 			-- an argument, and after accepting a function from the menu.
 			trigger = { show_on_insert = true, show_on_keyword = true, show_on_accept = true },
 		},
-		sources = {
-			per_filetype = {
-				sql = { "snippets", "dadbod", "buffer" },
-				mysql = { "snippets", "dadbod", "buffer" },
-				plsql = { "snippets", "dadbod", "buffer" },
-			},
-			providers = {
-				dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
-			},
-		},
 	},
 	opts_extend = { "sources.default" },
 }

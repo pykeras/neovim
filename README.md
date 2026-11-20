@@ -295,12 +295,6 @@ function body._
 
 ---
 
-### Database (Dadbod)
-
-- **Toggle database UI:** `<leader>db` _add a connection with `:DBUIAddConnection`; SQL buffers get table/column completion_
-
----
-
 ### Debugging
 
 _For python make sure you run `pip install debugpy` in the virtualenv detected/selected._
