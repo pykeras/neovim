@@ -266,7 +266,6 @@ end, { desc = 'Focus topmost floating window' })
 
 -- stylua: ignore end
 
--- Open a blank line below without leaving normal mode or moving the cursor.
-vim.keymap.set("n", "<S-CR>", function()
-	vim.fn.append(vim.fn.line("."), "")
-end, { noremap = true, silent = true, desc = "Append blank line below" })
+-- Like PyCharm: from anywhere on the line, start a new indented line below and type there.
+vim.keymap.set("n", "<S-CR>", "o", { noremap = true, silent = true, desc = "Start new line below" })
+vim.keymap.set("i", "<S-CR>", "<C-o>o", { noremap = true, silent = true, desc = "Start new line below" })
