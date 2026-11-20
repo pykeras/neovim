@@ -98,6 +98,37 @@ vim.keymap.set("n", "<leader>qo", ":only<CR>", { desc = "Close all splits except
 vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
 vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Show signature help" })
 
+-- Write the inlay type hints of the current line into the buffer
+vim.keymap.set("n", "<leader>ci", function()
+  local lnum = vim.fn.line(".") - 1
+  local hints = vim.lsp.inlay_hint.get({
+    bufnr = 0,
+    range = { start = { line = lnum, character = 0 }, ["end"] = { line = lnum + 1, character = 0 } },
+  })
+  local applied = 0
+  -- Right to left, so earlier edits don't shift later positions
+  table.sort(hints, function(a, b) return a.inlay_hint.position.character > b.inlay_hint.position.character end)
+  for _, item in ipairs(hints) do
+    local hint = item.inlay_hint
+    local client = vim.lsp.get_client_by_id(item.client_id)
+    local edits = hint.textEdits
+    if (not edits or #edits == 0) and hint.kind == 1 then
+      local label = hint.label
+      if type(label) == "table" then
+        label = table.concat(vim.tbl_map(function(part) return part.value end, label))
+      end
+      edits = { { range = { start = hint.position, ["end"] = hint.position }, newText = label } }
+    end
+    if client and edits and #edits > 0 then
+      vim.lsp.util.apply_text_edits(edits, item.bufnr, client.offset_encoding)
+      applied = applied + 1
+    end
+  end
+  if applied == 0 then
+    vim.notify("No insertable inlay hint on this line", vim.log.levels.INFO)
+  end
+end, { desc = "Insert inlay type hints of current line" })
+
 -- Copy diagnostics to system clipboard
 vim.keymap.set("n", "<leader>cd", function()
   local diag = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
@@ -209,6 +240,15 @@ vim.keymap.set("n", "<leader>hp", function()
     vim.ui.open(path)
 end, { desc = "Open Python cheat sheet in browser" })
 
+vim.keymap.set("n", "<leader>hv", function()
+    local path = vim.fn.stdpath("config") .. "/docs/vim-dojo.html"
+    if vim.fn.filereadable(path) == 0 then
+        vim.notify("Vim dojo not found: " .. path, vim.log.levels.ERROR)
+        return
+    end
+    vim.ui.open(path)
+end, { desc = "Open interactive Vim trainer in browser" })
+
 -- File opener
 vim.keymap.set("n", "<C-p>", ":FZFFilesProximity<CR>", { noremap = true, silent = true })
 
@@ -226,7 +266,6 @@ end, { desc = 'Focus topmost floating window' })
 
 -- stylua: ignore end
 
--- Open a blank line below without leaving normal mode or moving the cursor.
-vim.keymap.set("n", "<S-CR>", function()
-	vim.fn.append(vim.fn.line("."), "")
-end, { noremap = true, silent = true, desc = "Append blank line below" })
+-- Like PyCharm: from anywhere on the line, start a new indented line below and type there.
+vim.keymap.set("n", "<S-CR>", "o", { noremap = true, silent = true, desc = "Start new line below" })
+vim.keymap.set("i", "<S-CR>", "<C-o>o", { noremap = true, silent = true, desc = "Start new line below" })

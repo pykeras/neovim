@@ -13,3 +13,12 @@ vim.g.mapleader = " "
 -- Cursor hold time reduce
 vim.o.updatetime = 100
 vim.cmd [[autocmd CursorHold * lua vim.diagnostic.open_float(nil, {focus=false})]]
+
+-- Python: indent bracket contents by one level and put the closing bracket
+-- back under the line that opened it (the defaults double-indent both).
+vim.g.python_indent = {
+    open_paren = "shiftwidth()",
+    nested_paren = "shiftwidth()",
+    continue = "shiftwidth()",
+    closed_paren_align_last_line = false,
+}

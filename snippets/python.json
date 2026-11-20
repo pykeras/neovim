@@ -1,0 +1,1123 @@
+{
+  "__slots__": {
+    "prefix": ["__slots__", "slots"],
+    "body": ["__slots__ = (\"${1:attr}\",$0)"],
+    "description": "__slots__ tuple"
+  },
+  "__init__": {
+    "prefix": ["__init__", "init"],
+    "body": ["def __init__(self${1:, arg}) -> None:", "\t${0:pass}"],
+    "description": "__init__ method"
+  },
+  "__repr__": {
+    "prefix": ["__repr__", "repr"],
+    "body": ["def __repr__(self) -> str:", "\treturn f\"${1:{type(self).__name__\\}}(${2})\"$0"],
+    "description": "__repr__ method"
+  },
+  "__str__": {
+    "prefix": ["__str__", "str"],
+    "body": ["def __str__(self) -> str:", "\treturn ${0:f\"\"}"],
+    "description": "__str__ method"
+  },
+  "__eq__": {
+    "prefix": ["__eq__", "eq"],
+    "body": [
+      "def __eq__(self, other: object) -> bool:",
+      "\tif not isinstance(other, ${1:type(self)}):",
+      "\t\treturn NotImplemented",
+      "\treturn self.${2:attr} == other.${2:attr}$0"
+    ],
+    "description": "__eq__ method"
+  },
+  "__hash__": {
+    "prefix": ["__hash__", "hash"],
+    "body": ["def __hash__(self) -> int:", "\treturn hash((${0:self.attr}))"],
+    "description": "__hash__ method"
+  },
+  "__len__": {
+    "prefix": ["__len__", "len"],
+    "body": ["def __len__(self) -> int:", "\treturn len(${0:self.items})"],
+    "description": "__len__ method"
+  },
+  "__iter__": {
+    "prefix": ["__iter__", "iter"],
+    "body": ["def __iter__(self) -> Iterator[${1:Any}]:", "\t${0:return iter(self.items)}"],
+    "description": "__iter__ method"
+  },
+  "__getitem__": {
+    "prefix": ["__getitem__", "getitem"],
+    "body": ["def __getitem__(self, ${1:key}: ${2:int}) -> ${3:Any}:", "\treturn self.items[$1]$0"],
+    "description": "__getitem__ method"
+  },
+  "__contains__": {
+    "prefix": ["__contains__", "contains"],
+    "body": ["def __contains__(self, ${1:item}: object) -> bool:", "\treturn $1 in self.items$0"],
+    "description": "__contains__ method"
+  },
+  "__call__": {
+    "prefix": ["__call__", "call"],
+    "body": ["def __call__(self${1:, arg}) -> ${2:None}:", "\t${0:pass}"],
+    "description": "__call__ method"
+  },
+  "__enter__/__exit__": {
+    "prefix": ["__enter__", "enterexit"],
+    "body": [
+      "def __enter__(self) -> Self:",
+      "\t${1:return self}",
+      "",
+      "def __exit__(self, exc_type, exc, tb) -> None:",
+      "\t${0:pass}"
+    ],
+    "description": "context manager methods"
+  },
+  "__post_init__": {
+    "prefix": ["__post_init__", "postinit"],
+    "body": ["def __post_init__(self) -> None:", "\t${0:pass}"],
+    "description": "dataclass __post_init__"
+  },
+  "__getattr__": {
+    "prefix": ["__getattr__"],
+    "body": ["def __getattr__(self, name: str) -> ${1:Any}:", "\t${0:raise AttributeError(name)}"],
+    "description": "__getattr__: called when normal lookup fails"
+  },
+  "__getattribute__": {
+    "prefix": ["__getattribute__", "getattribute"],
+    "body": [
+      "def __getattribute__(self, name: str) -> ${1:Any}:",
+      "\t${0:return super().__getattribute__(name)}"
+    ],
+    "description": "__getattribute__: called on every attribute lookup"
+  },
+  "__setattr__": {
+    "prefix": ["__setattr__"],
+    "body": [
+      "def __setattr__(self, name: str, value: ${1:Any}) -> None:",
+      "\t${0:super().__setattr__(name, value)}"
+    ],
+    "description": "__setattr__ method"
+  },
+  "__delattr__": {
+    "prefix": ["__delattr__"],
+    "body": ["def __delattr__(self, name: str) -> None:", "\t${0:super().__delattr__(name)}"],
+    "description": "__delattr__ method"
+  },
+  "__dir__": {
+    "prefix": ["__dir__"],
+    "body": ["def __dir__(self) -> list[str]:", "\treturn [*super().__dir__()${0}]"],
+    "description": "__dir__ method"
+  },
+  "__get__": {
+    "prefix": ["__get__"],
+    "body": [
+      "def __get__(self, instance: ${1:object} | None, owner: type | None = None) -> ${2:Any}:",
+      "\tif instance is None:",
+      "\t\treturn self",
+      "\t${0:return instance.__dict__[self._name]}"
+    ],
+    "description": "descriptor __get__"
+  },
+  "__set__": {
+    "prefix": ["__set__"],
+    "body": [
+      "def __set__(self, instance: ${1:object}, value: ${2:Any}) -> None:",
+      "\t${0:instance.__dict__[self._name] = value}"
+    ],
+    "description": "descriptor __set__"
+  },
+  "__delete__": {
+    "prefix": ["__delete__"],
+    "body": ["def __delete__(self, instance: ${1:object}) -> None:", "\t${0:del instance.__dict__[self._name]}"],
+    "description": "descriptor __delete__"
+  },
+  "__set_name__": {
+    "prefix": ["__set_name__", "setname"],
+    "body": ["def __set_name__(self, owner: type, name: str) -> None:", "\t${0:self._name = name}"],
+    "description": "descriptor __set_name__"
+  },
+  "descriptor": {
+    "prefix": ["descriptor"],
+    "body": [
+      "class ${1:Field}:",
+      "\tdef __set_name__(self, owner: type, name: str) -> None:",
+      "\t\tself._name = name",
+      "",
+      "\tdef __get__(self, instance: object | None, owner: type | None = None) -> ${2:Any}:",
+      "\t\tif instance is None:",
+      "\t\t\treturn self",
+      "\t\treturn instance.__dict__[self._name]",
+      "",
+      "\tdef __set__(self, instance: object, value: ${2:Any}) -> None:",
+      "\t\tinstance.__dict__[self._name] = value$0"
+    ],
+    "description": "data descriptor class"
+  },
+  "__new__": {
+    "prefix": ["__new__"],
+    "body": [
+      "def __new__(cls${1:, *args: Any, **kwargs: Any}) -> Self:",
+      "\tinstance = super().__new__(cls)",
+      "\t$0",
+      "\treturn instance"
+    ],
+    "description": "__new__ method"
+  },
+  "__del__": {
+    "prefix": ["__del__"],
+    "body": ["def __del__(self) -> None:", "\t${0:pass}"],
+    "description": "__del__ method"
+  },
+  "__init_subclass__": {
+    "prefix": ["__init_subclass__", "initsubclass"],
+    "body": [
+      "def __init_subclass__(cls${1:, **kwargs: Any}) -> None:",
+      "\tsuper().__init_subclass__(${2:**kwargs})",
+      "\t$0"
+    ],
+    "description": "__init_subclass__ method"
+  },
+  "__class_getitem__": {
+    "prefix": ["__class_getitem__", "classgetitem"],
+    "body": [
+      "def __class_getitem__(cls, item: ${1:Any}) -> ${2:GenericAlias}:",
+      "\t${0:return GenericAlias(cls, item)}"
+    ],
+    "description": "__class_getitem__ method"
+  },
+  "__subclasshook__": {
+    "prefix": ["__subclasshook__", "subclasshook"],
+    "body": [
+      "@classmethod",
+      "def __subclasshook__(cls, subclass: type) -> bool:",
+      "\t${0:return NotImplemented}"
+    ],
+    "description": "__subclasshook__ method"
+  },
+  "__instancecheck__": {
+    "prefix": ["__instancecheck__", "instancecheck"],
+    "body": [
+      "def __instancecheck__(cls, instance: object) -> bool:",
+      "\t${0:return super().__instancecheck__(instance)}"
+    ],
+    "description": "metaclass __instancecheck__"
+  },
+  "__subclasscheck__": {
+    "prefix": ["__subclasscheck__", "subclasscheck"],
+    "body": [
+      "def __subclasscheck__(cls, subclass: type) -> bool:",
+      "\t${0:return super().__subclasscheck__(subclass)}"
+    ],
+    "description": "metaclass __subclasscheck__"
+  },
+  "__prepare__": {
+    "prefix": ["__prepare__"],
+    "body": [
+      "@classmethod",
+      "def __prepare__(mcs, name: str, bases: tuple[type, ...], **kwargs: Any) -> dict[str, object]:",
+      "\t${0:return {\\}}"
+    ],
+    "description": "metaclass __prepare__"
+  },
+  "__setitem__": {
+    "prefix": ["__setitem__", "setitem"],
+    "body": ["def __setitem__(self, key: ${1:Any}, value: ${2:Any}) -> None:", "\t${0:self.items[key] = value}"],
+    "description": "__setitem__ method"
+  },
+  "__delitem__": {
+    "prefix": ["__delitem__", "delitem"],
+    "body": ["def __delitem__(self, key: ${1:Any}) -> None:", "\t${0:del self.items[key]}"],
+    "description": "__delitem__ method"
+  },
+  "__missing__": {
+    "prefix": ["__missing__"],
+    "body": ["def __missing__(self, key: ${1:Any}) -> ${2:Any}:", "\t${0:raise KeyError(key)}"],
+    "description": "__missing__: dict subclass fallback"
+  },
+  "__next__": {
+    "prefix": ["__next__"],
+    "body": ["def __next__(self) -> ${1:Any}:", "\t${0:raise StopIteration}"],
+    "description": "__next__ method"
+  },
+  "__reversed__": {
+    "prefix": ["__reversed__"],
+    "body": ["def __reversed__(self) -> Iterator[${1:Any}]:", "\t${0:return reversed(self.items)}"],
+    "description": "__reversed__ method"
+  },
+  "__length_hint__": {
+    "prefix": ["__length_hint__", "lengthhint"],
+    "body": ["def __length_hint__(self) -> int:", "\t${0:return NotImplemented}"],
+    "description": "__length_hint__ method"
+  },
+  "__ne__": {
+    "prefix": ["__ne__", "ne"],
+    "body": [
+      "def __ne__(self, other: object) -> bool:",
+      "\tif not isinstance(other, ${1:type(self)}):",
+      "\t\treturn NotImplemented",
+      "\treturn self.${2:attr} != other.${2:attr}$0"
+    ],
+    "description": "__ne__ method"
+  },
+  "__lt__": {
+    "prefix": ["__lt__", "lt"],
+    "body": [
+      "def __lt__(self, other: object) -> bool:",
+      "\tif not isinstance(other, ${1:type(self)}):",
+      "\t\treturn NotImplemented",
+      "\treturn self.${2:attr} < other.${2:attr}$0"
+    ],
+    "description": "__lt__ method"
+  },
+  "__le__": {
+    "prefix": ["__le__", "le"],
+    "body": [
+      "def __le__(self, other: object) -> bool:",
+      "\tif not isinstance(other, ${1:type(self)}):",
+      "\t\treturn NotImplemented",
+      "\treturn self.${2:attr} <= other.${2:attr}$0"
+    ],
+    "description": "__le__ method"
+  },
+  "__gt__": {
+    "prefix": ["__gt__", "gt"],
+    "body": [
+      "def __gt__(self, other: object) -> bool:",
+      "\tif not isinstance(other, ${1:type(self)}):",
+      "\t\treturn NotImplemented",
+      "\treturn self.${2:attr} > other.${2:attr}$0"
+    ],
+    "description": "__gt__ method"
+  },
+  "__ge__": {
+    "prefix": ["__ge__", "ge"],
+    "body": [
+      "def __ge__(self, other: object) -> bool:",
+      "\tif not isinstance(other, ${1:type(self)}):",
+      "\t\treturn NotImplemented",
+      "\treturn self.${2:attr} >= other.${2:attr}$0"
+    ],
+    "description": "__ge__ method"
+  },
+  "__bool__": {
+    "prefix": ["__bool__"],
+    "body": ["def __bool__(self) -> bool:", "\t${0:return True}"],
+    "description": "__bool__ method"
+  },
+  "__int__": {
+    "prefix": ["__int__"],
+    "body": ["def __int__(self) -> int:", "\t${0:return 0}"],
+    "description": "__int__ method"
+  },
+  "__float__": {
+    "prefix": ["__float__"],
+    "body": ["def __float__(self) -> float:", "\t${0:return 0.0}"],
+    "description": "__float__ method"
+  },
+  "__index__": {
+    "prefix": ["__index__"],
+    "body": ["def __index__(self) -> int:", "\t${0:return 0}"],
+    "description": "__index__ method"
+  },
+  "__bytes__": {
+    "prefix": ["__bytes__"],
+    "body": ["def __bytes__(self) -> bytes:", "\t${0:return b\"\"}"],
+    "description": "__bytes__ method"
+  },
+  "__format__": {
+    "prefix": ["__format__"],
+    "body": ["def __format__(self, format_spec: str) -> str:", "\t${0:return format(str(self), format_spec)}"],
+    "description": "__format__ method"
+  },
+  "__fspath__": {
+    "prefix": ["__fspath__", "fspath"],
+    "body": ["def __fspath__(self) -> str:", "\t${0:return str(self.path)}"],
+    "description": "__fspath__ method"
+  },
+  "__add__": {
+    "prefix": ["__add__"],
+    "body": ["def __add__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__add__ operator"
+  },
+  "__radd__": {
+    "prefix": ["__radd__"],
+    "body": ["def __radd__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__radd__ reflected operator"
+  },
+  "__iadd__": {
+    "prefix": ["__iadd__"],
+    "body": ["def __iadd__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__iadd__ in-place operator"
+  },
+  "__sub__": {
+    "prefix": ["__sub__"],
+    "body": ["def __sub__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__sub__ operator"
+  },
+  "__rsub__": {
+    "prefix": ["__rsub__"],
+    "body": ["def __rsub__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rsub__ reflected operator"
+  },
+  "__isub__": {
+    "prefix": ["__isub__"],
+    "body": ["def __isub__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__isub__ in-place operator"
+  },
+  "__mul__": {
+    "prefix": ["__mul__"],
+    "body": ["def __mul__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__mul__ operator"
+  },
+  "__rmul__": {
+    "prefix": ["__rmul__"],
+    "body": ["def __rmul__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rmul__ reflected operator"
+  },
+  "__imul__": {
+    "prefix": ["__imul__"],
+    "body": ["def __imul__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__imul__ in-place operator"
+  },
+  "__matmul__": {
+    "prefix": ["__matmul__"],
+    "body": ["def __matmul__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__matmul__ operator"
+  },
+  "__rmatmul__": {
+    "prefix": ["__rmatmul__"],
+    "body": ["def __rmatmul__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rmatmul__ reflected operator"
+  },
+  "__imatmul__": {
+    "prefix": ["__imatmul__"],
+    "body": ["def __imatmul__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__imatmul__ in-place operator"
+  },
+  "__truediv__": {
+    "prefix": ["__truediv__"],
+    "body": ["def __truediv__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__truediv__ operator"
+  },
+  "__rtruediv__": {
+    "prefix": ["__rtruediv__"],
+    "body": ["def __rtruediv__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rtruediv__ reflected operator"
+  },
+  "__itruediv__": {
+    "prefix": ["__itruediv__"],
+    "body": ["def __itruediv__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__itruediv__ in-place operator"
+  },
+  "__floordiv__": {
+    "prefix": ["__floordiv__"],
+    "body": ["def __floordiv__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__floordiv__ operator"
+  },
+  "__rfloordiv__": {
+    "prefix": ["__rfloordiv__"],
+    "body": ["def __rfloordiv__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rfloordiv__ reflected operator"
+  },
+  "__ifloordiv__": {
+    "prefix": ["__ifloordiv__"],
+    "body": ["def __ifloordiv__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__ifloordiv__ in-place operator"
+  },
+  "__mod__": {
+    "prefix": ["__mod__"],
+    "body": ["def __mod__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__mod__ operator"
+  },
+  "__rmod__": {
+    "prefix": ["__rmod__"],
+    "body": ["def __rmod__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rmod__ reflected operator"
+  },
+  "__imod__": {
+    "prefix": ["__imod__"],
+    "body": ["def __imod__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__imod__ in-place operator"
+  },
+  "__pow__": {
+    "prefix": ["__pow__"],
+    "body": ["def __pow__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__pow__ operator"
+  },
+  "__rpow__": {
+    "prefix": ["__rpow__"],
+    "body": ["def __rpow__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rpow__ reflected operator"
+  },
+  "__ipow__": {
+    "prefix": ["__ipow__"],
+    "body": ["def __ipow__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__ipow__ in-place operator"
+  },
+  "__and__": {
+    "prefix": ["__and__"],
+    "body": ["def __and__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__and__ operator"
+  },
+  "__rand__": {
+    "prefix": ["__rand__"],
+    "body": ["def __rand__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rand__ reflected operator"
+  },
+  "__iand__": {
+    "prefix": ["__iand__"],
+    "body": ["def __iand__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__iand__ in-place operator"
+  },
+  "__or__": {
+    "prefix": ["__or__"],
+    "body": ["def __or__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__or__ operator"
+  },
+  "__ror__": {
+    "prefix": ["__ror__"],
+    "body": ["def __ror__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__ror__ reflected operator"
+  },
+  "__ior__": {
+    "prefix": ["__ior__"],
+    "body": ["def __ior__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__ior__ in-place operator"
+  },
+  "__xor__": {
+    "prefix": ["__xor__"],
+    "body": ["def __xor__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__xor__ operator"
+  },
+  "__rxor__": {
+    "prefix": ["__rxor__"],
+    "body": ["def __rxor__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rxor__ reflected operator"
+  },
+  "__ixor__": {
+    "prefix": ["__ixor__"],
+    "body": ["def __ixor__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__ixor__ in-place operator"
+  },
+  "__lshift__": {
+    "prefix": ["__lshift__"],
+    "body": ["def __lshift__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__lshift__ operator"
+  },
+  "__rlshift__": {
+    "prefix": ["__rlshift__"],
+    "body": ["def __rlshift__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rlshift__ reflected operator"
+  },
+  "__ilshift__": {
+    "prefix": ["__ilshift__"],
+    "body": ["def __ilshift__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__ilshift__ in-place operator"
+  },
+  "__rshift__": {
+    "prefix": ["__rshift__"],
+    "body": ["def __rshift__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rshift__ operator"
+  },
+  "__rrshift__": {
+    "prefix": ["__rrshift__"],
+    "body": ["def __rrshift__(self, other: ${1:Self}) -> ${2:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__rrshift__ reflected operator"
+  },
+  "__irshift__": {
+    "prefix": ["__irshift__"],
+    "body": ["def __irshift__(self, other: ${1:Self}) -> Self:", "\t${0:pass}", "\treturn self"],
+    "description": "__irshift__ in-place operator"
+  },
+  "__neg__": {
+    "prefix": ["__neg__"],
+    "body": ["def __neg__(self) -> ${1:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__neg__ unary operator"
+  },
+  "__pos__": {
+    "prefix": ["__pos__"],
+    "body": ["def __pos__(self) -> ${1:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__pos__ unary operator"
+  },
+  "__abs__": {
+    "prefix": ["__abs__"],
+    "body": ["def __abs__(self) -> ${1:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__abs__ unary operator"
+  },
+  "__invert__": {
+    "prefix": ["__invert__"],
+    "body": ["def __invert__(self) -> ${1:Self}:", "\t${0:return NotImplemented}"],
+    "description": "__invert__ unary operator"
+  },
+  "__exit__": {
+    "prefix": ["__exit__"],
+    "body": [
+      "def __exit__(self, exc_type: type[BaseException] | None, exc: BaseException | None, tb: TracebackType | None) -> ${1:None}:",
+      "\t${0:pass}"
+    ],
+    "description": "__exit__ method"
+  },
+  "__aenter__/__aexit__": {
+    "prefix": ["__aenter__", "aenterexit"],
+    "body": [
+      "async def __aenter__(self) -> Self:",
+      "\t${1:return self}",
+      "",
+      "async def __aexit__(self, exc_type: type[BaseException] | None, exc: BaseException | None, tb: TracebackType | None) -> None:",
+      "\t${0:pass}"
+    ],
+    "description": "async context manager methods"
+  },
+  "__aexit__": {
+    "prefix": ["__aexit__", "aexit"],
+    "body": [
+      "async def __aexit__(self, exc_type: type[BaseException] | None, exc: BaseException | None, tb: TracebackType | None) -> ${1:None}:",
+      "\t${0:pass}"
+    ],
+    "description": "__aexit__ method"
+  },
+  "__aiter__": {
+    "prefix": ["__aiter__"],
+    "body": ["def __aiter__(self) -> AsyncIterator[${1:Any}]:", "\t${0:return self}"],
+    "description": "__aiter__ method"
+  },
+  "__anext__": {
+    "prefix": ["__anext__"],
+    "body": ["async def __anext__(self) -> ${1:Any}:", "\t${0:raise StopAsyncIteration}"],
+    "description": "__anext__ method"
+  },
+  "__await__": {
+    "prefix": ["__await__"],
+    "body": [
+      "def __await__(self) -> Generator[Any, None, ${1:Any}]:",
+      "\treturn self.${2:run}().__await__()$0"
+    ],
+    "description": "__await__ method"
+  },
+  "__copy__": {
+    "prefix": ["__copy__"],
+    "body": ["def __copy__(self) -> Self:", "\t${0:return type(self)()}"],
+    "description": "__copy__ method"
+  },
+  "__deepcopy__": {
+    "prefix": ["__deepcopy__", "deepcopy"],
+    "body": ["def __deepcopy__(self, memo: dict[int, Any]) -> Self:", "\t${0:return type(self)()}"],
+    "description": "__deepcopy__ method"
+  },
+  "__getstate__": {
+    "prefix": ["__getstate__", "getstate"],
+    "body": ["def __getstate__(self) -> dict[str, Any]:", "\t${0:return self.__dict__.copy()}"],
+    "description": "__getstate__ method"
+  },
+  "__setstate__": {
+    "prefix": ["__setstate__", "setstate"],
+    "body": ["def __setstate__(self, state: dict[str, Any]) -> None:", "\t${0:self.__dict__.update(state)}"],
+    "description": "__setstate__ method"
+  },
+  "__reduce__": {
+    "prefix": ["__reduce__"],
+    "body": ["def __reduce__(self) -> tuple[Any, ...]:", "\t${0:return (type(self), ())}"],
+    "description": "__reduce__ method"
+  },
+  "__match_args__": {
+    "prefix": ["__match_args__", "matchargs"],
+    "body": ["__match_args__ = (\"${1:attr}\",$0)"],
+    "description": "__match_args__ tuple"
+  },
+  "__all__": {
+    "prefix": ["__all__"],
+    "body": ["__all__ = [\"${1:name}\"$0]"],
+    "description": "module __all__ list"
+  },
+  "dataclass": {
+    "prefix": ["dataclass"],
+    "body": [
+      "@dataclass${1:(slots=True)}",
+      "class ${2:Name}:",
+      "\t${3:field}: ${4:int}$0"
+    ],
+    "description": "dataclass"
+  },
+  "staticmethod": {
+    "prefix": ["staticmethod", "sm"],
+    "body": ["@staticmethod", "def ${1:name}(${2}) -> ${3:None}:", "\t${0:pass}"],
+    "description": "staticmethod"
+  },
+  "classmethod": {
+    "prefix": ["classmethod", "cm"],
+    "body": ["@classmethod", "def ${1:name}(cls${2}) -> Self:", "\t${0:return cls()}"],
+    "description": "classmethod"
+  },
+  "abstractmethod": {
+    "prefix": ["abstractmethod", "abm"],
+    "body": ["@abstractmethod", "def ${1:name}(self${2}) -> ${3:None}:", "\t${0:...}"],
+    "description": "abstractmethod"
+  },
+  "setter": {
+    "prefix": ["setter"],
+    "body": ["@${1:name}.setter", "def ${1:name}(self, value: ${2:Any}) -> None:", "\tself._$1 = value$0"],
+    "description": "property setter"
+  },
+  "Enum": {
+    "prefix": ["enum"],
+    "body": ["class ${1:Name}(${2:Enum}):", "\t${3:A} = ${4:auto()}$0"],
+    "description": "Enum class"
+  },
+  "Protocol": {
+    "prefix": ["protocol"],
+    "body": ["class ${1:Name}(Protocol):", "\tdef ${2:method}(self${3}) -> ${4:None}: ...$0"],
+    "description": "typing.Protocol"
+  },
+  "TypedDict": {
+    "prefix": ["typeddict", "td"],
+    "body": ["class ${1:Name}(TypedDict):", "\t${2:key}: ${3:str}$0"],
+    "description": "TypedDict"
+  },
+  "contextmanager": {
+    "prefix": ["contextmanager", "ctxm"],
+    "body": [
+      "@contextmanager",
+      "def ${1:name}(${2}) -> Iterator[${3:None}]:",
+      "\t${4:# setup}",
+      "\ttry:",
+      "\t\tyield${5}",
+      "\tfinally:",
+      "\t\t${0:pass}"
+    ],
+    "description": "contextlib.contextmanager"
+  },
+  "pytest test": {
+    "prefix": ["test"],
+    "body": ["def test_${1:name}(${2}) -> None:", "\t${0:assert True}"],
+    "description": "pytest test function"
+  },
+  "pytest fixture": {
+    "prefix": ["fixture"],
+    "body": ["@pytest.fixture", "def ${1:name}() -> ${2:Any}:", "\t${0:return None}"],
+    "description": "pytest fixture"
+  },
+  "pytest parametrize": {
+    "prefix": ["parametrize"],
+    "body": [
+      "@pytest.mark.parametrize(",
+      "\t(\"${1:arg}\", \"${2:expected}\"),",
+      "\t[",
+      "\t\t(${3}, ${4}),",
+      "\t],",
+      ")",
+      "def test_${5:name}($1, $2) -> None:",
+      "\tassert $1 == $2$0"
+    ],
+    "description": "pytest parametrize"
+  },
+  "pytest raises": {
+    "prefix": ["raises"],
+    "body": ["with pytest.raises(${1:ValueError}):", "\t${0:pass}"],
+    "description": "pytest.raises"
+  },
+  "logger": {
+    "prefix": ["logger"],
+    "body": ["logger = logging.getLogger(__name__)$0"],
+    "description": "module logger"
+  },
+  "argparse main": {
+    "prefix": ["argparse"],
+    "body": [
+      "def main() -> None:",
+      "\tparser = argparse.ArgumentParser(description=\"${1}\")",
+      "\tparser.add_argument(\"${2:path}\")",
+      "\targs = parser.parse_args()",
+      "\t${0:print(args)}",
+      "",
+      "",
+      "if __name__ == \"__main__\":",
+      "\tmain()"
+    ],
+    "description": "argparse skeleton"
+  },
+  "async main": {
+    "prefix": ["amain"],
+    "body": [
+      "async def main() -> None:",
+      "\t${0:pass}",
+      "",
+      "",
+      "if __name__ == \"__main__\":",
+      "\tasyncio.run(main())"
+    ],
+    "description": "async main with asyncio.run"
+  },
+  "json load": {
+    "prefix": ["jload"],
+    "body": ["with open(${1:path}, encoding=\"utf-8\") as f:", "\t${2:data} = json.load(f)$0"],
+    "description": "read JSON file"
+  },
+  "json dump": {
+    "prefix": ["jdump"],
+    "body": ["with open(${1:path}, \"w\", encoding=\"utf-8\") as f:", "\tjson.dump(${2:data}, f, ensure_ascii=False, indent=2)$0"],
+    "description": "write JSON file"
+  },
+  "here path": {
+    "prefix": ["here"],
+    "body": ["${1:HERE} = Path(__file__).resolve().parent$0"],
+    "description": "directory of current file"
+  },
+  "FastAPI app with lifespan": {
+    "prefix": ["faapp"],
+    "body": [
+      "@asynccontextmanager",
+      "async def lifespan(app: FastAPI) -> AsyncIterator[None]:",
+      "\t${1:# startup}",
+      "\tyield",
+      "\t${2:# shutdown}",
+      "",
+      "",
+      "app = FastAPI(title=\"${3:API}\", lifespan=lifespan)$0"
+    ],
+    "description": "FastAPI app with lifespan"
+  },
+  "FastAPI router": {
+    "prefix": ["farouter"],
+    "body": ["router = APIRouter(prefix=\"/${1:items}\", tags=[\"${1:items}\"])$0"],
+    "description": "FastAPI router"
+  },
+  "FastAPI GET endpoint": {
+    "prefix": ["faget"],
+    "body": [
+      "@${1:router}.get(\"/${2:{item_id\\}}\", response_model=${3:ItemOut})",
+      "async def ${4:get_item}(${5:item_id: int}) -> ${3:ItemOut}:",
+      "\t${0:...}"
+    ],
+    "description": "FastAPI GET endpoint"
+  },
+  "FastAPI POST endpoint": {
+    "prefix": ["fapost"],
+    "body": [
+      "@${1:router}.post(\"/${2}\", response_model=${3:ItemOut}, status_code=status.HTTP_201_CREATED)",
+      "async def ${4:create_item}(${5:payload}: ${6:ItemIn}) -> ${3:ItemOut}:",
+      "\t${0:...}"
+    ],
+    "description": "FastAPI POST endpoint"
+  },
+  "FastAPI PUT endpoint": {
+    "prefix": ["faput"],
+    "body": [
+      "@${1:router}.put(\"/${2:{item_id\\}}\", response_model=${3:ItemOut})",
+      "async def ${4:update_item}(${5:item_id: int}, ${6:payload}: ${7:ItemIn}) -> ${3:ItemOut}:",
+      "\t${0:...}"
+    ],
+    "description": "FastAPI PUT endpoint"
+  },
+  "FastAPI DELETE endpoint": {
+    "prefix": ["fadelete"],
+    "body": [
+      "@${1:router}.delete(\"/${2:{item_id\\}}\", status_code=status.HTTP_204_NO_CONTENT)",
+      "async def ${3:delete_item}(${4:item_id: int}) -> None:",
+      "\t${0:...}"
+    ],
+    "description": "FastAPI DELETE endpoint"
+  },
+  "FastAPI dependency with Annotated alias": {
+    "prefix": ["fadep"],
+    "body": [
+      "async def ${1:get_db}() -> AsyncIterator[${2:AsyncSession}]:",
+      "\t${3:async with SessionLocal() as session:}",
+      "\t\tyield ${4:session}",
+      "",
+      "",
+      "${5:DbSession} = Annotated[${2:AsyncSession}, Depends(${1:get_db})]$0"
+    ],
+    "description": "FastAPI dependency with Annotated alias"
+  },
+  "FastAPI raise HTTPException": {
+    "prefix": ["fa404"],
+    "body": ["raise HTTPException(status_code=status.HTTP_${1:404_NOT_FOUND}, detail=\"${2:Not found}\")$0"],
+    "description": "FastAPI raise HTTPException"
+  },
+  "Pydantic model": {
+    "prefix": ["pymodel"],
+    "body": [
+      "class ${1:Item}(BaseModel):",
+      "\tmodel_config = ConfigDict(from_attributes=True)",
+      "",
+      "\t${2:id}: ${3:int}$0"
+    ],
+    "description": "Pydantic model"
+  },
+  "Pydantic Field": {
+    "prefix": ["pyfield"],
+    "body": ["${1:name}: ${2:str} = Field(${3:...}, ${4:min_length=1})$0"],
+    "description": "Pydantic Field"
+  },
+  "Pydantic field_validator": {
+    "prefix": ["pyvalidator"],
+    "body": [
+      "@field_validator(\"${1:field}\")",
+      "@classmethod",
+      "def validate_$1(cls, value: ${3:str}) -> ${3:str}:",
+      "\t${0:return value}"
+    ],
+    "description": "Pydantic field_validator"
+  },
+  "pydantic-settings Settings class": {
+    "prefix": ["pysettings"],
+    "body": [
+      "class Settings(BaseSettings):",
+      "\tmodel_config = SettingsConfigDict(env_file=\".env\", extra=\"ignore\")",
+      "",
+      "\t${1:database_url}: ${2:str}$0",
+      "",
+      "",
+      "settings = Settings()"
+    ],
+    "description": "pydantic-settings Settings class"
+  },
+  "SQLAlchemy declarative Base": {
+    "prefix": ["sabase"],
+    "body": ["class Base(DeclarativeBase):", "\t${0:pass}"],
+    "description": "SQLAlchemy declarative Base"
+  },
+  "SQLAlchemy 2.0 model": {
+    "prefix": ["samodel"],
+    "body": [
+      "class ${1:User}(Base):",
+      "\t__tablename__ = \"${2:users}\"",
+      "",
+      "\tid: Mapped[int] = mapped_column(primary_key=True)",
+      "\t${3:name}: Mapped[${4:str}] = mapped_column(${5:String(100)})$0"
+    ],
+    "description": "SQLAlchemy 2.0 model"
+  },
+  "SQLAlchemy mapped_column": {
+    "prefix": ["sacol"],
+    "body": ["${1:name}: Mapped[${2:str}] = mapped_column(${3})$0"],
+    "description": "SQLAlchemy mapped_column"
+  },
+  "SQLAlchemy foreign key column": {
+    "prefix": ["safk"],
+    "body": [
+      "${1:user}_id: Mapped[int] = mapped_column(ForeignKey(\"${2:users}.id\"${3:, ondelete=\"CASCADE\"}))$0"
+    ],
+    "description": "SQLAlchemy foreign key column"
+  },
+  "SQLAlchemy relationship (many-to-one side)": {
+    "prefix": ["sarel"],
+    "body": ["${1:user}: Mapped[\"${2:User}\"] = relationship(back_populates=\"${3:posts}\")$0"],
+    "description": "SQLAlchemy relationship (many-to-one side)"
+  },
+  "SQLAlchemy relationship (one-to-many side)": {
+    "prefix": ["sarelmany"],
+    "body": [
+      "${1:posts}: Mapped[list[\"${2:Post}\"]] = relationship(back_populates=\"${3:user}\"${4:, cascade=\"all, delete-orphan\"})$0"
+    ],
+    "description": "SQLAlchemy relationship (one-to-many side)"
+  },
+  "SQLAlchemy created_at / updated_at columns": {
+    "prefix": ["satimestamps"],
+    "body": [
+      "created_at: Mapped[datetime] = mapped_column(server_default=func.now())",
+      "updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())$0"
+    ],
+    "description": "SQLAlchemy created_at / updated_at columns"
+  },
+  "SQLAlchemy async engine and session factory": {
+    "prefix": ["saengine"],
+    "body": [
+      "engine = create_async_engine(${1:settings.database_url}, echo=${2:False})",
+      "SessionLocal = async_sessionmaker(engine, expire_on_commit=False)$0"
+    ],
+    "description": "SQLAlchemy async engine and session factory"
+  },
+  "SQLAlchemy select query": {
+    "prefix": ["saselect"],
+    "body": [
+      "stmt = select(${1:User}).where(${2:User.id == user_id})",
+      "${3:result} = (await ${4:session}.execute(stmt)).scalar${5:_one_or_none}()$0"
+    ],
+    "description": "SQLAlchemy select query"
+  },
+  "SQLAlchemy add, commit, refresh": {
+    "prefix": ["saadd"],
+    "body": [
+      "${1:session}.add(${2:obj})",
+      "await ${1:session}.commit()",
+      "await ${1:session}.refresh(${2:obj})$0"
+    ],
+    "description": "SQLAlchemy add, commit, refresh"
+  },
+  "Django model": {
+    "prefix": ["djmodel"],
+    "body": [
+      "class ${1:Item}(models.Model):",
+      "\t${2:name} = models.CharField(max_length=${3:255})",
+      "\tcreated_at = models.DateTimeField(auto_now_add=True)",
+      "\tupdated_at = models.DateTimeField(auto_now=True)",
+      "",
+      "\tclass Meta:",
+      "\t\tordering = [\"${4:-created_at}\"]",
+      "",
+      "\tdef __str__(self) -> str:",
+      "\t\treturn self.$2$0"
+    ],
+    "description": "Django model"
+  },
+  "Django ForeignKey": {
+    "prefix": ["djfk"],
+    "body": [
+      "${1:owner} = models.ForeignKey(${2:settings.AUTH_USER_MODEL}, on_delete=models.${3:CASCADE}, related_name=\"${4:items}\")$0"
+    ],
+    "description": "Django ForeignKey"
+  },
+  "Django ManyToManyField": {
+    "prefix": ["djm2m"],
+    "body": ["${1:tags} = models.ManyToManyField(\"${2:Tag}\", related_name=\"${3:items}\", blank=True)$0"],
+    "description": "Django ManyToManyField"
+  },
+  "Django TextChoices": {
+    "prefix": ["djchoices"],
+    "body": ["class ${1:Status}(models.TextChoices):", "\t${2:DRAFT} = \"${3:draft}\", \"${4:Draft}\"$0"],
+    "description": "Django TextChoices"
+  },
+  "Django ModelAdmin": {
+    "prefix": ["djadmin"],
+    "body": [
+      "@admin.register(${1:Item})",
+      "class ${1:Item}Admin(admin.ModelAdmin):",
+      "\tlist_display = (${2:\"id\", \"name\"})",
+      "\tsearch_fields = (${3:\"name\",})",
+      "\tlist_filter = (${4})$0"
+    ],
+    "description": "Django ModelAdmin"
+  },
+  "Django function view": {
+    "prefix": ["djview"],
+    "body": [
+      "def ${1:item_list}(request: HttpRequest) -> HttpResponse:",
+      "\t${2:items = Item.objects.all()}",
+      "\treturn render(request, \"${3:app/item_list.html}\", {${4:\"items\": items}})$0"
+    ],
+    "description": "Django function view"
+  },
+  "Django class-based ListView": {
+    "prefix": ["djcbv"],
+    "body": [
+      "class ${1:Item}ListView(${2:LoginRequiredMixin, }ListView):",
+      "\tmodel = ${1:Item}",
+      "\ttemplate_name = \"${3:app/item_list.html}\"",
+      "\tcontext_object_name = \"${4:items}\"",
+      "\tpaginate_by = ${5:20}$0"
+    ],
+    "description": "Django class-based ListView"
+  },
+  "Django urlpatterns": {
+    "prefix": ["djurls"],
+    "body": [
+      "app_name = \"${1:app}\"",
+      "",
+      "urlpatterns = [",
+      "\tpath(\"${2}\", views.${3:item_list}, name=\"${4:item-list}\"),$0",
+      "]"
+    ],
+    "description": "Django urlpatterns"
+  },
+  "Django ModelForm": {
+    "prefix": ["djform"],
+    "body": [
+      "class ${1:Item}Form(forms.ModelForm):",
+      "\tclass Meta:",
+      "\t\tmodel = ${1:Item}",
+      "\t\tfields = [${2:\"name\"}]$0"
+    ],
+    "description": "Django ModelForm"
+  },
+  "Django management command": {
+    "prefix": ["djcommand"],
+    "body": [
+      "class Command(BaseCommand):",
+      "\thelp = \"${1:Describe the command}\"",
+      "",
+      "\tdef add_arguments(self, parser: CommandParser) -> None:",
+      "\t\t${2:parser.add_argument(\"--dry-run\", action=\"store_true\")}",
+      "",
+      "\tdef handle(self, *args: Any, **options: Any) -> None:",
+      "\t\t${0:self.stdout.write(self.style.SUCCESS(\"Done\"))}"
+    ],
+    "description": "Django management command"
+  },
+  "Django signal receiver": {
+    "prefix": ["djsignal"],
+    "body": [
+      "@receiver(${1:post_save}, sender=${2:Item})",
+      "def ${3:on_item_saved}(sender: type[${2:Item}], instance: ${2:Item}, ${4:created: bool, }**kwargs: Any) -> None:",
+      "\t${0:pass}"
+    ],
+    "description": "Django signal receiver"
+  },
+  "Django data migration": {
+    "prefix": ["djdatamigration"],
+    "body": [
+      "def forwards(apps: Apps, schema_editor: BaseDatabaseSchemaEditor) -> None:",
+      "\t${1:Item} = apps.get_model(\"${2:app}\", \"${1:Item}\")",
+      "\t${0:pass}",
+      "",
+      "",
+      "class Migration(migrations.Migration):",
+      "\tdependencies = [(\"${2:app}\", \"${3:0001_initial}\")]",
+      "",
+      "\toperations = [migrations.RunPython(forwards, migrations.RunPython.noop)]"
+    ],
+    "description": "Django data migration"
+  },
+  "Django TestCase": {
+    "prefix": ["djtest"],
+    "body": [
+      "class ${1:Item}Tests(TestCase):",
+      "\t@classmethod",
+      "\tdef setUpTestData(cls) -> None:",
+      "\t\t${2:pass}",
+      "",
+      "\tdef test_${3:name}(self) -> None:",
+      "\t\t${0:pass}"
+    ],
+    "description": "Django TestCase"
+  },
+  "DRF ModelSerializer": {
+    "prefix": ["drfserializer"],
+    "body": [
+      "class ${1:Item}Serializer(serializers.ModelSerializer):",
+      "\tclass Meta:",
+      "\t\tmodel = ${1:Item}",
+      "\t\tfields = [${2:\"id\", \"name\"}]",
+      "\t\tread_only_fields = [${3:\"id\"}]$0"
+    ],
+    "description": "DRF ModelSerializer"
+  },
+  "DRF ModelViewSet": {
+    "prefix": ["drfviewset"],
+    "body": [
+      "class ${1:Item}ViewSet(viewsets.ModelViewSet):",
+      "\tqueryset = ${1:Item}.objects.all()",
+      "\tserializer_class = ${1:Item}Serializer",
+      "\tpermission_classes = [${2:permissions.IsAuthenticated}]$0"
+    ],
+    "description": "DRF ModelViewSet"
+  },
+  "DRF viewset @action": {
+    "prefix": ["drfaction"],
+    "body": [
+      "@action(detail=${1:True}, methods=[\"${2:post}\"])",
+      "def ${3:name}(self, request: Request, pk: str | None = None) -> Response:",
+      "\t${4:obj = self.get_object()}",
+      "\treturn Response(${0:status=status.HTTP_204_NO_CONTENT})"
+    ],
+    "description": "DRF viewset @action"
+  },
+  "DRF router registration": {
+    "prefix": ["drfrouter"],
+    "body": [
+      "router = DefaultRouter()",
+      "router.register(\"${1:items}\", ${2:ItemViewSet}, basename=\"${3:item}\")",
+      "",
+      "urlpatterns = router.urls$0"
+    ],
+    "description": "DRF router registration"
+  }
+}

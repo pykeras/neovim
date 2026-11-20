@@ -277,6 +277,21 @@ function body._
 - **Organize imports:** `<leader>oi`
 - **Ruff fix-all:** `<leader>fa`
 - **Format buffer:** `rf` _formatting also runs on save_
+- **Extract function / variable (visual):** `<leader>rf` / `<leader>rv`
+- **Inline variable:** `<leader>ri`
+- **Refactor menu:** `<leader>rr`
+- **Generate docstring for the function/class under the cursor:** `<leader>ng`
+- **Framework snippets:** prefixes `fa…` (FastAPI), `py…` (Pydantic), `sa…` (SQLAlchemy 2.0), `dj…` (Django), `drf…` (DRF) — e.g. `faget`, `pymodel`, `samodel`, `djmodel`, `drfviewset`
+- **Dunder snippets:** type any `__dunder__` name (`__getattr__`, `__set_name__`, `__iadd__`, ...) or `descriptor` and accept it. Defined in `snippets/python.json`.
+
+---
+
+### Completion Menu
+
+- **Next / previous item:** `<C-j>` / `<C-k>` _(also `<C-n>` / `<C-p>` and the arrow keys)_
+- **Toggle signature help (menu closed):** `<C-k>`
+- **Accept:** `<Tab>` or `<CR>`
+- **Close menu:** `<C-e>`
 
 ---
 
@@ -336,7 +351,7 @@ _For python make sure you run `pip install debugpy` in the virtualenv detected/s
 - **Go to definition (horizontal split):** `<leader>gds`
 - **Peek definition:** `<leader>gdp`
 - **Code actions:** `<leader>ca`
-- **Show method signature (Insert mode):** `<C-k>`
+- **Toggle the signature help window (Insert mode):** `<C-k>` _opens by itself inside a call; see `lua/settings.lua`_
 - __Copy diagnostic message to clipboard:__ `<leader>cd`
 
 ---
@@ -483,6 +498,30 @@ changing any setting here.
 A Persian-language reference for the Python workflow above —
 environments, testing, debugging and structural editing — lives at
 `docs/python-cheatsheet.html`.
+
+- **Open the interactive Vim trainer:** `<leader>hv`
+
+`docs/vim-dojo.html` is a typing-tutor–style trainer in Persian: a
+built-in Vim simulator with graded lessons (motions, operators, text
+objects, flash, surround, treesitter objects), a spaced-repetition drill
+for every keymap in this config, and a progress page. Progress is kept in
+the browser's local storage.
+
+---
+
+## Settings
+
+Personal preferences live in `lua/settings.lua`. Change a value and restart Neovim.
+
+| Option | Default | Effect |
+| --- | --- | --- |
+| `completion.signature_help` | `true` | Parameter popup while typing call arguments |
+| `completion.auto_docs` | `true` | Documentation window beside the selected completion item |
+| `completion.ghost_text` | `false` | Dimmed inline preview of the selected item |
+| `completion.auto_brackets` | `true` | Insert `()` after accepting a function |
+| `completion.enter_accepts` | `true` | `false`: Enter always inserts a newline, only `<Tab>` accepts |
+| `diagnostics.update_in_insert` | `false` | Refresh diagnostics on every keystroke instead of on leaving insert mode |
+| `docstring_style` | `google_docstrings` | Docstring style for `<leader>ng` (`numpydoc`, `reST`) |
 
 ---
 
